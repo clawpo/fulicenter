@@ -1,9 +1,5 @@
 [
     {
-        "merged": "D:\\chensaitao\\superwechat-zip\\ChatDemoUI\\app\\build\\intermediates\\res\\merged\\debug\\menu\\context_tab_contact.xml",
-        "source": "D:\\chensaitao\\superwechat-zip\\ChatDemoUI\\app\\src\\main\\res\\menu\\context_tab_contact.xml"
-    },
-    {
         "merged": "D:\\chensaitao\\fulishe\\AS_GIT\\fulicenter\\app\\build\\intermediates\\res\\merged\\debug\\menu\\remove_from_blacklist.xml",
         "source": "D:\\chensaitao\\fulishe\\AS_GIT\\fulicenter\\app\\src\\main\\res\\menu\\remove_from_blacklist.xml"
     },
@@ -20,23 +16,7 @@
         "source": "D:\\chensaitao\\fulishe\\AS_GIT\\fulicenter\\app\\src\\main\\res\\menu\\context_contact_list.xml"
     },
     {
-        "merged": "D:\\chensaitao\\superwechat-zip\\ChatDemoUI\\app\\build\\intermediates\\res\\merged\\debug\\menu\\delete_contact.xml",
-        "source": "D:\\chensaitao\\superwechat-zip\\ChatDemoUI\\app\\src\\main\\res\\menu\\delete_contact.xml"
-    },
-    {
-        "merged": "D:\\chensaitao\\superwechat-zip\\ChatDemoUI\\app\\build\\intermediates\\res\\merged\\debug\\menu\\remove_from_blacklist.xml",
-        "source": "D:\\chensaitao\\superwechat-zip\\ChatDemoUI\\app\\src\\main\\res\\menu\\remove_from_blacklist.xml"
-    },
-    {
         "merged": "D:\\chensaitao\\fulishe\\AS_GIT\\fulicenter\\app\\build\\intermediates\\res\\merged\\debug\\menu\\delete_contact.xml",
         "source": "D:\\chensaitao\\fulishe\\AS_GIT\\fulicenter\\app\\src\\main\\res\\menu\\delete_contact.xml"
-    },
-    {
-        "merged": "D:\\chensaitao\\superwechat-zip\\ChatDemoUI\\app\\build\\intermediates\\res\\merged\\debug\\menu\\delete_message.xml",
-        "source": "D:\\chensaitao\\superwechat-zip\\ChatDemoUI\\app\\src\\main\\res\\menu\\delete_message.xml"
-    },
-    {
-        "merged": "D:\\chensaitao\\superwechat-zip\\ChatDemoUI\\app\\build\\intermediates\\res\\merged\\debug\\menu\\context_contact_list.xml",
-        "source": "D:\\chensaitao\\superwechat-zip\\ChatDemoUI\\app\\src\\main\\res\\menu\\context_contact_list.xml"
     }
 ]
