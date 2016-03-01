@@ -2,5 +2,9 @@
     {
         "merged": "D:\\chensaitao\\superwechat-zip\\ChatDemoUI\\app\\build\\intermediates\\res\\merged\\debug\\color\\main_botton_text_color.xml",
         "source": "D:\\chensaitao\\superwechat-zip\\ChatDemoUI\\app\\src\\main\\res\\color\\main_botton_text_color.xml"
+    },
+    {
+        "merged": "D:\\chensaitao\\fulishe\\AS_GIT\\fulicenter\\app\\build\\intermediates\\res\\merged\\debug\\color\\main_botton_text_color.xml",
+        "source": "D:\\chensaitao\\fulishe\\AS_GIT\\fulicenter\\app\\src\\main\\res\\color\\main_botton_text_color.xml"
     }
 ]

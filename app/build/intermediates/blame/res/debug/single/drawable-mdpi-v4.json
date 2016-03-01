@@ -1,7 +1,19 @@
 [
     {
+        "merged": "D:\\chensaitao\\fulishe\\AS_GIT\\fulicenter\\app\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi-v4\\ic_launcher.png",
+        "source": "D:\\chensaitao\\fulishe\\AS_GIT\\fulicenter\\app\\src\\main\\res\\drawable-mdpi\\ic_launcher.png"
+    },
+    {
         "merged": "D:\\chensaitao\\superwechat-zip\\ChatDemoUI\\app\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi-v4\\unread_count_bg.9.png",
         "source": "D:\\chensaitao\\superwechat-zip\\ChatDemoUI\\app\\src\\main\\res\\drawable-mdpi\\unread_count_bg.9.png"
+    },
+    {
+        "merged": "D:\\chensaitao\\fulishe\\AS_GIT\\fulicenter\\app\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi-v4\\pop_bg.9.png",
+        "source": "D:\\chensaitao\\fulishe\\AS_GIT\\fulicenter\\app\\src\\main\\res\\drawable-mdpi\\pop_bg.9.png"
+    },
+    {
+        "merged": "D:\\chensaitao\\fulishe\\AS_GIT\\fulicenter\\app\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi-v4\\pop_bg_press.9.png",
+        "source": "D:\\chensaitao\\fulishe\\AS_GIT\\fulicenter\\app\\src\\main\\res\\drawable-mdpi\\pop_bg_press.9.png"
     },
     {
         "merged": "D:\\chensaitao\\superwechat-zip\\ChatDemoUI\\app\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi-v4\\pop_bg_press.9.png",
@@ -10,6 +22,10 @@
     {
         "merged": "D:\\chensaitao\\superwechat-zip\\ChatDemoUI\\app\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi-v4\\ic_launcher.png",
         "source": "D:\\chensaitao\\superwechat-zip\\ChatDemoUI\\app\\src\\main\\res\\drawable-mdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "D:\\chensaitao\\fulishe\\AS_GIT\\fulicenter\\app\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi-v4\\unread_count_bg.9.png",
+        "source": "D:\\chensaitao\\fulishe\\AS_GIT\\fulicenter\\app\\src\\main\\res\\drawable-mdpi\\unread_count_bg.9.png"
     },
     {
         "merged": "D:\\chensaitao\\superwechat-zip\\ChatDemoUI\\app\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi-v4\\pop_bg.9.png",

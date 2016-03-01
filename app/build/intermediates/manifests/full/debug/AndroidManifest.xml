@@ -41,8 +41,7 @@
     <uses-permission android:name="cn.ucai.superwechat.permission.C2D_MESSAGE" />
 
     <application
-        name="cn.ucai.superwechat.SuperWeChatApplication"
-        android:name="com.android.tools.fd.runtime.BootstrapApplication"
+        android:name="cn.ucai.superwechat.SuperWeChatApplication"
         android:allowBackup="true"
         android:icon="@drawable/logo_uidemo"
         android:label="@string/app_name" >
