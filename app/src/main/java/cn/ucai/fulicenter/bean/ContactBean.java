@@ -14,17 +14,11 @@ public class ContactBean implements Serializable {
      * result : ok
      * myuid : 1001
      * cuid : 1002
-     * isGetMyLocation : false
-     * isShowMyLocation : false
      */
 
     private String result;
     private int myuid;
     private int cuid;
-    @JsonProperty("isGetMyLocation")
-    private boolean 	isGetMyLocation;
-    @JsonProperty("isShowMyLocation")
-    private boolean 	isShowMyLocation;
 
     public void setResult(String result) {
         this.result = result;
@@ -36,14 +30,6 @@ public class ContactBean implements Serializable {
 
     public void setCuid(int cuid) {
         this.cuid = cuid;
-    }
-
-    public void setIsGetMyLocation(boolean isGetMyLocation) {
-        this.isGetMyLocation = isGetMyLocation;
-    }
-
-    public void setIsShowMyLocation(boolean isShowMyLocation) {
-        this.isShowMyLocation = isShowMyLocation;
     }
 
     public String getResult() {
@@ -58,25 +44,13 @@ public class ContactBean implements Serializable {
         return cuid;
     }
 
-    @JsonIgnore
-    public boolean isGetMyLocation() {
-        return isGetMyLocation;
-    }
-
-    @JsonIgnore
-    public boolean isShowMyLocation() {
-        return isShowMyLocation;
-    }
-
     public ContactBean() {
     }
 
-    public ContactBean(String result, int myuid, int cuid, boolean isGetMyLocation, boolean isShowMyLocation) {
+    public ContactBean(String result, int myuid, int cuid) {
         this.result = result;
         this.myuid = myuid;
         this.cuid = cuid;
-        this.isGetMyLocation = isGetMyLocation;
-        this.isShowMyLocation = isShowMyLocation;
     }
 
     @Override
@@ -85,8 +59,6 @@ public class ContactBean implements Serializable {
                 "result='" + result + '\'' +
                 ", myuid=" + myuid +
                 ", cuid=" + cuid +
-                ", isGetMyLocation=" + isGetMyLocation +
-                ", isShowMyLocation=" + isShowMyLocation +
                 '}';
     }
 }

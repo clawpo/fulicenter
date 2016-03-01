@@ -49,8 +49,6 @@ public class UserDao extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(I.User.AVATAR, user.getAvatar());
         values.put(I.User.HEADER, user.getHeader());
-        values.put(I.User.LATITUDE, user.getLatitude());
-        values.put(I.User.LONGITUDE,user.getLongitude());
         values.put(I.User.NICK, user.getNick());
         values.put(I.User.PASSWORD, user.getPassword());
         values.put(I.User.UID,user.getId());
@@ -75,7 +73,7 @@ public class UserDao extends SQLiteOpenHelper {
             double longitude=c.getDouble(c.getColumnIndex(I.User.LONGITUDE));
             String password=c.getString(c.getColumnIndex(I.User.PASSWORD));
             int unreadMsgCount=c.getInt(c.getColumnIndex(I.User.UN_READ_MSG_COUNT));
-            UserBean user = new UserBean(uid, "ok", userName, nick, password, avatar, latitude, longitude, unreadMsgCount);
+            UserBean user = new UserBean(uid, "ok", userName, nick, password, avatar, unreadMsgCount);
             Log.e("main","UserDao.findUserByUserName.user="+user);
             return user;
         }
@@ -87,8 +85,6 @@ public class UserDao extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(I.User.AVATAR, user.getAvatar());
         values.put(I.User.HEADER, user.getHeader());
-        values.put(I.User.LATITUDE, user.getLatitude());
-        values.put(I.User.LONGITUDE,user.getLongitude());
         values.put(I.User.NICK, user.getNick());
         values.put(I.User.PASSWORD, user.getPassword());
         values.put(I.User.UID,user.getId());

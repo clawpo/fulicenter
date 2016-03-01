@@ -294,8 +294,6 @@
 		    android:screenOrientation="portrait"
 		    android:theme="@style/horizontal_slide" >
         </activity>
-        <activity 
-            android:name="cn.ucai.fulicenter.activity.NearPeopleActivity"/>
 
         <!-- 开机自启动服务 -->
         <receiver android:name="com.easemob.chat.StartServiceReceiver" >

@@ -14,10 +14,7 @@ public class UserBean implements Serializable {
      * nick : 张三
      * password : 1234
      * avatar : user_avatar/zhangsan.jpg
-     * groups : 2011
      * header : z
-     * latitude : 8.34
-     * longitude : 12.2
      * unreadMsgCount : 4
      */
 
@@ -27,10 +24,7 @@ public class UserBean implements Serializable {
     private String nick;
     private String password;
     private String avatar;
-    private String groups;
     private String header;
-    private double latitude;
-    private double longitude;
     private int unreadMsgCount;
 
     public void setId(int id) {
@@ -57,20 +51,9 @@ public class UserBean implements Serializable {
         this.avatar = avatar;
     }
 
-    public void setGroups(String groups) {
-        this.groups = groups;
-    }
 
     public void setHeader(String header) {
         this.header = header;
-    }
-
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
-    }
-
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
     }
 
     public void setUnreadMsgCount(int unreadMsgCount) {
@@ -101,20 +84,9 @@ public class UserBean implements Serializable {
         return avatar;
     }
 
-    public String getGroups() {
-        return groups;
-    }
 
     public String getHeader() {
         return header;
-    }
-
-    public double getLatitude() {
-        return latitude;
-    }
-
-    public double getLongitude() {
-        return longitude;
     }
 
     public int getUnreadMsgCount() {
@@ -134,15 +106,13 @@ public class UserBean implements Serializable {
         this.password = password;
     }
 
-    public UserBean(int id, String result, String userName, String nick, String password, String avatar, double latitude, double longitude, int unreadMsgCount) {
+    public UserBean(int id, String result, String userName, String nick, String password, String avatar, int unreadMsgCount) {
         this.id = id;
         this.result = result;
         this.userName = userName;
         this.nick = nick;
         this.password = password;
         this.avatar = avatar;
-        this.latitude = latitude;
-        this.longitude = longitude;
         this.unreadMsgCount = unreadMsgCount;
     }
 
@@ -155,10 +125,7 @@ public class UserBean implements Serializable {
                 ", nick='" + nick + '\'' +
                 ", password='" + password + '\'' +
                 ", avatar='" + avatar + '\'' +
-                ", groups='" + groups + '\'' +
                 ", header='" + header + '\'' +
-                ", latitude=" + latitude +
-                ", longitude=" + longitude +
                 ", unreadMsgCount=" + unreadMsgCount +
                 '}';
     }

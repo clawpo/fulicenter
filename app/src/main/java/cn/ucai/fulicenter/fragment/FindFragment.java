@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import cn.ucai.fulicenter.R;
-import cn.ucai.fulicenter.activity.NearPeopleActivity;
 
 public class FindFragment extends Fragment {
 
@@ -40,24 +39,5 @@ public class FindFragment extends Fragment {
 
     /** 附近人*/
     private void setNearPeopleClickListener(View layout) {
-        layout.findViewById(R.id.layoutNearPeople).setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String hint=getResources().getString(R.string.near_people_hint);
-                AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
-                builder.setTitle("附近人")
-                    .setMessage(hint)
-                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Intent intent=new Intent(getActivity(), NearPeopleActivity.class);
-                            startActivity(intent);
-                        }
-                    }).setNegativeButton("取消", null)
-                    .create().show();
-                    
-                
-            }
-        });
     }
 }
