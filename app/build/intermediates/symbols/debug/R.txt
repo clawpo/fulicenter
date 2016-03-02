@@ -452,6 +452,8 @@ int id btn_video_call 0x7f0d002b
 int id btn_voice_call 0x7f0d0029
 int id button_avatar 0x7f0d00d6
 int id button_uploadlog 0x7f0d0033
+int id cb_member_inviter 0x7f0d006b
+int id cb_public 0x7f0d0069
 int id chat_swipe_layout 0x7f0d002d
 int id chatting_click_area 0x7f0d0106
 int id chatting_content_iv 0x7f0d0107
@@ -460,8 +462,6 @@ int id chatting_size_iv 0x7f0d00a5
 int id chatting_status_btn 0x7f0d010a
 int id chatting_video_data_area 0x7f0d0108
 int id checkbox 0x7f0d00ef
-int id chkMemberInviter 0x7f0d006b
-int id chkPublic 0x7f0d0069
 int id chronometer 0x7f0d008c
 int id clear_all_history 0x7f0d003f
 int id container_remove 0x7f0d0013

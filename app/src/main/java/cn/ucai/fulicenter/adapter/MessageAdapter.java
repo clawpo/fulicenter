@@ -174,9 +174,6 @@ public class MessageAdapter extends BaseAdapter{
 		    if(id>0&&contactList!=null&&contactList.size()>0&&id<contactList.size()){
 		        mToUser = contactList.get(id);
 		    }
-		}else{
-		    HashMap<String, ArrayList<UserBean>> groupMembers = FuLiCenterApplication.getInstance().getGroupMembers();
-		    mGroupMembers = groupMembers.get(username);
 		}
 	}
 	

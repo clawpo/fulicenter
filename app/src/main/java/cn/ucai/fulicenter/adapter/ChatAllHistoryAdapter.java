@@ -78,7 +78,6 @@ public class ChatAllHistoryAdapter extends ArrayAdapter<EMConversation> {
     
     ContactChangeReceiver mReceiver;
     ChatAllHistoryAdapter mAdapter;
-    GroupListChangedReceiver mGroupListChangedReceiver;
     Context mContext;
     
     UserBean mUser;
@@ -99,7 +98,6 @@ public class ChatAllHistoryAdapter extends ArrayAdapter<EMConversation> {
 		registerContactChangeReceiver(context);
 		mUser = FuLiCenterApplication.getInstance().getUserBean();
 		mAdapter = this;
-		registerGroupListChangedReceiver();
 		Log.e(TAG,"ChatAllHistoryAdapter init..........");
 	}
 	
@@ -129,21 +127,12 @@ public class ChatAllHistoryAdapter extends ArrayAdapter<EMConversation> {
 
 
 
-    private void registerGroupListChangedReceiver() {
-        mGroupListChangedReceiver = new GroupListChangedReceiver();
-        IntentFilter filter = new IntentFilter("update_group");
-        mContext.registerReceiver(mGroupListChangedReceiver, filter);
-    }
-
     private void registerContactChangeReceiver(Context context) {
         mReceiver = new ContactChangeReceiver();
         IntentFilter filter = new IntentFilter("update_contacts");
         mContext.registerReceiver(mReceiver, filter);
     }
 
-    public void unRegisterGroupListChangedReceiver(){
-        mContext.unregisterReceiver(mGroupListChangedReceiver);
-    }
     
     @Override
 	public View getView(int position, View convertView, final ViewGroup parent) {
@@ -177,28 +166,28 @@ public class ChatAllHistoryAdapter extends ArrayAdapter<EMConversation> {
 		getContactList();
 		String path = null;
 		if (conversation.getType() == EMConversationType.GroupChat) {
-            Log.e(TAG,"getView,--------this is group,conversation.getUserName()="+conversation.getUserName());
-		    ArrayList<GroupBean> groupList = FuLiCenterApplication.getInstance().getGroupList();
-		    GroupBean currentGroup = null;
-		    for(GroupBean group:groupList){
-                Log.e(TAG,"getView,----for----group="+group.toString());
-		        if(group.getGroupId().equals(username)){
-		            currentGroup=group;
-                    Log.e(TAG,"getView,----YES----this is group,currentGroup="+currentGroup.toString());
-		            break;
-		        }
-		    }
-		    String groupName = null;
-		    if(currentGroup!=null){
-		        path = I.DOWNLOAD_AVATAR_URL+currentGroup.getAvatar();
-                Log.e(TAG,"getView,--------this is group,path="+path);
-		        groupName = currentGroup.getName();
-		        holder.name.setText(groupName);
-		    }
+//            Log.e(TAG,"getView,--------this is group,conversation.getUserName()="+conversation.getUserName());
+//		    ArrayList<GroupBean> groupList = FuLiCenterApplication.getInstance().getGroupList();
+//		    GroupBean currentGroup = null;
+//		    for(GroupBean group:groupList){
+//                Log.e(TAG,"getView,----for----group="+group.toString());
+//		        if(group.getGroupId().equals(username)){
+//		            currentGroup=group;
+//                    Log.e(TAG,"getView,----YES----this is group,currentGroup="+currentGroup.toString());
+//		            break;
+//		        }
+//		    }
+//		    String groupName = null;
+//		    if(currentGroup!=null){
+//		        path = I.DOWNLOAD_AVATAR_URL+currentGroup.getAvatar();
+//                Log.e(TAG,"getView,--------this is group,path="+path);
+//		        groupName = currentGroup.getName();
+//		        holder.name.setText(groupName);
+//		    }
 		} else if(conversation.getType() == EMConversationType.ChatRoom){
-		    holder.avatar.setImageResource(R.drawable.group_icon);
-            EMChatRoom room = EMChatManager.getInstance().getChatRoom(username);
-            holder.name.setText(room != null && !TextUtils.isEmpty(room.getName()) ? room.getName() : username);
+//		    holder.avatar.setImageResource(R.drawable.group_icon);
+//            EMChatRoom room = EMChatManager.getInstance().getChatRoom(username);
+//            holder.name.setText(room != null && !TextUtils.isEmpty(room.getName()) ? room.getName() : username);
 		}else {
 		    if(mConversationUserMap!=null&&mConversationUserMap.size()>0){
 	            UserBean u = mConversationUserMap.get(username);
@@ -467,12 +456,5 @@ public class ChatAllHistoryAdapter extends ArrayAdapter<EMConversation> {
         }
 	    
 	}
-	public class GroupListChangedReceiver extends BroadcastReceiver{
 
-        @Override
-        public void onReceive(Context context, Intent intent) {
-           mAdapter.notifyDataSetChanged();
-        }
-	    
-	}
 }

@@ -23,6 +23,7 @@ import com.easemob.EMCallBack;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import cn.ucai.fulicenter.bean.CartBean;
 import cn.ucai.fulicenter.bean.ContactBean;
 import cn.ucai.fulicenter.bean.GroupBean;
 import cn.ucai.fulicenter.bean.UserBean;
@@ -175,39 +176,14 @@ public class FuLiCenterApplication extends Application {
         this.contacts = contacts;
     }
     
-    private ArrayList<GroupBean> mGroupList = new ArrayList<GroupBean>();
+    private ArrayList<CartBean> cartList = new ArrayList<CartBean>();
 
-    public ArrayList<GroupBean> getGroupList() {
-        return mGroupList;
+    public ArrayList<CartBean> getCartList() {
+        return cartList;
     }
 
-    public void setGroupList(ArrayList<GroupBean> mGroupList) {
-        this.mGroupList = mGroupList;
+    public void setCartList(ArrayList<CartBean> cartList) {
+        this.cartList = cartList;
     }
-    
-    private ArrayList<GroupBean> mPublicGroupList = new ArrayList<GroupBean>();
-
-    public ArrayList<GroupBean> getPublicGroupList() {
-        return mPublicGroupList;
-    }
-
-    public void setPublicGroupList(ArrayList<GroupBean> mPublicGroupList) {
-        this.mPublicGroupList = mPublicGroupList;
-    }
-    
-    /**
-     * 缓存指定群成员的集合
-     */
-    private HashMap<String, ArrayList<UserBean>> mGroupMembers = new HashMap<String, ArrayList<UserBean>>();
-
-    public HashMap<String, ArrayList<UserBean>> getGroupMembers() {
-        return mGroupMembers;
-    }
-
-    public void setGroupMembers(HashMap<String, ArrayList<UserBean>> mGroupMembers) {
-        this.mGroupMembers = mGroupMembers;
-    }
-    
-    
     
 }

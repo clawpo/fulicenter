@@ -40,15 +40,15 @@ public class DownloadContactsTask extends AsyncTask<Void, Void, Boolean> {
 //        else{
 //            Toast.makeText(context,"服务器下载失败",Toast.LENGTH_SHORT).show();
 //        }
-        if(isSuccess){
-            ArrayList<GroupBean> groupList = FuLiCenterApplication.getInstance().getGroupList();
-            ArrayList<GroupBean>groups = NetUtil.downloadAllGroup(userName);
-            if(groups!=null){
-                groupList.addAll(groups);
-                Intent intent = new Intent("update_group");
-                context.sendBroadcast(intent);
-            }
-        }
+//        if(isSuccess){
+//            ArrayList<GroupBean> groupList = FuLiCenterApplication.getInstance().getGroupList();
+//            ArrayList<GroupBean>groups = NetUtil.downloadAllGroup(userName);
+//            if(groups!=null){
+//                groupList.addAll(groups);
+//                Intent intent = new Intent("update_group");
+//                context.sendBroadcast(intent);
+//            }
+//        }
         return isSuccess;
     }
     

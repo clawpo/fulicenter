@@ -870,17 +870,17 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 		public void onApplicationAccept(String groupId, String groupName, String accepter) {
 		    //以下两行代码，将登陆用户添加至groupName代表的群(服务端)
 		    String userName= FuLiCenterApplication.getInstance().getUserName();
-		    GroupBean group=NetUtil.addGroupMember(groupName, userName);
-		    if(group!=null){
-                //将新增的群添加至当前用户所属的群组集合中
-		        ArrayList<GroupBean> groupList = FuLiCenterApplication.getInstance().getGroupList();
-		        groupList.add(group);
-                //将新增的群成员的UserBean类型的对象添加至groupMembers集合中
-		        HashMap<String, ArrayList<UserBean>> groupMembers = FuLiCenterApplication.getInstance().getGroupMembers();
-		        ArrayList<UserBean> groupUsers = groupMembers.get(group.getGroupId());
-		        UserBean user = NetUtil.findUserByUserName(userName);
-		        groupUsers.add(user);
-		    }
+//		    GroupBean group=NetUtil.addGroupMember(groupName, userName);
+//		    if(group!=null){
+//                //将新增的群添加至当前用户所属的群组集合中
+//		        ArrayList<GroupBean> groupList = FuLiCenterApplication.getInstance().getGroupList();
+//		        groupList.add(group);
+//                //将新增的群成员的UserBean类型的对象添加至groupMembers集合中
+//		        HashMap<String, ArrayList<UserBean>> groupMembers = FuLiCenterApplication.getInstance().getGroupMembers();
+//		        ArrayList<UserBean> groupUsers = groupMembers.get(group.getGroupId());
+//		        UserBean user = NetUtil.findUserByUserName(userName);
+//		        groupUsers.add(user);
+//		    }
 
 			String st4 = getResources().getString(R.string.Agreed_to_your_group_chat_application);
 			// 加群申请被同意

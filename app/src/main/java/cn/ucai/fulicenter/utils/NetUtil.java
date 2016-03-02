@@ -22,17 +22,30 @@ import org.apache.http.message.BasicNameValuePair;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 
+import com.pingplusplus.model.Charge;
+
 import cn.ucai.fulicenter.FuLiCenterApplication;
 import cn.ucai.fulicenter.I;
 import cn.ucai.fulicenter.R;
+import cn.ucai.fulicenter.bean.BoutiqueBean;
+import cn.ucai.fulicenter.bean.CartBean;
+import cn.ucai.fulicenter.bean.CategoryChildBean;
+import cn.ucai.fulicenter.bean.CategoryGroupBean;
+import cn.ucai.fulicenter.bean.CollectBean;
+import cn.ucai.fulicenter.bean.ColorBean;
 import cn.ucai.fulicenter.bean.ContactBean;
+import cn.ucai.fulicenter.bean.GoodDetailsBean;
 import cn.ucai.fulicenter.bean.GroupBean;
 import cn.ucai.fulicenter.bean.MessageBean;
+import cn.ucai.fulicenter.bean.NewGoodBean;
+import cn.ucai.fulicenter.bean.PropertyBean;
 import cn.ucai.fulicenter.bean.UserBean;
 
 
@@ -281,385 +294,13 @@ public final class NetUtil {
 		}
 		return null;
 	}
-
-	/**
-	 * 上传当前用户的当前位置信息
-	 * 
-	 * @return
-	 */
-	public static boolean uploadLocation(UserBean user) {
-		MessageBean msg = new MessageBean(false, "上传位置失败");
-
-		ArrayList<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>();
-		params.add(new BasicNameValuePair(I.KEY_REQUEST,I.REQUEST_UPLOAD_LOCATION));
-		params.add(new BasicNameValuePair(I.User.USER_NAME, user.getUserName()));
-		params.add(new BasicNameValuePair(I.User.ID, user.getId() + ""));
-		try {
-			InputStream in = HttpUtils.getInputStream(FuLiCenterApplication.SERVER_ROOT, params,
-					HttpUtils.METHOD_GET);
-			ObjectMapper om = new ObjectMapper();
-			msg = om.readValue(in, MessageBean.class);
-            Log.e(TAG,"uploadLocation.msg="+msg);
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			HttpUtils.closeClient();
-		}
-		return msg.isSuccess();
-	}
-
-	/**
-	 * 下载指定范围的用户数据，目的：获取用户的地理位置信息
-	 * 
-	 * @param pageId
-	 * @param pageSize
-	 * @return
-	 */
-	public static ArrayList<UserBean> downloadLocation(String userName,int pageId, int pageSize) {
-		ArrayList<UserBean> users = null;
-
-		ArrayList<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>();
-		params.add(new BasicNameValuePair(I.KEY_REQUEST,I.REQUEST_DOWNLOAD_LOCATION));
-		params.add(new BasicNameValuePair(I.User.USER_NAME, userName));
-		params.add(new BasicNameValuePair(I.PAGE_ID, pageId + ""));
-		params.add(new BasicNameValuePair(I.PAGE_SIZE, pageSize + ""));
-		try {
-			InputStream in = HttpUtils.getInputStream(FuLiCenterApplication.SERVER_ROOT, params,
-					HttpUtils.METHOD_GET);
-			ObjectMapper om = new ObjectMapper();
-            if(in!=null){
-                Log.e(TAG,"NetUtils.downloadLocation.in="+in);
-                UserBean[] userArray = om.readValue(in, UserBean[].class);
-                Log.e(TAG,"NetUtils.downloadLocation.userArray="+userArray.length);
-                List<UserBean> list = Arrays.asList(userArray);
-                users = new ArrayList<UserBean>(list);
-            }
-		} catch (IllegalStateException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ClientProtocolException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			HttpUtils.closeClient();
-		}
-		return users;
-	}
-
-	/**
-	 * 向应用服务器上传当前群新增的所有成员的账号
-	 * 
-	 * @param groupName:群名
-	 * @param membersName：新增成员的账号数组
-	 */
-	public static boolean addGroupMembers(String groupName, String[] membersName) {
-		MessageBean msg=new MessageBean(false, "新增组成员失败");
-		StringBuilder newGroupMembers = new StringBuilder();
-		for (String member : membersName) {
-			newGroupMembers.append(member).append(",");
-		}
-		newGroupMembers.deleteCharAt(newGroupMembers.length() - 1);
-
-		ArrayList<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>();
-		params.add(new BasicNameValuePair(I.KEY_REQUEST,I.REQUEST_ADD_GROUP_MEMBERS));
-		params.add(new BasicNameValuePair(I.Group.GROUP_NAME, groupName));
-		params.add(new BasicNameValuePair(I.Group.MEMBERS, newGroupMembers.toString()));
-		try {
-			InputStream in=HttpUtils.getInputStream(FuLiCenterApplication.SERVER_ROOT,params,HttpUtils.METHOD_GET);
-			ObjectMapper om = new ObjectMapper();
-			msg = om.readValue(in, MessageBean.class);
-			return msg.isSuccess();
-		} catch (IllegalStateException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ClientProtocolException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			HttpUtils.closeClient();
-		}
-		return false;
-	}
-
-    /**
-     * 创建群,将群信息上传应用服务器
-     * 
-     * @param group：群名
-     */
-    public static boolean createGroup(GroupBean group) {
-        MessageBean msg=new MessageBean(false, FuLiCenterApplication.getInstance().getResources().getString(R.string.Create_groups_Failed));
-        String url= FuLiCenterApplication.SERVER_ROOT+"?"+I.KEY_REQUEST+"="+I.REQUEST_CREATE_GROUP;
-        HttpClient client=new DefaultHttpClient();
-        try {
-            HttpPost post=new HttpPost(url);
-            ObjectMapper om = new ObjectMapper();
-            String strGroup = om.writeValueAsString(group);
-            StringEntity entity=new StringEntity(strGroup,"utf-8");
-            entity.setContentType("application/json;charset=utf-8");
-            post.setEntity(entity);
-            HttpResponse response = client.execute(post);
-            if(response.getStatusLine().getStatusCode()==200){
-                msg = om.readValue(response.getEntity().getContent(), 
-                    MessageBean.class);
-                return msg.isSuccess();
-            }
-        } catch (IllegalStateException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (ClientProtocolException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } finally {
-            HttpUtils.closeClient();
-        }
-        return false;
-    }	
-	
-	/**
-	 * 将当前用户的账号添加到应用服务器的当前群,申请加群
-	 * 
-	 * @param groupName：群名
-	 * @param userName：用户名
-	 * @return true:添加成功
-	 */
-	public static GroupBean addGroupMember(String groupName, String userName) {
-		ArrayList<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>();
-		params.add(new BasicNameValuePair(I.KEY_REQUEST,I.REQUEST_ADD_GROUP_MEMBER));
-		params.add(new BasicNameValuePair(I.Group.GROUP_NAME, groupName));
-		params.add(new BasicNameValuePair(I.Group.MEMBERS, userName));
-		try {
-			InputStream in=HttpUtils.getInputStream(FuLiCenterApplication.SERVER_ROOT, params,HttpUtils.METHOD_GET);
-			ObjectMapper om = new ObjectMapper();
-			GroupBean group=om.readValue(in, GroupBean.class);
-			return group;
-		} catch (IllegalStateException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ClientProtocolException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}finally{
-			HttpUtils.closeClient();
-		}
-		return null;
-	}
-
-	/**
-	 * 修改群昵称
-	 * 
-	 * @param groupName:群名
-	 * @param groupNick：群昵称
-	 */
-	public static boolean updateGroupName(String groupName, String groupNewName) {
-		ArrayList<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>();
-		params.add(new BasicNameValuePair(I.KEY_REQUEST,I.REQUEST_UPDATE_GROUP_NAME));
-		params.add(new BasicNameValuePair(I.Group.GROUP_NAME, groupName));
-		params.add(new BasicNameValuePair(I.Group.NEW_NAME, groupNewName));
-		try {
-			InputStream in = HttpUtils.getInputStream(FuLiCenterApplication.SERVER_ROOT, params,
-					HttpUtils.METHOD_GET);
-			ObjectMapper om = new ObjectMapper();
-			MessageBean msg = om.readValue(in, MessageBean.class);
-			return msg.isSuccess();
-		} catch (IllegalStateException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ClientProtocolException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			HttpUtils.closeClient();
-		}
-		return false;
-	}
-
-	/**
-	 * 下载所有群成员
-	 * 
-	 * @param noContactGroupMember
-	 * @return
-	 */
-	public static ArrayList<UserBean> downloadGroupMembers(String groupId) {
-		ArrayList<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>();
-		params.add(new BasicNameValuePair(I.KEY_REQUEST,I.REQUEST_DOWNLOAD_GROUP_MEMBERS));
-		params.add(new BasicNameValuePair(I.Group.GROUP_ID, groupId));
-		try {
-			InputStream in = HttpUtils.getInputStream(FuLiCenterApplication.SERVER_ROOT, params,
-					HttpUtils.METHOD_GET);
-			ObjectMapper om = new ObjectMapper();
-			UserBean[] userArray = om.readValue(in, UserBean[].class);
-			Log.e(TAG,"NetUtil.downloadGroupMembers.userArray="+userArray.length);
-			List<UserBean> list = Arrays.asList(userArray);
-			Log.e(TAG,"NetUtil.downloadGroupMembers.list="+list.size());
-			ArrayList<UserBean> users = new ArrayList<UserBean>(list);
-			Log.e(TAG,"NetUtil.downloadGroupMembers.userArray="+users.size());
-			return users;
-		} catch (IllegalStateException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ClientProtocolException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			HttpUtils.closeClient();
-		}
-
-		return null;
-	}
-
-	/**
-	 * 删除群成员,T群
-	 * 
-	 * @param groupName
-	 * @param userName
-	 */
-	public static boolean deleteGroupMember(String groupName, String userName) {
-
-		ArrayList<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>();
-		params.add(new BasicNameValuePair(I.KEY_REQUEST,I.REQUEST_DELETE_GROUP_MEMBER));
-		params.add(new BasicNameValuePair(I.Group.GROUP_NAME, groupName));
-		params.add(new BasicNameValuePair(I.Group.MEMBERS, userName));
-		try {
-			InputStream in = HttpUtils.getInputStream(FuLiCenterApplication.SERVER_ROOT, params,
-					HttpUtils.METHOD_GET);
-			ObjectMapper om = new ObjectMapper();
-			Boolean isSuccess = om.readValue(in, Boolean.class);
-			return isSuccess;
-		} catch (IllegalStateException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ClientProtocolException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			HttpUtils.closeClient();
-		}
-		return false;
-	}
-
-	/**
-	 * 向服务端发送解散指定群的请求
-	 * 
-	 * @param groupName
-	 */
-	public static boolean deleteGroup(String groupName) {
-		MessageBean msg=new MessageBean(false, "解散群失败");
-		ArrayList<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>();
-		params.add(new BasicNameValuePair(I.KEY_REQUEST, I.REQUEST_DELETE_GROUP));
-		params.add(new BasicNameValuePair(I.Group.GROUP_NAME, groupName));
-		try {
-			InputStream in = HttpUtils.getInputStream(FuLiCenterApplication.SERVER_ROOT, params,
-				HttpUtils.METHOD_GET);
-			ObjectMapper om = new ObjectMapper();
-			msg = om.readValue(in, MessageBean.class);
-			return msg.isSuccess();
-		} catch (IllegalStateException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ClientProtocolException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			HttpUtils.closeClient();
-		}
-		return false;
-	}
-
-	/**
-	 * 从应用服务器下载userName的所有群组
-	 * 
-	 * @return
-	 */
-	public static ArrayList<GroupBean> downloadAllGroup(String userName) {
-
-		ArrayList<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>();
-		params.add(new BasicNameValuePair(I.KEY_REQUEST,I.REQUEST_DOWNLOAD_GROUPS));
-		params.add(new BasicNameValuePair(I.User.USER_NAME, userName));
-		try {
-			InputStream in=HttpUtils.getInputStream(FuLiCenterApplication.SERVER_ROOT,params,HttpUtils.METHOD_GET);
-			ObjectMapper om = new ObjectMapper();
-			GroupBean[] groupArray = om.readValue(in, GroupBean[].class);
-			if(groupArray==null){
-				return null;
-			}
-			String json = om.writeValueAsString(groupArray);
-			List<GroupBean> list = Arrays.asList(groupArray);
-			ArrayList<GroupBean> groups = new ArrayList<GroupBean>(list);
-			return groups;
-		} catch (IllegalStateException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ClientProtocolException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			HttpUtils.closeClient();
-		}
-		return null;
-	}
-
-	/**
-	 * 下载所有公开群
-	 */
-	public static ArrayList<GroupBean> findPublicGroup(String userName,int pageId,int pageSize) {
-	    ArrayList<GroupBean> publicGroupList=null;
-		ArrayList<BasicNameValuePair> params=new ArrayList<BasicNameValuePair>();
-		params.add(new BasicNameValuePair(I.KEY_REQUEST, I.REQUEST_FIND_PUBLIC_GROUPS));
-		params.add(new BasicNameValuePair(I.User.USER_NAME, userName));
-		params.add(new BasicNameValuePair(I.PAGE_ID, ""+pageId));
-		params.add(new BasicNameValuePair(I.PAGE_SIZE, ""+pageSize));
-		try {
-			InputStream in = HttpUtils.getInputStream(FuLiCenterApplication.SERVER_ROOT, params, HttpUtils.METHOD_GET);
-			ObjectMapper om=new ObjectMapper();
-			GroupBean[] groups = om.readValue(in, GroupBean[].class);
-			if(groups!=null){
-			    publicGroupList=Utils.array2List(groups);
-			}
-		} catch (IllegalStateException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ClientProtocolException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}finally{
-			HttpUtils.closeClient();
-		}
-		return publicGroupList;
-	}
 	
 	/**
 	 * 下载联系人->HashMap<Integer,ContactBean>
-	 * @param url
+	 * @param instance
+	 * @param userName
+	 * @param pageId
+	 * @param pageSize
 	 */
 	public static boolean downloadContacts(FuLiCenterApplication instance, String userName, int pageId, int pageSize){
 		ArrayList<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>();
@@ -799,24 +440,46 @@ public final class NetUtil {
         }
         return msg;
     }
-	
+
     /**
-     *查询指定群名称的群
-     * @param groupName
-     * @return 
+     * 下载新品首页或精选二级页面的商品信息
+     * @param catId:新品或精选的下载请求
+     * @param pageId
+     * @param pageSize
+     * @return
+     * @throws Exception
      */
-    public static GroupBean findGroupByName(String groupName){
-//		if(isServerConnectioned()){
-//			return null;
-//		}
+    public static ArrayList<NewGoodBean> findNewandBoutiqueGoods(int catId, int pageId, int pageSize) throws Exception {
         ArrayList<BasicNameValuePair> params=new ArrayList<BasicNameValuePair>();
-        params.add(new BasicNameValuePair(I.KEY_REQUEST, I.REQUEST_FIND_GROUP));
-        params.add(new BasicNameValuePair(I.Group.NAME, groupName));
+        params.add(new BasicNameValuePair(I.KEY_REQUEST, I.REQUEST_FIND_NEW_BOUTIQUE_GOODS));
+        params.add(new BasicNameValuePair(I.NewAndBoutiqueGood.CAT_ID, catId+""));
+        params.add(new BasicNameValuePair(I.PAGE_ID, pageId+""));
+        params.add(new BasicNameValuePair(I.PAGE_SIZE, pageSize+""));
+        InputStream in;
+        in = HttpUtils.getInputStream(FuLiCenterApplication.SERVER_ROOT, params, HttpUtils.METHOD_GET);
+        ObjectMapper om=new ObjectMapper();
+        NewGoodBean[] goodArray = om.readValue(in,NewGoodBean[].class);
+        ArrayList<NewGoodBean> goods = Utils.array2List(goodArray);
+        Log.i("main","新品加载完成");
+        HttpUtils.closeClient();
+        return goods;
+    }
+
+    /**
+     * 下载商品详情
+     * @param goodsId
+     * @return
+     */
+    public static GoodDetailsBean findGoodDetails(int goodsId) {
+        HttpUtils httpUtils=new HttpUtils();
+        ArrayList<BasicNameValuePair> params=new ArrayList<BasicNameValuePair>();
+        params.add(new BasicNameValuePair(I.KEY_REQUEST, I.REQUEST_FIND_GOOD_DETAILS));
+        params.add(new BasicNameValuePair(I.CategoryGood.GOODS_ID, ""+goodsId));
         try {
-            InputStream in = HttpUtils.getInputStream(FuLiCenterApplication.SERVER_ROOT, params, HttpUtils.METHOD_GET);
+            InputStream in = httpUtils.getInputStream(FuLiCenterApplication.SERVER_ROOT, params, HttpUtils.METHOD_GET);
             ObjectMapper om=new ObjectMapper();
-            GroupBean group = om.readValue(in, GroupBean.class);
-            return group;
+            GoodDetailsBean goodDetails = om.readValue(in, GoodDetailsBean.class);
+            return goodDetails;
         } catch (IllegalStateException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -827,20 +490,450 @@ public final class NetUtil {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }finally{
-            HttpUtils.closeClient();
+            httpUtils.closeClient();
         }
         return null;
     }
-//
-//	public static boolean isServerConnectioned(){
-//		final String st2 = FuLiCenterApplication.applicationContext.getResources().getString(R.string.the_current_network);
-//		//添加本地服务器连接监听
-//		boolean localConnectioned = NetUtil.getServerStatus().isSuccess();
-//		Log.e("main", "MainActivity.MyConnectionListener.localConnectioned=" + localConnectioned);
-//		if (!localConnectioned) {
-//			Log.e("main", "MainActivity.MyConnectionListener.localConnectioned is false,show the popu");
-//			Toast.makeText(FuLiCenterApplication.applicationContext,st2,Toast.LENGTH_LONG).show();
-//		}
-//		return localConnectioned;
-//	}
+
+    /**
+     * 查询指定商品是否已被收藏
+     * @param goodsId
+     */
+    public static boolean isCollect(String userName,int goodsId) {
+        
+        HttpUtils httpUtils=new HttpUtils();
+        ArrayList<BasicNameValuePair> params=new ArrayList<BasicNameValuePair>();
+        params.add(new BasicNameValuePair(I.KEY_REQUEST, I.REQUEST_IS_COLLECT));
+        params.add(new BasicNameValuePair(I.User.USER_NAME, userName));
+        params.add(new BasicNameValuePair(I.Collect.GOODS_ID, goodsId+""));
+        try {
+            InputStream in = httpUtils.getInputStream(FuLiCenterApplication.SERVER_ROOT, params, HttpUtils.METHOD_GET);
+            ObjectMapper om=new ObjectMapper();
+            MessageBean msg = om.readValue(in, MessageBean.class);
+            return msg.isSuccess();
+        } catch (IllegalStateException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (ClientProtocolException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }finally{
+            httpUtils.closeClient();
+        }
+        return false;
+    }
+
+    /**
+     * 添加收藏
+     * @param userName:用户账号
+     * @param good：商品id
+     */
+    public static MessageBean addCollect(String userName, GoodDetailsBean good) {
+        HttpUtils httpUtils=new HttpUtils();
+        ArrayList<BasicNameValuePair> params=new ArrayList<BasicNameValuePair>();
+        params.add(new BasicNameValuePair(I.KEY_REQUEST, I.REQUEST_ADD_COLLECT));
+        params.add(new BasicNameValuePair(I.User.USER_NAME, userName));
+        params.add(new BasicNameValuePair(I.Collect.GOODS_ID, ""+good.getGoodsId()));
+        params.add(new BasicNameValuePair(I.Collect.GOODS_NAME, good.getGoodsName()));
+        params.add(new BasicNameValuePair(I.Collect.GOODS_ENGLISH_NAME, good.getGoodsEnglishName()));
+        params.add(new BasicNameValuePair(I.Collect.GOODS_THUMB, good.getGoodsThumb()));
+        params.add(new BasicNameValuePair(I.Collect.GOODS_IMG, good.getGoodsImg()));
+        params.add(new BasicNameValuePair(I.Collect.ADD_TIME, good.getAddTime()+""));
+        try {
+            InputStream in = httpUtils.getInputStream(FuLiCenterApplication.SERVER_ROOT, params, HttpUtils.METHOD_GET);
+            ObjectMapper om=new ObjectMapper();
+            MessageBean msg = om.readValue(in, MessageBean.class);
+            return msg;
+        } catch (IllegalStateException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (ClientProtocolException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }finally{
+            httpUtils.closeClient();
+        }
+        return null;
+    }
+    /**
+     * 取消收藏
+     * @param userName:用户账号
+     * @param goodsId：商品id
+     */
+    public static MessageBean deleteCollect(String userName, int goodsId) {
+        HttpUtils httpUtils=new HttpUtils();
+        ArrayList<BasicNameValuePair> params=new ArrayList<BasicNameValuePair>();
+        params.add(new BasicNameValuePair(I.KEY_REQUEST, I.REQUEST_DELETE_COLLECT));
+        params.add(new BasicNameValuePair(I.User.USER_NAME, userName));
+        params.add(new BasicNameValuePair(I.Collect.GOODS_ID, ""+goodsId));
+        try {
+            InputStream in = httpUtils.getInputStream(FuLiCenterApplication.SERVER_ROOT, params, HttpUtils.METHOD_GET);
+            ObjectMapper om=new ObjectMapper();
+            MessageBean msg = om.readValue(in, MessageBean.class);
+            return msg;
+        } catch (IllegalStateException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (ClientProtocolException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }finally{
+            httpUtils.closeClient();
+        }
+        return null;
+    }
+
+    /**
+     * 下载精选首页数据
+     */
+    public static ArrayList<BoutiqueBean> findBoutiqueList() {
+        ArrayList<BoutiqueBean> list=null;
+        HttpUtils httpUtils=new HttpUtils();
+        ArrayList<BasicNameValuePair> params=new ArrayList<BasicNameValuePair>();
+        params.add(new BasicNameValuePair(I.KEY_REQUEST, I.REQUEST_FIND_BOUTIQUES));
+        
+        try {
+            InputStream in = httpUtils.getInputStream(FuLiCenterApplication.SERVER_ROOT, params, HttpUtils.METHOD_GET);
+            ObjectMapper om=new ObjectMapper();
+            BoutiqueBean[] ary = om.readValue(in, BoutiqueBean[].class);
+            list=Utils.array2List(ary);
+        } catch (IllegalStateException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (ClientProtocolException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }finally{
+            httpUtils.closeClient();
+        }
+        return list;
+    }
+
+    /**
+     * 下载分类中的大类数据
+     * @return
+     */
+    public static ArrayList<CategoryGroupBean> findCategoryGroup() {
+        HttpUtils httpUtils=new HttpUtils();
+        ArrayList<BasicNameValuePair> params=new ArrayList<BasicNameValuePair>();
+        params.add(new BasicNameValuePair(I.KEY_REQUEST, I.REQUEST_FIND_CATEGORY_GROUP));
+        try {
+            InputStream in = httpUtils.getInputStream(FuLiCenterApplication.SERVER_ROOT, params, HttpUtils.METHOD_GET);
+            ObjectMapper om=new ObjectMapper();
+            CategoryGroupBean[] groups = om.readValue(in, CategoryGroupBean[].class);
+            ArrayList<CategoryGroupBean> groupList = Utils.array2List(groups);
+            return groupList;
+        } catch (IllegalStateException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (ClientProtocolException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }finally{
+            httpUtils.closeClient();
+        }
+        return null;
+    }
+
+    public static ArrayList<CategoryChildBean> findCategoryChild(int parentId, int pageId, int pageSize) {
+        HttpUtils httpUtils=new HttpUtils();
+        ArrayList<BasicNameValuePair> params=new ArrayList<BasicNameValuePair>();
+        params.add(new BasicNameValuePair(I.KEY_REQUEST, I.REQUEST_FIND_CATEGORY_CHILDREN));
+        params.add(new BasicNameValuePair(I.CategoryChild.PARENT_ID, parentId+""));
+        params.add(new BasicNameValuePair(I.PAGE_ID, ""+pageId));
+        params.add(new BasicNameValuePair(I.PAGE_SIZE, ""+pageSize));
+        try {
+            InputStream in = httpUtils.getInputStream(FuLiCenterApplication.SERVER_ROOT, params, HttpUtils.METHOD_GET);
+            ObjectMapper om=new ObjectMapper();
+            CategoryChildBean[] children = om.readValue(in, CategoryChildBean[].class);
+            ArrayList<CategoryChildBean> childList =Utils.array2List(children);
+            return childList;
+        } catch (IllegalStateException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (ClientProtocolException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }finally{
+            httpUtils.closeClient();
+        }
+        return null;
+    }
+    
+    
+    /**
+     * 下载商品详情的集合
+     * 分类二级页面中颜色按钮下拉列表项被选择时，
+     * 分类二级页面:下载一组商品信息
+     * @param pageId
+     * @param pageSize
+     * @return
+     * @throws Exception
+     */
+    public static ArrayList<NewGoodBean> findGoodsDetails(Context context, int catId, int pageId, int pageSize) throws Exception {
+        ArrayList<BasicNameValuePair> params=new ArrayList<BasicNameValuePair>();
+        params.add(new BasicNameValuePair(I.KEY_REQUEST, I.REQUEST_FIND_GOODS_DETAILS));
+        params.add(new BasicNameValuePair(I.NewAndBoutiqueGood.CAT_ID, catId+""));
+        params.add(new BasicNameValuePair(I.PAGE_ID, pageId+""));
+        params.add(new BasicNameValuePair(I.PAGE_SIZE, pageSize+""));
+        InputStream in;
+        in = HttpUtils.getInputStream(FuLiCenterApplication.SERVER_ROOT, params, HttpUtils.METHOD_GET);
+        ObjectMapper om=new ObjectMapper();
+        GoodDetailsBean[] goodArray = om.readValue(in,GoodDetailsBean[].class);
+        ArrayList<GoodDetailsBean> goods = Utils.array2List(goodArray);
+        
+        //将GoodDetailsBean类型的集合转换为NewGoodBean类型的集合
+        ArrayList<NewGoodBean> goodList=new ArrayList<NewGoodBean>();
+        for(int i=0;i<goods.size();i++){
+            GoodDetailsBean goodDetails = goods.get(i);
+            NewGoodBean good=new NewGoodBean();
+            good.setAddTime(goodDetails.getAddTime());
+            good.setCatId(goodDetails.getCatId());
+            PropertyBean p = goodDetails.getProperties()[0];
+            good.setColorCode(p.getColorCode());
+            good.setColorId(p.getColorId());
+            good.setColorName(p.getColorName());
+            good.setColorUrl(p.getColorUrl());
+            good.setCurrencyPrice(goodDetails.getCurrencyPrice());
+            good.setGoodsBrief(goodDetails.getGoodsBrief());
+            good.setGoodsEnglishName(goodDetails.getGoodsEnglishName());
+            good.setGoodsId(goodDetails.getGoodsId());
+            good.setGoodsImg(goodDetails.getGoodsImg());
+            good.setGoodsName(goodDetails.getGoodsName());
+            good.setGoodsThumb(goodDetails.getGoodsThumb());
+            good.setId(goodDetails.getId());
+            good.setIsPromote(goodDetails.isPromote());
+            good.setPromotePrice(goodDetails.getPromotePrice());
+            good.setRankPrice(goodDetails.getRankPrice());
+            good.setShopPrice(goodDetails.getShopPrice());
+            goodList.add(good);
+        }
+        HttpUtils.closeClient();
+        //向CatgeoryChildActivity发送
+        context.sendBroadcast(new Intent("good_details_update")
+            .putExtra("goods_details", goods));
+        return goodList;
+    }
+
+    /**
+     * 下载指定catId的颜色列表
+     * @param catId
+     * @return
+     */
+    public static ArrayList<ColorBean> findColors(int catId) {
+        ArrayList<ColorBean> colorList=null;
+        HttpUtils httpUtils=new HttpUtils();
+        ArrayList<BasicNameValuePair> params=new ArrayList<BasicNameValuePair>();
+        params.add(new BasicNameValuePair(I.KEY_REQUEST, I.REQUEST_FIND_COLOR_LIST));
+        params.add(new BasicNameValuePair(I.Color.CAT_ID, ""+catId));
+        try {
+            InputStream in = httpUtils.getInputStream(FuLiCenterApplication.SERVER_ROOT, params, HttpUtils.METHOD_GET);
+            ObjectMapper om=new ObjectMapper();
+            ColorBean[] array = om.readValue(in, ColorBean[].class);
+            colorList=Utils.array2List(array);
+        } catch (IllegalStateException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (ClientProtocolException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }finally{
+            httpUtils.closeClient();
+        }
+        return colorList;
+    }
+
+    /**
+     * 将修改的昵称长传至服务器
+     * @param nick
+     */
+    public static boolean uploadNick(String nick,String userName) {
+        
+        HttpUtils httpUtils=new HttpUtils();
+        ArrayList<BasicNameValuePair> params=new ArrayList<BasicNameValuePair>();
+        params.add(new BasicNameValuePair(I.KEY_REQUEST, I.REQUEST_UPLOAD_NICK));
+        params.add(new BasicNameValuePair(I.User.USER_NAME, userName));
+        params.add(new BasicNameValuePair(I.User.NICK, nick));
+        try {
+            InputStream in = httpUtils.getInputStream(FuLiCenterApplication.SERVER_ROOT, params, HttpUtils.METHOD_GET);
+            ObjectMapper om=new ObjectMapper();
+            MessageBean msg = om.readValue(in, MessageBean.class);
+            return msg.isSuccess();
+        } catch (IllegalStateException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (ClientProtocolException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }finally{
+            httpUtils.closeClient();
+        }
+        return false;
+    }
+
+    /**
+     * 下载收藏商品
+     * @param userName：当前用户账号
+     * @return
+     */
+    public static ArrayList<CollectBean> findCollects(String userName, int pageId, int pageSize) {
+        ArrayList<CollectBean> collectList=null;
+        
+        HttpUtils httpUtils=new HttpUtils();
+        ArrayList<BasicNameValuePair> params=new ArrayList<BasicNameValuePair>();
+        params.add(new BasicNameValuePair(I.KEY_REQUEST, I.REQUEST_FIND_COLLECTS));
+        params.add(new BasicNameValuePair(I.User.USER_NAME, userName));
+        params.add(new BasicNameValuePair(I.PAGE_ID, pageId+""));
+        params.add(new BasicNameValuePair(I.PAGE_SIZE, pageSize+""));
+        try {
+            InputStream in= httpUtils.getInputStream(FuLiCenterApplication.SERVER_ROOT, params, HttpUtils.METHOD_GET);
+            ObjectMapper om=new ObjectMapper();
+            CollectBean[] array = om.readValue(in, CollectBean[].class);
+            collectList=Utils.array2List(array);
+        } catch (IllegalStateException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (ClientProtocolException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }finally{
+            httpUtils.closeClient();
+        }
+        return collectList;
+    }
+
+    public static ArrayList<CartBean> findcartList(String userName, int pageId, int pageSize) {
+        HttpUtils httpUtils=new HttpUtils();
+        ArrayList<BasicNameValuePair> params=new ArrayList<BasicNameValuePair>();
+        params.add(new BasicNameValuePair(I.KEY_REQUEST, I.REQUEST_FIND_CARTS));
+        params.add(new BasicNameValuePair(I.User.USER_NAME, userName));
+        params.add(new BasicNameValuePair(I.PAGE_ID, pageId + ""));
+        params.add(new BasicNameValuePair(I.PAGE_SIZE, pageSize + ""));
+        try {
+            InputStream in = httpUtils.getInputStream(FuLiCenterApplication.SERVER_ROOT, params, HttpUtils.METHOD_GET);
+            ObjectMapper om=new ObjectMapper();
+            CartBean[] array = om.readValue(in, CartBean[].class);
+            ArrayList<CartBean> cartList = Utils.array2List(array);
+            return cartList;
+        } catch (IllegalStateException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (ClientProtocolException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }finally{
+            httpUtils.closeClient();
+        }
+        return null;
+    }
+
+    public static int addCart(CartBean cart) {
+        HttpUtils httpUtils=new HttpUtils();
+        ArrayList<BasicNameValuePair> params=new ArrayList<BasicNameValuePair>();
+        params.add(new BasicNameValuePair(I.KEY_REQUEST, I.REQUEST_ADD_CART));
+        params.add(new BasicNameValuePair(I.Cart.COUNT, cart.getCount()+""));
+        params.add(new BasicNameValuePair(I.Cart.GOODS_ID, cart.getGoodsId()+""));
+        params.add(new BasicNameValuePair(I.Cart.IS_CHECKED, cart.isIsChecked()+""));
+        params.add(new BasicNameValuePair(I.Cart.USER_NAME, cart.getUserName()));
+        try {
+            InputStream in = httpUtils.getInputStream(FuLiCenterApplication.SERVER_ROOT, params, HttpUtils.METHOD_GET);
+            ObjectMapper om=new ObjectMapper();
+            Integer id = om.readValue(in, Integer.class);
+            return id;
+        } catch (IllegalStateException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (ClientProtocolException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }finally{
+            httpUtils.closeClient();
+        }
+        return 0;
+    }
+
+    /**
+     * 修改服务端指定用户的购物车中的商品件数
+     * @param cartId
+     * @param count
+     * @return
+     */
+    public static boolean updateCart(int cartId, int count) {
+        HttpUtils httpUtils=new HttpUtils();
+        ArrayList<BasicNameValuePair> params=new ArrayList<BasicNameValuePair>();
+        params.add(new BasicNameValuePair(I.KEY_REQUEST, I.REQUEST_UPDATE_CART));
+        params.add(new BasicNameValuePair(I.Cart.COUNT, count+""));
+        params.add(new BasicNameValuePair(I.Cart.ID, cartId+""));
+        try {
+            InputStream in = httpUtils.getInputStream(FuLiCenterApplication.SERVER_ROOT, params, HttpUtils.METHOD_GET);
+            ObjectMapper om=new ObjectMapper();
+            MessageBean msg= om.readValue(in, MessageBean.class);
+            return msg.isSuccess();
+        } catch (IllegalStateException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (ClientProtocolException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }finally{
+            httpUtils.closeClient();
+        }
+        return false;
+    }
+
+    public static HashMap<String, Object> findCharege(){
+        HashMap chargeMap =null;
+        HttpUtils httpUtils=new HttpUtils();
+        ArrayList<BasicNameValuePair> params=new ArrayList<BasicNameValuePair>();
+        params.add(new BasicNameValuePair(I.KEY_REQUEST, I.REQUEST_FIND_CHARGE));
+        Charge charge = null;
+        try {
+            InputStream in = httpUtils.getInputStream(FuLiCenterApplication.SERVER_ROOT, params, HttpUtils.METHOD_GET);
+            ObjectMapper om=new ObjectMapper();
+//          以下的解析方式不成立
+            chargeMap = om.readValue(in, HashMap.class);
+            Log.i("main",chargeMap.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }finally{
+            httpUtils.closeClient();
+        }
+        return chargeMap;
+    }
 }

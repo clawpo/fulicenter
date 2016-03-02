@@ -726,6 +726,8 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int btn_voice_call=0x7f0d0029;
         public static final int button_avatar=0x7f0d00d6;
         public static final int button_uploadlog=0x7f0d0033;
+        public static final int cb_member_inviter=0x7f0d006b;
+        public static final int cb_public=0x7f0d0069;
         public static final int chat_swipe_layout=0x7f0d002d;
         public static final int chatting_click_area=0x7f0d0106;
         public static final int chatting_content_iv=0x7f0d0107;
@@ -734,8 +736,6 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int chatting_status_btn=0x7f0d010a;
         public static final int chatting_video_data_area=0x7f0d0108;
         public static final int checkbox=0x7f0d00ef;
-        public static final int chkMemberInviter=0x7f0d006b;
-        public static final int chkPublic=0x7f0d0069;
         public static final int chronometer=0x7f0d008c;
         public static final int clear_all_history=0x7f0d003f;
         public static final int container_remove=0x7f0d0013;

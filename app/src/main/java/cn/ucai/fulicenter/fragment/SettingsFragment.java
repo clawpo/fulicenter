@@ -365,8 +365,8 @@ public class SettingsFragment extends Fragment implements OnClickListener {
 			    FuLiCenterApplication instance = FuLiCenterApplication.getInstance();
 			    instance.getContactList().clear();
 			    instance.getContacts().clear();
-			    instance.getGroupList().clear();
-			    instance.getGroupMembers().clear();
+//			    instance.getGroupList().clear();
+//			    instance.getGroupMembers().clear();
 				getActivity().runOnUiThread(new Runnable() {
 					public void run() {
 						pd.dismiss();

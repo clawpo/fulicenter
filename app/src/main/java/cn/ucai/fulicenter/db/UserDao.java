@@ -32,8 +32,6 @@ public class UserDao extends SQLiteOpenHelper {
                 + I.User.NICK+" varchar,"
                 + I.User.AVATAR+" varchar,"
                 + I.User.HEADER+" varchar,"
-                + I.User.LATITUDE+" double,"
-                + I.User.LONGITUDE+" double,"
                 + I.User.PASSWORD+" varchar,"
                 + I.User.UN_READ_MSG_COUNT+" int)";
         db.execSQL(sql);
@@ -68,9 +66,6 @@ public class UserDao extends SQLiteOpenHelper {
             int uid = c.getInt(c.getColumnIndex(I.User.UID));
             String nick=c.getString(c.getColumnIndex(I.User.NICK));
             String avatar=c.getString(c.getColumnIndex(I.User.AVATAR));
-            String header=c.getString(c.getColumnIndex(I.User.HEADER));
-            double latitude=c.getDouble(c.getColumnIndex(I.User.LATITUDE));
-            double longitude=c.getDouble(c.getColumnIndex(I.User.LONGITUDE));
             String password=c.getString(c.getColumnIndex(I.User.PASSWORD));
             int unreadMsgCount=c.getInt(c.getColumnIndex(I.User.UN_READ_MSG_COUNT));
             UserBean user = new UserBean(uid, "ok", userName, nick, password, avatar, unreadMsgCount);

@@ -40,85 +40,42 @@ import cn.ucai.fulicenter.utils.NetUtil;
 import cn.ucai.fulicenter.utils.Utils;
 
 public class NewGroupActivity extends BaseActivity {
-	private EditText metGroupName;
+	private EditText groupNameEditText;
 	private ProgressDialog progressDialog;
 	private EditText introductionEditText;
-	private CheckBox mchkPublic;
-	private CheckBox mchkMemberInviter;
+	private CheckBox checkBox;
+	private CheckBox memberCheckbox;
 	private LinearLayout openInviteContainer;
-	static final int ACTION_CREATE_GROUP = 100;
-	NewGroupActivity mContext;
-	OnSetAvatarListener mOnSetAvatarListener;
-	ImageView mivAvatar;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mContext=this;
 		setContentView(R.layout.activity_new_group);
-		initView();
-		setListener();
+		groupNameEditText = (EditText) findViewById(R.id.edit_group_name);
+		introductionEditText = (EditText) findViewById(R.id.edit_group_introduction);
+		checkBox = (CheckBox) findViewById(R.id.cb_public);
+		memberCheckbox = (CheckBox) findViewById(R.id.cb_member_inviter);
+		openInviteContainer = (LinearLayout) findViewById(R.id.ll_open_invite);
+
+		checkBox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				if(isChecked){
+					openInviteContainer.setVisibility(View.INVISIBLE);
+				}else{
+					openInviteContainer.setVisibility(View.VISIBLE);
+				}
+			}
+		});
 	}
-
-    private void initView() {
-        mivAvatar=(ImageView) findViewById(R.id.iv_avatar);
-        metGroupName = (EditText) findViewById(R.id.edit_group_name);
-        introductionEditText = (EditText) findViewById(R.id.edit_group_introduction);
-        mchkPublic = (CheckBox) findViewById(R.id.chkPublic);
-        mchkMemberInviter = (CheckBox) findViewById(R.id.chkMemberInviter);
-        openInviteContainer = (LinearLayout) findViewById(R.id.ll_open_invite);
-    }
-	private void setListener() {
-	    setOnCheckchangedListener();
-	    setSaveGroupClickListener();
-	    setGroupIconClickListener();
-    }
-
-
-    private void setGroupIconClickListener() {
-        findViewById(R.id.layout_group_icon).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mOnSetAvatarListener=new OnSetAvatarListener(NewGroupActivity.this, R.id.layout_new_group);
-            }
-        });
-    }
-
-    private void setSaveGroupClickListener() {
-        findViewById(R.id.btnSaveGroup).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String str = getResources().getString(R.string.Group_name_cannot_be_empty);
-                String groupName = metGroupName.getText().toString();
-                if(TextUtils.isEmpty(groupName)){
-                    metGroupName.setError(str);
-                    metGroupName.requestFocus();
-                    return;
-                }
-                startActivityForResult(new Intent(mContext,GroupPickContactsActivity.class).putExtra("groupName", groupName), ACTION_CREATE_GROUP);
-            }
-        });
-    }
-
-    private void setOnCheckchangedListener() {
-        mchkPublic.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
-                    openInviteContainer.setVisibility(View.INVISIBLE);
-                }else{
-                    openInviteContainer.setVisibility(View.VISIBLE);
-                }
-            }
-        });
-    }
 
 	/**
 	 * @param v
 	 */
 	public void save(View v) {
 		String str6 = getResources().getString(R.string.Group_name_cannot_be_empty);
-		String name = metGroupName.getText().toString();
+		String name = groupNameEditText.getText().toString();
 		if (TextUtils.isEmpty(name)) {
 			Intent intent = new Intent(this, AlertDialog.class);
 			intent.putExtra("msg", str6);
@@ -128,109 +85,57 @@ public class NewGroupActivity extends BaseActivity {
 			startActivityForResult(new Intent(this, GroupPickContactsActivity.class).putExtra("groupName", name), 0);
 		}
 	}
-	
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, final Intent data) {
-	    super.onActivityResult(requestCode, resultCode, data);
-	    if(resultCode!=RESULT_OK){
-	        return;
-	    }
-	    switch (requestCode) {
-        case ACTION_CREATE_GROUP:
-            new CreateGroupTask(mContext,data,requestCode).execute();
-            break;
+		super.onActivityResult(requestCode, resultCode, data);
+		String st1 = getResources().getString(R.string.Is_to_create_a_group_chat);
+		final String st2 = getResources().getString(R.string.Failed_to_create_groups);
+		if (resultCode == RESULT_OK) {
+			//新建群组
+			progressDialog = new ProgressDialog(this);
+			progressDialog.setMessage(st1);
+			progressDialog.setCanceledOnTouchOutside(false);
+			progressDialog.show();
 
-        default:
-            String groupName=metGroupName.getText().toString();
-            mOnSetAvatarListener.setAvatar(requestCode, data, mivAvatar, "group_icon", groupName);
-            break;
-        }
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					// 调用sdk创建群组方法
+					String groupName = groupNameEditText.getText().toString().trim();
+					String desc = introductionEditText.getText().toString();
+					String[] members = data.getStringArrayExtra("newmembers");
+					try {
+						if(checkBox.isChecked()){
+							//创建公开群，此种方式创建的群，可以自由加入
+							//创建公开群，此种方式创建的群，用户需要申请，等群主同意后才能加入此群
+							EMGroupManager.getInstance().createPublicGroup(groupName, desc, members, true,200);
+						}else{
+							//创建不公开群
+							EMGroupManager.getInstance().createPrivateGroup(groupName, desc, members, memberCheckbox.isChecked(),200);
+						}
+						runOnUiThread(new Runnable() {
+							public void run() {
+								progressDialog.dismiss();
+								setResult(RESULT_OK);
+								finish();
+							}
+						});
+					} catch (final EaseMobException e) {
+						runOnUiThread(new Runnable() {
+							public void run() {
+								progressDialog.dismiss();
+								Toast.makeText(NewGroupActivity.this, st2 + e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+							}
+						});
+					}
+
+				}
+			}).start();
+		}
 	}
 
 	public void back(View view) {
 		finish();
-	}
-
-	class CreateGroupTask extends AsyncTask<Void, Void, String> {
-		Context context;
-		ProgressDialog dialog;
-		Intent intent;
-		int requestCode;
-		GroupBean group;
-
-		public CreateGroupTask(Context context, Intent intent, int requestCode) {
-			super();
-			this.context = context;
-			this.intent = intent;
-			this.requestCode = requestCode;
-			dialog = new ProgressDialog(context);
-		}
-
-		@Override
-		protected void onPreExecute() {
-			String str1 = getResources().getString(R.string.Is_to_create_a_group_chat);
-			dialog.setMessage(str1);
-			dialog.setCanceledOnTouchOutside(false);
-			dialog.show();
-		}
-		@Override
-		protected String doInBackground(Void... params) {
-			String groupName = metGroupName.getText().toString().trim();
-			String desc = introductionEditText.getText().toString();
-			String[] members = intent.getStringArrayExtra("newmembers");
-			EMGroup emGroup=null;
-			group=NetUtil.findGroupByName(groupName);
-			if(group!=null){
-				return getResources().getString(R.string.Group_name_existed);
-			}
-			try {
-				if(mchkPublic.isChecked()){
-					emGroup = EMGroupManager.getInstance().createPublicGroup(groupName, desc, members, true,200);
-				}else{
-					emGroup=EMGroupManager.getInstance().createPrivateGroup(groupName, desc, members,mchkMemberInviter.isChecked(),200);
-				}
-				boolean isPublic=mchkPublic.isChecked();
-				boolean isExam=!mchkMemberInviter.isChecked();
-				String userName= FuLiCenterApplication.getInstance().getUserName();
-				StringBuffer sbMemberBuffer=new StringBuffer();
-				for(String member:members){
-					sbMemberBuffer.append(member).append(",");
-				}
-				sbMemberBuffer.append(userName);
-				String groupId=emGroup.getGroupId();
-				group=new GroupBean(groupId,groupName,desc,userName,isPublic,isExam,sbMemberBuffer.toString());
-				boolean isSuccess=NetUtil.createGroup(group);
-				if(isSuccess){
-					NetUtil.uploadAvatar(mContext, "group_icon", groupName);
-					group.setAvatar("group_icon/"+groupName+".jpg");
-				}
-				return getResources().getString(R.string.Create_groups_Success);
-			} catch (final EaseMobException e) {
-				String str2=getResources().getString(R.string.Failed_to_create_groups);
-				return str2+e.getLocalizedMessage();
-			} catch(Exception e){
-				e.printStackTrace();
-				return e.getMessage();
-			}
-		}
-		@Override
-		protected void onPostExecute(String result) {
-			dialog.dismiss();
-			String strExisted = getResources().getString(R.string.Group_name_existed);
-			String strSuccess = getResources().getString(R.string.Create_groups_Success);
-			String strFailed = getResources().getString(R.string.Create_groups_Failed);
-			if(strExisted.equals(result)){
-				metGroupName.setError(strExisted);
-				metGroupName.requestFocus();
-			}else if(strFailed.equals(result)){
-				Utils.showToast(context, result, Toast.LENGTH_SHORT);
-			}else if(strSuccess.equals(result)){
-				Intent intent = new Intent(mContext,GroupsActivity.class);
-				intent.putExtra("group", group);
-				setResult(RESULT_OK,intent);
-				finish();
-			}
-		}
-
 	}
 }

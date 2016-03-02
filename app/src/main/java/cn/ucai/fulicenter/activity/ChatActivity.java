@@ -209,11 +209,9 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 		}
 	};
 	public EMGroup group;
-    GroupBean mGroup;
 	public EMChatRoom room;
 	public boolean isRobot;
 
-    HashMap<String, ArrayList<UserBean>> groupMembers;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -522,20 +520,14 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 	}
 	
 	protected void onGroupViewCreation(){
-	    mGroup = (GroupBean) getIntent().getSerializableExtra("group");
-		Log.e(TAG,"ChatAvtivity.onGroupViewCreation.mGroup="+mGroup);
-        if(mGroup==null){
-            return;
-        }
-	    toChatUsername = mGroup.getGroupId();
+
 	    group = EMGroupManager.getInstance().getGroup(toChatUsername);
-        new DownloadGroupTask(this, toChatUsername).execute();
         if (group != null){
             ((TextView) findViewById(R.id.name)).setText(group.getGroupName());
         }
-//        else{
-//            ((TextView) findViewById(R.id.name)).setText(toChatUsername);
-//        }
+        else{
+            ((TextView) findViewById(R.id.name)).setText(toChatUsername);
+        }
         
         // 监听当前会话的群聊解散被T事件
         groupListener = new GroupListener();
@@ -1264,7 +1256,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 			return;
 		}
 		if(chatType == CHATTYPE_GROUP){
-			startActivityForResult((new Intent(this, GroupDetailsActivity.class).putExtra("groupId", toChatUsername).putExtra("group",mGroup).putExtra("groupMembers",groupMembers.get(toChatUsername))),
+			startActivityForResult((new Intent(this, GroupDetailsActivity.class).putExtra("groupId", toChatUsername)),
 					REQUEST_CODE_GROUP_DETAIL);
 		}else{
 			startActivityForResult((new Intent(this, ChatRoomDetailsActivity.class).putExtra("roomId", toChatUsername)),
@@ -1722,10 +1714,10 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 			EMChatManager.getInstance().leaveChatRoom(forward_msg.getTo());
 		}
 	}
-	
+
 	/**
 	 * 监测群组解散或者被T事件
-	 * 
+	 *
 	 */
 	class GroupListener extends GroupRemoveListener {
 
@@ -1772,43 +1764,5 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 		return listView;
 	}
 	
-	class DownloadGroupTask extends AsyncTask<Void, Void, Boolean> {
-	    Context context;
-	    String groupId;
-	    
-        public DownloadGroupTask(Context context, String groupId) {
-            super();
-            this.context = context;
-            this.groupId = groupId;
-        }
 
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            groupMembers = FuLiCenterApplication
-                    .getInstance().getGroupMembers();
-			Log.e(TAG,"DownloadGroupTask.doInBackground.groupMembers="+groupMembers);
-			Log.e(TAG,"DownloadGroupTask.doInBackground.groupId="+groupId);
-            if(!groupMembers.containsKey(groupId)){
-				Log.e(TAG,"DownloadGroupTask.doInBackground.groupId="+groupId);
-                ArrayList<UserBean> group = NetUtil.downloadGroupMembers(groupId);
-				Log.e(TAG,"DownloadGroupTask.doInBackground.group="+group.size());
-                if(group!=null && !group.isEmpty()){
-                    groupMembers.put(groupId, group);
-                }
-				Log.e(TAG,"DownloadGroupTask.doInBackground.groupMembers="+groupMembers);
-                return true;
-            }
-            return false;
-        }
-        
-        @Override
-        protected void onPostExecute(Boolean result) {
-            if(result){
-                adapter = new MessageAdapter(context, toChatUsername, CHATTYPE_GROUP);
-                listView.setAdapter(adapter);
-                adapter.refreshSelectLast();
-            }
-        }
-	    
-	}
 }

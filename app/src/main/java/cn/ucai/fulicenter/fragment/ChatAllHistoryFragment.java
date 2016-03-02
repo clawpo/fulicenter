@@ -121,17 +121,17 @@ public class ChatAllHistoryFragment extends Fragment implements View.OnClickList
 				         // it is group chat
 	                        intent.putExtra("chatType", ChatActivity.CHATTYPE_GROUP);
 	                        intent.putExtra("groupId", username);
-							ArrayList<GroupBean> groupList = FuLiCenterApplication.getInstance().getGroupList();
-							GroupBean currentGroup = null;
-							for(GroupBean group:groupList){
-								Log.e("main","getView,----for----group="+group.toString());
-								if(group.getGroupId().equals(username)){
-									currentGroup=group;
-									intent.putExtra("group",currentGroup);
-									Log.e("main","getView,----YES----this is group,currentGroup="+currentGroup.toString());
-									break;
-								}
-							}
+//							ArrayList<GroupBean> groupList = FuLiCenterApplication.getInstance().getGroupList();
+//							GroupBean currentGroup = null;
+//							for(GroupBean group:groupList){
+//								Log.e("main","getView,----for----group="+group.toString());
+//								if(group.getGroupId().equals(username)){
+//									currentGroup=group;
+//									intent.putExtra("group",currentGroup);
+//									Log.e("main","getView,----YES----this is group,currentGroup="+currentGroup.toString());
+//									break;
+//								}
+//							}
 				        }
 				        
 				    }else{

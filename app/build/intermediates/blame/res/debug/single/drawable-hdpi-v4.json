@@ -208,12 +208,12 @@
         "source": "D:\\chensaitao\\fulishe\\AS_GIT\\fulicenter\\app\\src\\main\\res\\drawable-hdpi\\confirm_dialog_bg2.9.png"
     },
     {
-        "merged": "D:\\chensaitao\\fulishe\\AS_GIT\\fulicenter\\app\\build\\intermediates\\res\\merged\\debug\\drawable-hdpi-v4\\logo_uidemo.png",
-        "source": "D:\\chensaitao\\fulishe\\AS_GIT\\fulicenter\\app\\src\\main\\res\\drawable-hdpi\\logo_uidemo.png"
-    },
-    {
         "merged": "D:\\chensaitao\\fulishe\\AS_GIT\\fulicenter\\app\\build\\intermediates\\res\\merged\\debug\\drawable-hdpi-v4\\camera_switch_pressed.9.png",
         "source": "D:\\chensaitao\\fulishe\\AS_GIT\\fulicenter\\app\\src\\main\\res\\drawable-hdpi\\camera_switch_pressed.9.png"
+    },
+    {
+        "merged": "D:\\chensaitao\\fulishe\\AS_GIT\\fulicenter\\app\\build\\intermediates\\res\\merged\\debug\\drawable-hdpi-v4\\logo_uidemo.png",
+        "source": "D:\\chensaitao\\fulishe\\AS_GIT\\fulicenter\\app\\src\\main\\res\\drawable-hdpi\\logo_uidemo.png"
     },
     {
         "merged": "D:\\chensaitao\\fulishe\\AS_GIT\\fulicenter\\app\\build\\intermediates\\res\\merged\\debug\\drawable-hdpi-v4\\chatto_voice_playing_f3.png",

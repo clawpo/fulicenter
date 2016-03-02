@@ -60,13 +60,13 @@ public class Utils {
     public static UserBean getMessageFromUser(ChatType chatType,String groupId,String userName){
         ArrayList<UserBean> userList = null;
         switch (chatType) {
-        case GroupChat://群聊
-            HashMap<String,ArrayList<UserBean>> groupMembers = FuLiCenterApplication.getInstance().getGroupMembers();
-            //获取指定groupId的群聊成员集合
-            userList = groupMembers.get(groupId);
-            break;
-        case ChatRoom:
-            break;
+//        case GroupChat://群聊
+//            HashMap<String,ArrayList<UserBean>> groupMembers = FuLiCenterApplication.getInstance().getGroupMembers();
+//            //获取指定groupId的群聊成员集合
+//            userList = groupMembers.get(groupId);
+//            break;
+//        case ChatRoom:
+//            break;
         default://单聊
             userList = FuLiCenterApplication.getInstance().getContactList();
             break;
