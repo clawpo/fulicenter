@@ -8,15 +8,15 @@
     <color name="btn_logout_pressed">#DA5A4D</color>
     <color name="btn_register_normal">#ffffff</color>
     <color name="btn_register_pressed">#00acff</color>
-    <color name="common_bottom_bar_normal_bg">#2d2f31</color>
+    <color name="common_bottom_bar_normal_bg">#ffffff</color>
     <color name="common_bottom_bar_selected_bg">#161718</color>
     <color name="common_botton_bar_blue">#2ea7e0</color>
     <color name="common_bg">#fcfcfc</color>
     <color name="btn_pressed_green_solid">#B6DA53</color>
     <color name="divider_list">#d4d4d4</color>
-    <color name="top_bar_normal_bg">#00acff</color>
+    <color name="top_bar_normal_bg">#ffffff</color>
     <color name="error_item_color">#F6EBE6</color>
-    <color name="bottom_bar_normal_bg">#2D2F31</color>
+    <color name="bottom_bar_normal_bg">#ffffff</color>
     <color name="bottom_text_color_normal">#ffffff</color>
     <color name="btn_white_normal">#f7f8f8</color>
     <color name="btn_white_pressed">#b5b5b6</color>
@@ -36,5 +36,10 @@
     <color name="black_deep">#FF000000</color>
     <color name="btn_answer_pressed">#4ebcd3</color>
     <color name="btn_answer_normal">#2dafa3</color>
-
+	<drawable name="menu_item_normal">#6A7077</drawable>
+	<drawable name="menu_item_pressed">#FF7A49</drawable>
+	<drawable name="menu_item_selected">#FF7A49</drawable>
+	<color name="fragment_bg">#eff2f6</color>
+    <color name="item_good_text">#313131</color>
+    <color name="item_good_price">#df3131</color>
 </resources>

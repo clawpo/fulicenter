@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <!--<android.support.v4.widget.SwipeRefreshLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent">-->
+    <!--</android.support.v4.widget.SwipeRefreshLayout>-->
+    <cn.ucai.fulicenter.utils.PullRefreshView
+        android:id="@+id/prfvNewGood"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <GridView
+            android:id="@+id/gvNewGood"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:columnWidth="150dp"
+            android:horizontalSpacing="10dp"
+            android:numColumns="auto_fit"
+            android:verticalSpacing="10dp"/>
+    </cn.ucai.fulicenter.utils.PullRefreshView>
+
+</LinearLayout>

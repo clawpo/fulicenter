@@ -25,8 +25,11 @@ import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -84,17 +87,38 @@ public class MainActivity extends BaseActivity implements EMEventListener {
     Context mContext;
 
 	protected static final String TAG = "MainActivity";
+
+	// 菜单项按钮
+	TextView mtvCartHint;
+	TextView mtvCart;
+	TextView mtvNewGood;
+	TextView mtvBoutique;
+	TextView mtvCategory;
+	TextView mtvPersonalCenter;
+
+	ImageView mivCart;
+	ImageView mivNewGood;
+	ImageView mivBoutique;
+	ImageView mivCategory;
+	ImageView mivPersonalCenter;
+
+	RelativeLayout mLayoutCart;
+	RelativeLayout mLayoutNewGood;
+	RelativeLayout mLayoutBoutique;
+	RelativeLayout mLayoutCategory;
+	RelativeLayout mLayoutPersonalCenter;
+
 	// 未读消息textview
-	private TextView unreadLabel;
+//	private TextView unreadLabel;
 	// 未读通讯录textview
-	private TextView unreadAddressLable;
+//	private TextView unreadAddressLable;
 
 	private Button[] mTabs;
-	private ContactlistFragment mContactListFragment;
+//	private ContactlistFragment mContactListFragment;
 	// private ChatHistoryFragment chatHistoryFragment;
-	private ChatAllHistoryFragment mChatHistoryFragment;
-	private SettingsFragment mSettingFragment;
-	private FindFragment mFindFragment;
+//	private ChatAllHistoryFragment mChatHistoryFragment;
+//	private SettingsFragment mSettingFragment;
+//	private FindFragment mFindFragment;
 	private Fragment[] mFragments;
 	private int index;
 	// 当前fragment的index
@@ -106,7 +130,7 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 
     private MyContactListener contactListener = null;
 	private MyConnectionListener connectionListener = null;
-	private MyGroupChangeListener groupChangeListener = null;
+//	private MyGroupChangeListener groupChangeListener = null;
 
 	/**
 	 * 检查当前用户是否被删除
@@ -116,34 +140,14 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 	}
 
 	@Override
+	public boolean onMenuItemSelected(int featureId, MenuItem item) {
+		return super.onMenuItemSelected(featureId, item);
+	}
+
+	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mContext=this;
-		if (savedInstanceState != null && savedInstanceState.getBoolean(Constant.ACCOUNT_REMOVED, false)) {
-			// 防止被移除后，没点确定按钮然后按了home键，长期在后台又进app导致的crash
-			// 三个fragment里加的判断同理
-		    DemoHXSDKHelper.getInstance().logout(true,null);
-			finish();
-			startActivity(new Intent(this, LoginActivity.class));
-			return;
-		} else if (savedInstanceState != null && savedInstanceState.getBoolean("isConflict", false)) {
-			// 防止被T后，没点确定按钮然后按了home键，长期在后台又进app导致的crash
-			// 三个fragment里加的判断同理
-			finish();
-			startActivity(new Intent(this, LoginActivity.class));
-			return;
-		}
-//        boolean server_status = getIntent().getBooleanExtra("server_status",false);
-//        new Thread() {
-//            @Override
-//            public void run() {
-//                if(!NetUtil.isServerConnectioned()){
-//                    finish();
-//                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
-//                    return;
-//                }
-//            }
-//        }.start();
 
 		setContentView(R.layout.activity_main);
 		initFragment();
@@ -168,19 +172,19 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 
     private void initFragment() {
 		// 显示所有人消息记录的fragment
-		mChatHistoryFragment = new ChatAllHistoryFragment();
-		mContactListFragment = new ContactlistFragment();
-		mSettingFragment = new SettingsFragment();
-		mFindFragment=new FindFragment();
-		mFragments = new Fragment[] {
-		    mChatHistoryFragment, mContactListFragment, 
-		    mFindFragment,mSettingFragment};
-		// 添加显示第一个fragment
-		getSupportFragmentManager()
-		    .beginTransaction().add(R.id.fragment_container, mChatHistoryFragment)
-			.add(R.id.fragment_container, mContactListFragment)
-			.hide(mContactListFragment).show(mChatHistoryFragment)
-			.commit();
+//		mChatHistoryFragment = new ChatAllHistoryFragment();
+//		mContactListFragment = new ContactlistFragment();
+//		mSettingFragment = new SettingsFragment();
+//		mFindFragment=new FindFragment();
+//		mFragments = new Fragment[] {
+//		    mChatHistoryFragment, mContactListFragment,
+//		    mFindFragment,mSettingFragment};
+//		// 添加显示第一个fragment
+//		getSupportFragmentManager()
+//		    .beginTransaction().add(R.id.fragment_container, mChatHistoryFragment)
+//			.add(R.id.fragment_container, mContactListFragment)
+//			.hide(mContactListFragment).show(mChatHistoryFragment)
+//			.commit();
     }
 
     private void initDB() {
@@ -200,9 +204,9 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 		connectionListener = new MyConnectionListener();
 		EMChatManager.getInstance().addConnectionListener(connectionListener);
 
-        // 注册群聊相关的listener
-		groupChangeListener = new MyGroupChangeListener();
-        EMGroupManager.getInstance().addGroupChangeListener(groupChangeListener);
+//        // 注册群聊相关的listener
+//		groupChangeListener = new MyGroupChangeListener();
+//        EMGroupManager.getInstance().addGroupChangeListener(groupChangeListener);
 		
         setMenuItemClickListener(); }
 
@@ -210,11 +214,11 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 	 * 设置菜单项单击事件监听
 	 */
     private void setMenuItemClickListener() {
-        MenuItemClickListener listener=new MenuItemClickListener();
-        mTabs[0].setOnClickListener(listener);
-        mTabs[1].setOnClickListener(listener);
-        mTabs[2].setOnClickListener(listener);
-        mTabs[3].setOnClickListener(listener);
+//        MenuItemClickListener listener=new MenuItemClickListener();
+//        mTabs[0].setOnClickListener(listener);
+//        mTabs[1].setOnClickListener(listener);
+//        mTabs[2].setOnClickListener(listener);
+//        mTabs[3].setOnClickListener(listener);
     }
 	
 	static void asyncFetchGroupsFromServer(){
@@ -372,17 +376,35 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 	 * 初始化组件
 	 */
 	private void initView() {
-		unreadLabel = (TextView) findViewById(R.id.unread_msg_number);
-		unreadAddressLable = (TextView) findViewById(R.id.unread_address_number);
-		mTabs = new Button[mFragments.length];
-		mTabs[0] = (Button) findViewById(R.id.btn_conversation);
-		mTabs[1] = (Button) findViewById(R.id.btn_contact_list);
-		mTabs[2] = (Button) findViewById(R.id.btn_find);
-		mTabs[3] = (Button) findViewById(R.id.btn_setting);
+//        unreadLabel = (TextView) findViewById(R.id.tvUnreadMsgCount);
+//		unreadAddressLable = (TextView) findViewById(R.id.unread_address_number);
+//		mTabs = new Button[mFragments.length];
+//		mTabs[0] = (Button) findViewById(R.id.btn_conversation);
+//		mTabs[1] = (Button) findViewById(R.id.btn_contact_list);
+//		mTabs[2] = (Button) findViewById(R.id.btn_find);
+//		mTabs[3] = (Button) findViewById(R.id.btn_setting);
 		// 把第一个tab设为选中状态
-		mTabs[0].setSelected(true);
+//		mTabs[0].setSelected(true);
 
 //		registerForContextMenu(mTabs[1]);
+		mtvCartHint = getViewById(R.id.tvCartHint);
+		mtvCart = getViewById(R.id.tvCart);
+		mtvBoutique = getViewById(R.id.tvBoutique);
+		mtvCategory = getViewById(R.id.tvCategory);
+		mtvNewGood = getViewById(R.id.btnNewGood);
+		mtvPersonalCenter = getViewById(R.id.tvPersonalCenter);
+
+		mivBoutique=getViewById(R.id.ivBoutique);
+		mivCart=getViewById(R.id.ivCart);
+		mivCategory=getViewById(R.id.ivCategory);
+		mivNewGood=getViewById(R.id.ivNewGood);
+		mivPersonalCenter=getViewById(R.id.ivPersonalCenter);
+
+		mLayoutBoutique=getViewById(R.id.layout_boutique);
+		mLayoutCart=getViewById(R.id.layout_cart);
+		mLayoutCategory=getViewById(R.id.layout_category);
+		mLayoutNewGood=getViewById(R.id.layout_new_good);
+		mLayoutPersonalCenter=getViewById(R.id.layout_personal_center);
 	}
 
 	/**
@@ -424,9 +446,9 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 				updateUnreadLabel();
 				if (currentTabIndex == 0) {
 					// 当前页面如果为聊天历史页面，刷新此页面
-					if (mChatHistoryFragment != null) {
-						mChatHistoryFragment.refresh();
-					}
+//					if (mChatHistoryFragment != null) {
+//						mChatHistoryFragment.refresh();
+//					}
 				}
 			}
 		});
@@ -450,9 +472,9 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 		    EMChatManager.getInstance().removeConnectionListener(connectionListener);
 		}
 		
-		if(groupChangeListener != null){
-		    EMGroupManager.getInstance().removeGroupChangeListener(groupChangeListener);
-		}
+//		if(groupChangeListener != null){
+//		    EMGroupManager.getInstance().removeGroupChangeListener(groupChangeListener);
+//		}
 	}
 
 	/**
@@ -460,12 +482,12 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 	 */
 	public void updateUnreadLabel() {
 		int count = getUnreadMsgCountTotal();
-		if (count > 0) {
-			unreadLabel.setText(String.valueOf(count));
-			unreadLabel.setVisibility(View.VISIBLE);
-		} else {
-			unreadLabel.setVisibility(View.INVISIBLE);
-		}
+//		if (count > 0) {
+//			unreadLabel.setText(String.valueOf(count));
+//			unreadLabel.setVisibility(View.VISIBLE);
+//		} else {
+//			unreadLabel.setVisibility(View.INVISIBLE);
+//		}
 	}
 
 	/**
@@ -476,12 +498,12 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 			public void run() {
 				int count = getUnreadAddressCountTotal();
 				Log.e("main","mainActivity.updateUnreadAddressLable="+count);
-				if (count > 0) {
-//					unreadAddressLable.setText(String.valueOf(count));
-					unreadAddressLable.setVisibility(View.VISIBLE);
-				} else {
-					unreadAddressLable.setVisibility(View.INVISIBLE);
-				}
+//				if (count > 0) {
+////					unreadAddressLable.setText(String.valueOf(count));
+//					unreadAddressLable.setVisibility(View.VISIBLE);
+//				} else {
+//					unreadAddressLable.setVisibility(View.INVISIBLE);
+//				}
 			}
 		});
 
@@ -546,8 +568,8 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 			}
 			localUsers.putAll(toAddUsers);
 			// 刷新ui
-			if (currentTabIndex == 1)
-				mContactListFragment.refresh();
+//			if (currentTabIndex == 1)
+//				mContactListFragment.refresh();
 			
 			FuLiCenterApplication instance = FuLiCenterApplication.getInstance();
 			ArrayList<UserBean> contactList = instance.getContactList();
@@ -611,8 +633,8 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 					}
 					updateUnreadLabel();
 					// 刷新ui
-					mContactListFragment.refresh();
-					mChatHistoryFragment.refresh();
+//					mContactListFragment.refresh();
+//					mChatHistoryFragment.refresh();
 				}
 			});
 
@@ -706,7 +728,7 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 
                 @Override
                 public void run() {
-                    mChatHistoryFragment.errorItem.setVisibility(View.GONE);
+//                    mChatHistoryFragment.errorItem.setVisibility(View.GONE);
                 }
 
             });
@@ -727,11 +749,11 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 						// 显示帐号在其他设备登陆dialog
 						showConflictDialog();
 					} else {
-						mChatHistoryFragment.errorItem.setVisibility(View.VISIBLE);
-						if (NetUtils.hasNetwork(MainActivity.this))
-							mChatHistoryFragment.errorText.setText(st1);
-						else
-							mChatHistoryFragment.errorText.setText(st2);
+//						mChatHistoryFragment.errorItem.setVisibility(View.VISIBLE);
+//						if (NetUtils.hasNetwork(MainActivity.this))
+//							mChatHistoryFragment.errorText.setText(st1);
+//						else
+//							mChatHistoryFragment.errorText.setText(st2);
 
 					}
 				}
@@ -778,7 +800,7 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 					updateUnreadLabel();
 					// 刷新ui
 					if (currentTabIndex == 0)
-						mChatHistoryFragment.refresh();
+//						mChatHistoryFragment.refresh();
 					if (CommonUtils.getTopActivity(MainActivity.this).equals(GroupsActivity.class.getName())) {
 						GroupsActivity.instance.onResume();
 					}
@@ -814,7 +836,7 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 					try {
 						updateUnreadLabel();
 						if (currentTabIndex == 0)
-							mChatHistoryFragment.refresh();
+//							mChatHistoryFragment.refresh();
 						if (CommonUtils.getTopActivity(MainActivity.this).equals(GroupsActivity.class.getName())) {
 							GroupsActivity.instance.onResume();
 						}
@@ -836,7 +858,7 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 				public void run() {
 					updateUnreadLabel();
 					if (currentTabIndex == 0)
-						mChatHistoryFragment.refresh();
+//						mChatHistoryFragment.refresh();
 					if (CommonUtils.getTopActivity(MainActivity.this).equals(GroupsActivity.class.getName())) {
 						GroupsActivity.instance.onResume();
 					}
@@ -899,8 +921,8 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 				public void run() {
 					updateUnreadLabel();
 					// 刷新ui
-					if (currentTabIndex == 0)
-						mChatHistoryFragment.refresh();
+//					if (currentTabIndex == 0)
+//						mChatHistoryFragment.refresh();
 					//注释掉以下两行代码
 //					if (CommonUtils.getTopActivity(MainActivity.this).equals(GroupsActivity.class.getName())) {
 //						GroupsActivity.instance.onResume();
@@ -931,8 +953,8 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 		// 刷新bottom bar消息未读数
 		updateUnreadAddressLable();
 		// 刷新好友页面ui
-		if (currentTabIndex == 1)
-			mContactListFragment.refresh();
+//		if (currentTabIndex == 1)
+//			mContactListFragment.refresh();
 	}
 
 	/**
@@ -1177,20 +1199,20 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 	class MenuItemClickListener implements View.OnClickListener {
 	    @Override
 	    public void onClick(View v) {
-	        switch (v.getId()) {
-	        case R.id.btn_conversation:
-	            index = 0;
-	            break;
-	        case R.id.btn_contact_list:
-	            index = 1;
-	            break;
-	        case R.id.btn_find:
-	            index=2;
-	            break;
-	        case R.id.btn_setting:
-	            index = 3;
-	            break;
-	        }
+//	        switch (v.getId()) {
+//	        case R.id.btn_conversation:
+//	            index = 0;
+//	            break;
+//	        case R.id.btn_contact_list:
+//	            index = 1;
+//	            break;
+//	        case R.id.btn_find:
+//	            index=2;
+//	            break;
+//	        case R.id.btn_setting:
+//	            index = 3;
+//	            break;
+//	        }
 	        if (currentTabIndex != index) {
 	            FragmentTransaction trx = getSupportFragmentManager().beginTransaction();
 	            trx.hide(mFragments[currentTabIndex]);
