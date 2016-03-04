@@ -25,7 +25,7 @@ import cn.ucai.fulicenter.utils.PullRefreshView;
  */
 public class DownloadGoodsTask extends AsyncTask<Integer,Void,ArrayList<NewGoodBean>> {
     public final String TAG = "DownloadGoodsTask";
-    ProgressDialog mdialog;
+    ProgressDialog mDialog;
     Context mContext;
     LoadStatus loadStatus;
     ArrayList<NewGoodBean> mGoodList;
@@ -45,15 +45,21 @@ public class DownloadGoodsTask extends AsyncTask<Integer,Void,ArrayList<NewGoodB
         this.catId = catId;
         this.goodType = goodType;
     }
-
+	/**
+	 * 提供加载数据的状态
+	 * @return
+	 */
+	public LoadStatus getLoadStatus(){
+		return this.loadStatus;
+	}
     @Override
     protected void onPreExecute() {
-        mdialog = null;
+        mDialog = null;
         if(actionType == ActionType.ACTION_DOWNLOAD){
-            mdialog = new ProgressDialog(mContext);
-            mdialog.setTitle(D.NewGood.HINT_DOWNLOAD_TITLE);
-            mdialog.setMessage(D.NewGood.HINT_DOWNLOADING);
-            mdialog.show();
+            mDialog = new ProgressDialog(mContext);
+            mDialog.setTitle(D.NewGood.HINT_DOWNLOAD_TITLE);
+            mDialog.setMessage(D.NewGood.HINT_DOWNLOADING);
+            mDialog.show();
         }
     }
 
@@ -81,16 +87,16 @@ public class DownloadGoodsTask extends AsyncTask<Integer,Void,ArrayList<NewGoodB
 
     @Override
     protected void onPostExecute(ArrayList<NewGoodBean> goods) {
-        if(loadStatus == LoadStatus.FAILURE){
-            if(mdialog!=null){
-                mdialog.dismiss();
+        if(getLoadStatus() == LoadStatus.FAILURE){
+            if(mDialog!=null){
+                mDialog.dismiss();
             }
             Toast.makeText(mContext,D.NewGood.HINT_DOWNLOAD_FAILURE,Toast.LENGTH_SHORT).show();
             return;
         }
         switch (actionType){
             case  ACTION_DOWNLOAD:
-                mdialog.dismiss();
+                mDialog.dismiss();
                 mAdapter.initItems(goods);
                 break;
             case ACTION_PULL_DOWN:

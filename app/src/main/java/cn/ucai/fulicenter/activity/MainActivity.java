@@ -13,13 +13,18 @@
  */
 package cn.ucai.fulicenter.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.SharedElementCallback;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -77,6 +82,7 @@ import cn.ucai.fulicenter.domain.User;
 import cn.ucai.fulicenter.fragment.ChatAllHistoryFragment;
 import cn.ucai.fulicenter.fragment.ContactlistFragment;
 import cn.ucai.fulicenter.fragment.FindFragment;
+import cn.ucai.fulicenter.fragment.NewGoodFragment;
 import cn.ucai.fulicenter.fragment.SettingsFragment;
 import cn.ucai.fulicenter.task.DeleteContactsTask;
 import cn.ucai.fulicenter.utils.CommonUtils;
@@ -86,7 +92,7 @@ import cn.ucai.fulicenter.utils.Utils;
 public class MainActivity extends BaseActivity implements EMEventListener {
     Context mContext;
 
-	protected static final String TAG = "MainActivity";
+	protected static final String TAG = MainActivity.class.getName();
 
 	// 菜单项按钮
 	TextView mtvCartHint;
@@ -112,8 +118,9 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 //	private TextView unreadLabel;
 	// 未读通讯录textview
 //	private TextView unreadAddressLable;
-
+    float mDensity;
 	private Button[] mTabs;
+	private NewGoodFragment mNewGoodFragment;
 //	private ContactlistFragment mContactListFragment;
 	// private ChatHistoryFragment chatHistoryFragment;
 //	private ChatAllHistoryFragment mChatHistoryFragment;
@@ -138,6 +145,8 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 	public boolean getCurrentAccountRemoved() {
 		return isCurrentAccountRemoved;
 	}
+
+    Drawable drawableNewGood,drawableBoutique,drawableCategory,drawableCart,drawablePersonalCenter;
 
 	@Override
 	public boolean onMenuItemSelected(int featureId, MenuItem item) {
@@ -171,14 +180,14 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 	}
 
     private void initFragment() {
+		mNewGoodFragment = new NewGoodFragment();
 		// 显示所有人消息记录的fragment
 //		mChatHistoryFragment = new ChatAllHistoryFragment();
 //		mContactListFragment = new ContactlistFragment();
 //		mSettingFragment = new SettingsFragment();
 //		mFindFragment=new FindFragment();
-//		mFragments = new Fragment[] {
-//		    mChatHistoryFragment, mContactListFragment,
-//		    mFindFragment,mSettingFragment};
+		mFragments = new Fragment[] {
+				mNewGoodFragment};
 //		// 添加显示第一个fragment
 //		getSupportFragmentManager()
 //		    .beginTransaction().add(R.id.fragment_container, mChatHistoryFragment)
@@ -214,7 +223,8 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 	 * 设置菜单项单击事件监听
 	 */
     private void setMenuItemClickListener() {
-//        MenuItemClickListener listener=new MenuItemClickListener();
+        MenuItemClickListener listener=new MenuItemClickListener();
+        mLayoutNewGood.setOnClickListener(listener);
 //        mTabs[0].setOnClickListener(listener);
 //        mTabs[1].setOnClickListener(listener);
 //        mTabs[2].setOnClickListener(listener);
@@ -407,7 +417,12 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 		mLayoutPersonalCenter=getViewById(R.id.layout_personal_center);
 	}
 
-	/**
+    @Override
+    public void setEnterSharedElementCallback(SharedElementCallback callback) {
+        super.setEnterSharedElementCallback(callback);
+    }
+
+    /**
 	 * 监听事件
      */
 	@Override
@@ -1199,20 +1214,31 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 	class MenuItemClickListener implements View.OnClickListener {
 	    @Override
 	    public void onClick(View v) {
-//	        switch (v.getId()) {
-//	        case R.id.btn_conversation:
-//	            index = 0;
-//	            break;
-//	        case R.id.btn_contact_list:
-//	            index = 1;
-//	            break;
-//	        case R.id.btn_find:
-//	            index=2;
-//	            break;
-//	        case R.id.btn_setting:
-//	            index = 3;
-//	            break;
-//	        }
+            setMenuItemDefaultDrawable();
+            Fragment fragment = null;
+            switch (v.getId()) {
+	        case R.id.layout_new_good:
+                index = 0;
+                drawableNewGood = getmDrawable(R.drawable.menu_item_new_good_selected);
+                fragment = mNewGoodFragment;
+	            break;
+	        case R.id.layout_boutique:
+	            index = 1;
+                drawableBoutique = getmDrawable(R.drawable.boutique_selected);
+	            break;
+	        case R.id.layout_category:
+	            index=2;
+                drawableCategory = getmDrawable(R.drawable.menu_item_category_selected);
+	            break;
+	        case R.id.layout_cart:
+	            index = 3;
+                drawableCart = getmDrawable(R.drawable.menu_item_cart_selected);
+	            break;
+            case R.id.layout_personal_center:
+                index = 4;
+                drawablePersonalCenter = getmDrawable(R.drawable.menu_item_personal_center_selected);
+                break;
+	        }
 	        if (currentTabIndex != index) {
 	            FragmentTransaction trx = getSupportFragmentManager().beginTransaction();
 	            trx.hide(mFragments[currentTabIndex]);
@@ -1221,10 +1247,37 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 	            }
 	            trx.show(mFragments[index]).commit();
 	        }
-	        mTabs[currentTabIndex].setSelected(false);
-	        // 把当前tab设为选中状态
-	        mTabs[index].setSelected(true);
+            Log.e(TAG,"MenuItemClickListener.currentTabIndex="+currentTabIndex);
+//	        mTabs[currentTabIndex].setSelected(false);
+//	        // 把当前tab设为选中状态
+//	        mTabs[index].setSelected(true);
 	        currentTabIndex = index;
+            setMenuItemDrawable();
 	    }
 	}
+
+//    @SuppressLint("Override")
+    public Drawable getmDrawable(int id){
+        Resources res = getResources();
+        Drawable drawable = res.getDrawable(id);
+        return drawable;
+    }
+    /** 设置菜单项按钮顶部缺省显示的图片 */
+    private void setMenuItemDefaultDrawable() {
+        drawableNewGood = getmDrawable(R.drawable.menu_item_new_good_normal);
+        drawableBoutique = getmDrawable(R.drawable.boutique_normal);
+        drawableCategory = getmDrawable(R.drawable.menu_item_category_normal);
+        drawableCart = getmDrawable(R.drawable.menu_item_cart_normal);
+        drawablePersonalCenter = getmDrawable(R.drawable.menu_item_personal_center_normal);
+    }
+
+    /** 设置菜单项按钮顶部某菜单项被选择后显示的图片 */
+    private void setMenuItemDrawable() {
+        int width = (int) (mDensity * 32);
+        int height = width;
+
+        Rect bounds = new Rect(0, 0, width, height);
+        drawableNewGood.setBounds(bounds);
+        mivNewGood.setImageDrawable(drawableNewGood);
+    }
 }
