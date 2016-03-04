@@ -18,6 +18,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
 import com.easemob.EMCallBack;
 
 import java.util.ArrayList;
@@ -30,6 +33,8 @@ import cn.ucai.fulicenter.bean.UserBean;
 
 public class FuLiCenterApplication extends Application {
 
+	public static final String TAG = FuLiCenterApplication.class.getName();
+
 	//    public static String SERVER_ROOT="http://10.0.2.2:8080/SuperQQ3Server/Server";
 	public static String SERVER_ROOT="http://139.196.185.33:8080/SuperQQ3Server/Server";
 
@@ -37,6 +42,7 @@ public class FuLiCenterApplication extends Application {
 
 	public static Context applicationContext;
 	private static FuLiCenterApplication instance;
+	private static RequestQueue mRequestQueue;
 	// login user name
 	public final String PREF_USERNAME = "username";
 	
@@ -51,6 +57,7 @@ public class FuLiCenterApplication extends Application {
 		super.onCreate();
         applicationContext = this;
         instance = this;
+		mRequestQueue = Volley.newRequestQueue(applicationContext);
 
         /**
          * this function will initialize the HuanXin SDK
@@ -78,6 +85,18 @@ public class FuLiCenterApplication extends Application {
 		}
 		Log.e("main","***************************Superwechat.serverurl="+SERVER_ROOT);
 		hxSDKHelper.onInit(applicationContext);
+	}
+
+
+	public RequestQueue getRequestQueue(){
+		return mRequestQueue;
+	}
+	public <T> void add(Request<T> req){
+		req.setTag(TAG);
+		getRequestQueue().add(req);
+	}
+	public void cancel(){
+		mRequestQueue.cancelAll(TAG);
 	}
 
 
