@@ -15,6 +15,7 @@ import cn.ucai.fulicenter.R;
 import cn.ucai.fulicenter.activity.MainActivity;
 import cn.ucai.fulicenter.adapter.GoodAdapter;
 import cn.ucai.fulicenter.bean.NewGoodBean;
+import cn.ucai.fulicenter.task.DownloadGoodsTask;
 import cn.ucai.fulicenter.utils.PullRefreshView;
 
 /**
