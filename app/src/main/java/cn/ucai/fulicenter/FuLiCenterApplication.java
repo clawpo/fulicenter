@@ -35,8 +35,8 @@ public class FuLiCenterApplication extends Application {
 
 	public static final String TAG = FuLiCenterApplication.class.getName();
 
-	//    public static String SERVER_ROOT="http://10.0.2.2:8080/SuperQQ3Server/Server";
-	public static String SERVER_ROOT="http://139.196.185.33:8080/SuperQQ3Server/Server";
+	    public static String SERVER_ROOT="http://10.0.2.2:8080/FuLiCenterServer/Server";
+//	public static String SERVER_ROOT="http://139.196.185.33:8080/FuLiCenterServer/Server";
 
 	public static boolean isLocalhost = false;
 
@@ -81,7 +81,7 @@ public class FuLiCenterApplication extends Application {
 		if(isLocalhost){
 			initServerUrl();
 		}else{
-			SERVER_ROOT = "http://10.0.2.2:8080/SuperQQ4Server/Server";
+			SERVER_ROOT = "http://10.0.2.2:8080/FuLiCenterServer/Server";
 		}
 		Log.e("main","***************************Superwechat.serverurl="+SERVER_ROOT);
 		hxSDKHelper.onInit(applicationContext);
@@ -103,11 +103,11 @@ public class FuLiCenterApplication extends Application {
 	public void initServerUrl() {
 		final SharedPreferences sp=getSharedPreferences("server_url", MODE_PRIVATE);
 		String serverUrl=sp.getString("url", "");
-		if(serverUrl==null || serverUrl.isEmpty()){
-			SERVER_ROOT="http://139.196.185.33:8080/SuperQQ3Server/Server";
-		}else {
-			FuLiCenterApplication.SERVER_ROOT=serverUrl+":8080/SuperQQ3Server/Server";
-		}
+//		if(serverUrl==null || serverUrl.isEmpty()){
+			SERVER_ROOT="http://139.196.185.33:8080/FuLiCenterServer/Server";
+//		}else {
+//			FuLiCenterApplication.SERVER_ROOT=serverUrl+":8080/FuLiCenterServer/Server";
+//		}
 	}
 
 	public static FuLiCenterApplication getInstance() {

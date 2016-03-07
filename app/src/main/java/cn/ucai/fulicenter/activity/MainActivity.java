@@ -23,6 +23,7 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.SharedElementCallback;
 import android.text.TextUtils;
@@ -86,11 +87,11 @@ import cn.ucai.fulicenter.fragment.NewGoodFragment;
 import cn.ucai.fulicenter.fragment.SettingsFragment;
 import cn.ucai.fulicenter.task.DeleteContactsTask;
 import cn.ucai.fulicenter.utils.CommonUtils;
+import cn.ucai.fulicenter.utils.FragmentUtils;
 import cn.ucai.fulicenter.utils.NetUtil;
 import cn.ucai.fulicenter.utils.Utils;
 
 public class MainActivity extends BaseActivity implements EMEventListener {
-    Context mContext;
 
 	protected static final String TAG = MainActivity.class.getName();
 
@@ -129,7 +130,7 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 	private Fragment[] mFragments;
 	private int index;
 	// 当前fragment的index
-	private int currentTabIndex;
+	private int currentTabIndex = -1;
 	// 账号在别处登录
 	public boolean isConflict = false;
 	// 账号被移除
@@ -139,6 +140,8 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 	private MyConnectionListener connectionListener = null;
 //	private MyGroupChangeListener groupChangeListener = null;
 
+    FragmentActivity mContext;
+
 	/**
 	 * 检查当前用户是否被删除
 	 */
@@ -147,6 +150,8 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 	}
 
     Drawable drawableNewGood,drawableBoutique,drawableCategory,drawableCart,drawablePersonalCenter;
+	
+    UserBean mUser;
 
 	@Override
 	public boolean onMenuItemSelected(int featureId, MenuItem item) {
@@ -166,17 +171,19 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 		// --?--
 		MobclickAgent.updateOnlineConfig(this);
 
-		if (getIntent().getBooleanExtra("conflict", false) && !isConflictDialogShow) {
-			showConflictDialog();
-		} else if (getIntent().getBooleanExtra(Constant.ACCOUNT_REMOVED, false) && !isAccountRemovedDialogShow) {
-			showAccountRemovedDialog();
-		}
-
-		initDB();
+        if (getIntent().getBooleanExtra("conflict", false)
+                && !isConflictDialogShow) {
+            showConflictDialog();
+        } else if (getIntent().getBooleanExtra(Constant.ACCOUNT_REMOVED, false)
+                && !isAccountRemovedDialogShow) {
+            showAccountRemovedDialog();
+        }
+        mUser = FuLiCenterApplication.getInstance().getUserBean();
+//		initDB();
 		
 		setListener();
-		//异步获取当前用户的昵称和头像
-		((DemoHXSDKHelper)HXSDKHelper.getInstance()).getUserProfileManager().asyncGetCurrentUserInfo();
+//		//异步获取当前用户的昵称和头像
+//		((DemoHXSDKHelper)HXSDKHelper.getInstance()).getUserProfileManager().asyncGetCurrentUserInfo();
 	}
 
     private void initFragment() {
@@ -205,19 +212,21 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 	 * 注册联系人改变、群组改变等事件监听
 	 */
 	private void setListener() {     
-		// setContactListener监听联系人的变化等
-        contactListener = new MyContactListener();
-		EMContactManager.getInstance().setContactListener(contactListener);
+        if (mUser != null) {
+            // setContactListener监听联系人的变化等
+            contactListener = new MyContactListener();
+            EMContactManager.getInstance().setContactListener(contactListener);
 
-		// 注册一个监听连接状态的listener
-		connectionListener = new MyConnectionListener();
-		EMChatManager.getInstance().addConnectionListener(connectionListener);
+            // 注册一个监听连接状态的listener
+            connectionListener = new MyConnectionListener();
+            EMChatManager.getInstance().addConnectionListener(connectionListener);
 
 //        // 注册群聊相关的listener
 //		groupChangeListener = new MyGroupChangeListener();
 //        EMGroupManager.getInstance().addGroupChangeListener(groupChangeListener);
-		
-        setMenuItemClickListener(); }
+        }
+        setMenuItemClickListener();
+    }
 
 	/**
 	 * 设置菜单项单击事件监听
@@ -1019,7 +1028,7 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if (!isConflict && !isCurrentAccountRemoved) {
+        if (!isConflict && !isCurrentAccountRemoved && mUser!=null) {
 			updateUnreadLabel();
 			updateUnreadAddressLable();
 			EMChatManager.getInstance().activityResumed();
@@ -1239,20 +1248,36 @@ public class MainActivity extends BaseActivity implements EMEventListener {
                 drawablePersonalCenter = getmDrawable(R.drawable.menu_item_personal_center_selected);
                 break;
 	        }
+//	        if (currentTabIndex != index) {
+//	            FragmentTransaction trx = getSupportFragmentManager().beginTransaction();
+//	            trx.hide(mFragments[currentTabIndex]);
+//	            if (!mFragments[index].isAdded()) {
+//	                trx.add(R.id.fragment_container, mFragments[index]);
+//	            }
+//	            trx.show(mFragments[index]).commit();
+//	        }
+            Log.e(TAG,"MenuItemClickListener.1currentTabIndex="+currentTabIndex+",index="+index);
+//	        mTabs[currentTabIndex].setSelected(false);
+//	        // 把当前tab设为选中状态
+//	        mTabs[index].setSelected(true);
+
 	        if (currentTabIndex != index) {
 	            FragmentTransaction trx = getSupportFragmentManager().beginTransaction();
-	            trx.hide(mFragments[currentTabIndex]);
+                if(currentTabIndex>-1){
+                    trx.hide(mFragments[currentTabIndex]);
+                }
 	            if (!mFragments[index].isAdded()) {
 	                trx.add(R.id.fragment_container, mFragments[index]);
 	            }
 	            trx.show(mFragments[index]).commit();
+                currentTabIndex = index;
+                Log.e(TAG,"MenuItemClickListener2.currentTabIndex="+currentTabIndex+",index="+index);
+                setMenuItemDrawable();
+//                if(fragment!=null){
+//                    Log.e(TAG,"MenuItemClickListener.FragmentUtils.startFragment,fragment="+fragment);
+//                    FragmentUtils.startFragment(mContext,fragment);
+//                }
 	        }
-            Log.e(TAG,"MenuItemClickListener.currentTabIndex="+currentTabIndex);
-//	        mTabs[currentTabIndex].setSelected(false);
-//	        // 把当前tab设为选中状态
-//	        mTabs[index].setSelected(true);
-	        currentTabIndex = index;
-            setMenuItemDrawable();
 	    }
 	}
 

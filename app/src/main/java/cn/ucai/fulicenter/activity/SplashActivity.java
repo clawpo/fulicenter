@@ -84,9 +84,6 @@ public class SplashActivity extends BaseActivity {
                             Log.i("main","SplashActivity.download contactList");
                             new DownloadContactsTask(SplashActivity.this, userName, 0, 20).execute();
                         }
-                        //进入主页面
-                        startActivity(new Intent(SplashActivity.this, MainActivity.class));//.putExtra("server_status",msg.isSuccess()));
-                        finish();
 //                    }else{
 //                        Log.e("SplashAvtivity","！！！！！！SplashAvtivity.NetUtil.login.userelse****="+msg.isSuccess());
 //                        startActivity(new Intent(SplashActivity.this, LoginActivity.class));
@@ -98,9 +95,12 @@ public class SplashActivity extends BaseActivity {
 						Thread.sleep(sleepTime);
 					} catch (InterruptedException e) {
 					}
-					startActivity(new Intent(SplashActivity.this, LoginActivity.class));
-					finish();
+//					startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+//					finish();
 				}
+                //进入主页面
+				startActivity(new Intent(SplashActivity.this, MainActivity.class));//.putExtra("server_status",msg.isSuccess()));
+				finish();
 			}
 		}).start();
 
