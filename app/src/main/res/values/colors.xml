@@ -16,7 +16,8 @@
     <color name="divider_list">#d4d4d4</color>
     <color name="top_bar_normal_bg">#ffffff</color>
     <color name="error_item_color">#F6EBE6</color>
-    <color name="bottom_bar_normal_bg">#ffffff</color>
+    <color name="bottom_bar_normal_bg">#FFFFFF</color>
+    <color name="bottom_bar_normal_bg_top">#C0BFBF</color>
     <color name="bottom_text_color_normal">#ffffff</color>
     <color name="btn_white_normal">#f7f8f8</color>
     <color name="btn_white_pressed">#b5b5b6</color>
@@ -42,4 +43,5 @@
 	<color name="fragment_bg">#eff2f6</color>
     <color name="item_good_text">#313131</color>
     <color name="item_good_price">#df3131</color>
+    <color name="list_background">#E7E6E6</color>
 </resources>

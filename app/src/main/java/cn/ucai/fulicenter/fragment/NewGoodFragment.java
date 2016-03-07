@@ -3,6 +3,7 @@ package cn.ucai.fulicenter.fragment;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,7 @@ import cn.ucai.fulicenter.utils.PullRefreshView.OnRefreshListener;
  * Created by ucai001 on 2016/3/3.
  */
 public class NewGoodFragment extends Fragment {
+    public static final String TAG = NewGoodFragment.class.getName();
     MainActivity mContext;
 
     ArrayList<NewGoodBean> mGoodList;
@@ -42,6 +44,7 @@ public class NewGoodFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        Log.i(TAG,"onCreateView...");
         mContext = (MainActivity) getActivity();
         View layout = View.inflate(mContext, R.layout.fragment_new_good,null);
         initView(layout);

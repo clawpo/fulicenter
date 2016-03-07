@@ -450,16 +450,20 @@ public final class NetUtil {
      * @throws Exception
      */
     public static ArrayList<NewGoodBean> findNewandBoutiqueGoods(int catId, int pageId, int pageSize) throws Exception {
+		Log.i(TAG,"findNewandBoutiqueGoods...catId="+catId+",pageId="+pageId+",pageSize="+pageSize);
         ArrayList<BasicNameValuePair> params=new ArrayList<BasicNameValuePair>();
         params.add(new BasicNameValuePair(I.KEY_REQUEST, I.REQUEST_FIND_NEW_BOUTIQUE_GOODS));
         params.add(new BasicNameValuePair(I.NewAndBoutiqueGood.CAT_ID, catId+""));
         params.add(new BasicNameValuePair(I.PAGE_ID, pageId+""));
         params.add(new BasicNameValuePair(I.PAGE_SIZE, pageSize+""));
         InputStream in;
+		Log.i(TAG,"findNewandBoutiqueGoods....SERVER_ROOT="+FuLiCenterApplication.SERVER_ROOT);
         in = HttpUtils.getInputStream(FuLiCenterApplication.SERVER_ROOT, params, HttpUtils.METHOD_GET);
         ObjectMapper om=new ObjectMapper();
         NewGoodBean[] goodArray = om.readValue(in,NewGoodBean[].class);
+		Log.i(TAG,"findNewandBoutiqueGoods....goodArray="+goodArray);
         ArrayList<NewGoodBean> goods = Utils.array2List(goodArray);
+		Log.i(TAG,"findNewandBoutiqueGoods....goods="+goods);
         Log.i("main","新品加载完成");
         HttpUtils.closeClient();
         return goods;

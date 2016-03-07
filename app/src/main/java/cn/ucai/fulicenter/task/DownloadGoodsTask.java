@@ -37,6 +37,7 @@ public class DownloadGoodsTask extends AsyncTask<Integer,Void,ArrayList<NewGoodB
 
     public DownloadGoodsTask(Context context, GoodAdapter mAdapter,
              ArrayList<NewGoodBean> mGoodList, ActionType actionType, int catId, int goodType) {
+        Log.i(TAG,"DownloadGoodsTask...");
         this.mContext = context;
         this.mAdapter = mAdapter;
         this.mGoodList = mGoodList;
@@ -54,6 +55,7 @@ public class DownloadGoodsTask extends AsyncTask<Integer,Void,ArrayList<NewGoodB
 	}
     @Override
     protected void onPreExecute() {
+        Log.i(TAG,"DownloadGoodsTask...onPreExecute");
         mDialog = null;
         if(actionType == ActionType.ACTION_DOWNLOAD){
             mDialog = new ProgressDialog(mContext);
@@ -67,7 +69,7 @@ public class DownloadGoodsTask extends AsyncTask<Integer,Void,ArrayList<NewGoodB
     protected ArrayList<NewGoodBean> doInBackground(Integer... params) {
         int pageId=params[0];
         int pageSize=params[1];
-        Log.i(TAG,"DownloadGoodsTask...");
+        Log.i(TAG,"DownloadGoodsTask...doInBackground");
         ArrayList<NewGoodBean> goodList=null;
         try{
             switch (goodType){
@@ -80,6 +82,7 @@ public class DownloadGoodsTask extends AsyncTask<Integer,Void,ArrayList<NewGoodB
             }
             this.loadStatus = LoadStatus.SUCCESS;
         }catch (Exception e){
+            e.printStackTrace();
             this.loadStatus = LoadStatus.FAILURE;
         }
         return goodList;
@@ -87,6 +90,7 @@ public class DownloadGoodsTask extends AsyncTask<Integer,Void,ArrayList<NewGoodB
 
     @Override
     protected void onPostExecute(ArrayList<NewGoodBean> goods) {
+        Log.i(TAG,"DownloadGoodsTask...onPostExecute");
         if(getLoadStatus() == LoadStatus.FAILURE){
             if(mDialog!=null){
                 mDialog.dismiss();
@@ -104,7 +108,7 @@ public class DownloadGoodsTask extends AsyncTask<Integer,Void,ArrayList<NewGoodB
                 break;
             case ACTION_SCROLL:
                 if(goods!=null){
-                    mAdapter.initItems(goods);
+		            mAdapter.addItems(goods);
                     mAdapter.setMore(true);
                 } else {
                   mAdapter.setMore(false);

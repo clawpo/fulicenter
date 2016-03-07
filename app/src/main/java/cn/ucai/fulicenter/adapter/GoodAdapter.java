@@ -29,9 +29,19 @@ public class GoodAdapter extends BaseAdapter {
     Context context;
     ArrayList<NewGoodBean> goodList;
     ImageLoader imageLoader;
+    /** 还有更多的数据可供下载*/
     boolean misMore;
     int sortBy;
-
+    /**
+     * 商品显示构造器
+     * @param context
+     * @param goodList
+     * @param sortBy:排序方式，以下常量值之一
+     * SORT_BY_PRICE_ASC
+     * SORT_BY_PRICE_DESC
+     * SORT_BY_ADDTIME_ASC
+     * SORT_BY_ADDTIME_DESC
+     */
     public GoodAdapter(Context context,ArrayList<NewGoodBean> goodList, int sortBy) {
         this.context = context;
         this.goodList = goodList;
@@ -58,8 +68,8 @@ public class GoodAdapter extends BaseAdapter {
         goodList.clear();
         addItems(data);
     }
-
-    private void addItems(ArrayList<NewGoodBean> data) {
+    
+    public void addItems(ArrayList<NewGoodBean> data) {
         goodList.addAll(data);
         sort(sortBy);
         notifyDataSetChanged();
@@ -100,10 +110,10 @@ public class GoodAdapter extends BaseAdapter {
         String goodsThumb = good.getGoodsThumb();
         holder.ivGoodsThumb.setTag(goodsThumb);
         String savePath = goodsThumb.substring(goodsThumb.indexOf("/images")+1);
-        String uri = I.SERVER_ROOT
+        String url=I.SERVER_ROOT
                 +"?"+ I.KEY_REQUEST+"="+ I.REQUEST_DOWNLOAD_NEW_GOOD
                 +"&"+ I.FILE_NAME+"="+goodsThumb;
-        Bitmap thumb = imageLoader.displayImage(uri, savePath, 150, 250, new ImageLoader.OnImageLoadListener() {
+        Bitmap thumb = imageLoader.displayImage(url, savePath, 150, 250, new ImageLoader.OnImageLoadListener() {
             @Override
             public void onSuccess(String path, Bitmap bitmap) {
                 ImageView iv = (ImageView) parent.getTag();

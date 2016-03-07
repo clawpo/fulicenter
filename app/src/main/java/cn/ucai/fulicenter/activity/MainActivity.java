@@ -181,10 +181,24 @@ public class MainActivity extends BaseActivity implements EMEventListener {
         mUser = FuLiCenterApplication.getInstance().getUserBean();
 //		initDB();
 		
-		setListener();
+//		setListener();
 //		//异步获取当前用户的昵称和头像
 //		((DemoHXSDKHelper)HXSDKHelper.getInstance()).getUserProfileManager().asyncGetCurrentUserInfo();
 	}
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        setListener();
+        setMenuItemDefaultDrawable();
+        if(currentTabIndex == -1){
+            currentTabIndex = 0;
+            index = 0;
+            drawableNewGood = getmDrawable(R.drawable.menu_item_new_good_selected);
+            FragmentUtils.startFragment(mContext, mFragments[0]);
+        }
+
+    }
 
     private void initFragment() {
 		mNewGoodFragment = new NewGoodFragment();
@@ -1289,6 +1303,7 @@ public class MainActivity extends BaseActivity implements EMEventListener {
     }
     /** 设置菜单项按钮顶部缺省显示的图片 */
     private void setMenuItemDefaultDrawable() {
+        Log.i(TAG,"setMenuItemDefaultDrawable..........");
         drawableNewGood = getmDrawable(R.drawable.menu_item_new_good_normal);
         drawableBoutique = getmDrawable(R.drawable.boutique_normal);
         drawableCategory = getmDrawable(R.drawable.menu_item_category_normal);
