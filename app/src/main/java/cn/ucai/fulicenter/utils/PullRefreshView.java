@@ -25,7 +25,7 @@ import cn.ucai.fulicenter.R;
  * 
  * @author yw
  */
-public class PullRefreshView<T extends AdapterView<?>> extends LinearLayout
+public class PullRefreshView<T extends AdapterView<?>> extends RelativeLayout
 		implements OnTouchListener {
 	/**
 	 * 加载状态的枚举类

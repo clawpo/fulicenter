@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fff">
+
+    <RelativeLayout
+        android:id="@+id/layout_title"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:background="@color/good_detail_title_bg">
+        <ImageView
+            android:id="@+id/ivReturn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:padding="5dp"
+            android:src="@drawable/selector_return_bg" />
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@id/ivReturn"
+            android:text="商品详情"
+            android:textColor="#fff"
+            android:textSize="18sp" />
+
+        <ImageView
+            android:id="@+id/ivShare"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:padding="5dp"
+            android:src="@drawable/selector_share_bg" />
+
+        <ImageView
+            android:id="@+id/ivCollect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/ivShare"
+            android:padding="5dp"
+            android:src="@drawable/bg_collect_in" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_toLeftOf="@id/ivCollect"
+            android:layout_toRightOf="@id/tvTitle"
+            android:layout_centerVertical="true"
+            android:padding="5dp" >
+
+            <ImageView
+                android:id="@+id/ivAddCart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/menu_item_cart_selected" />
+
+            <TextView
+                android:id="@+id/tvCartCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:gravity="center"
+                android:text="1"
+                android:textColor="#f00"
+                android:textSize="12dp" 
+                android:visibility="invisible"/>
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/layout_title"
+        android:layout_marginTop="5dp"
+        android:padding="5dp" >
+
+        <TextView
+            android:id="@+id/tvGoodEnglishName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pencey"
+            android:textColor="#000" />
+
+        <TextView
+            android:id="@+id/tvGoodName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvGoodEnglishName"
+            android:layout_marginTop="5dp"
+            android:text="Warriar西装外套"
+            android:textColor="#000" />
+
+        <TextView
+            android:id="@+id/tvShopPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:textColor="#000" />
+
+        <TextView
+            android:id="@+id/tvCurrencyPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/tvShopPrice"
+            android:text="￥1,900"
+            android:textColor="#000" />
+
+        <RelativeLayout
+            android:id="@+id/layout_banner"
+            android:layout_width="match_parent"
+            android:layout_height="190dp"
+            android:layout_below="@id/tvCurrencyPrice"
+            android:layout_marginTop="5dp" >
+
+            <cn.ucai.fulicenter.view.SlideAutoLoopView
+                android:id="@+id/salv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <cn.ucai.fulicenter.view.FlowIndicator
+                android:id="@+id/indicator"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                app:count="4"
+                app:focus="0"
+                app:focus_color="#ff4b93"
+                app:normal_color="#a1d1d1d1"
+                app:r="10dp"
+                app:space="5dp" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/layoutColor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/layout_banner"
+            android:orientation="horizontal" >
+
+            <LinearLayout
+                android:id="@+id/layoutColorSelector"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal" />
+        </LinearLayout>
+
+        <WebView
+            android:id="@+id/wvGoodBrief"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/layoutColor"
+            android:background="#fff" />
+    </RelativeLayout>
+
+</RelativeLayout>

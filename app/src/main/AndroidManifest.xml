@@ -362,6 +362,11 @@
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="Po3TowOnTtA4sw97xNSqhMhr" />
+        <activity
+            android:name="cn.ucai.fulicenter.activity.GoodDetailsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/horizontal_slide">
+        </activity>
         
           </application>
 

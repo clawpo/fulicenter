@@ -4,13 +4,16 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:background="#fff"
-    android:id="@+id/layoutGood">
+    android:id="@+id/layoutGood"
+    android:weightSum="1">
     <ImageView
         android:id="@+id/ivGoodThumb"
-        android:layout_width="150dp"
+        android:layout_width="match_parent"
         android:layout_height="250dp"
-        android:scaleType="fitCenter"
-        android:src="@drawable/nopic"/>
+        android:scaleType="fitXY"
+        android:layout_gravity="center"
+        android:src="@drawable/nopic"
+        android:layout_weight="0.42" />
     <TextView
         android:id="@+id/tvGoodName"
         android:layout_width="150dp"

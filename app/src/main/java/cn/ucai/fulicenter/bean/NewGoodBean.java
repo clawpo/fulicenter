@@ -91,7 +91,7 @@ public class NewGoodBean implements Serializable {
         this.rankPrice = rankPrice;
     }
 
-    public void setIsPromote(boolean isPromote) {
+    public void setPromote(boolean isPromote) {
         this.isPromote = isPromote;
     }
 

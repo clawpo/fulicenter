@@ -724,7 +724,7 @@ public final class NetUtil {
             good.setGoodsName(goodDetails.getGoodsName());
             good.setGoodsThumb(goodDetails.getGoodsThumb());
             good.setId(goodDetails.getId());
-            good.setIsPromote(goodDetails.isPromote());
+            good.setPromote(goodDetails.isPromote());
             good.setPromotePrice(goodDetails.getPromotePrice());
             good.setRankPrice(goodDetails.getRankPrice());
             good.setShopPrice(goodDetails.getShopPrice());

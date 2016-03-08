@@ -18,6 +18,7 @@ import java.util.Comparator;
 import cn.ucai.fulicenter.D;
 import cn.ucai.fulicenter.I;
 import cn.ucai.fulicenter.R;
+import cn.ucai.fulicenter.activity.GoodDetailsActivity;
 import cn.ucai.fulicenter.bean.NewGoodBean;
 import cn.ucai.fulicenter.utils.ImageLoader;
 
@@ -137,8 +138,8 @@ public class GoodAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 Log.i(TAG,"new good item on click,good="+good.toString());
-//                context.startActivity(new Intent(context,GoodDetailsActivity.class)
-//                        .putExtra(D.NewGood.KEY_GOODS_ID,good.getGoodsId()));
+                context.startActivity(new Intent(context,GoodDetailsActivity.class)
+                        .putExtra(D.NewGood.KEY_GOODS_ID,good.getGoodsId()));
             }
         });
         return layout;
