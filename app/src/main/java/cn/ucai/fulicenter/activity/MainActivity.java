@@ -164,8 +164,8 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 		mContext=this;
 
 		setContentView(R.layout.activity_main);
-		initFragment();
 		initView();
+		initFragment();
 
 		// MobclickAgent.setDebugMode( true );
 		// --?--
@@ -190,14 +190,6 @@ public class MainActivity extends BaseActivity implements EMEventListener {
     protected void onStart() {
         super.onStart();
         setListener();
-        setMenuItemDefaultDrawable();
-        if(currentTabIndex == -1){
-            currentTabIndex = 0;
-            index = 0;
-            drawableNewGood = getmDrawable(R.drawable.menu_item_new_good_selected);
-            FragmentUtils.startFragment(mContext, mFragments[0]);
-        }
-
     }
 
     private void initFragment() {
@@ -209,12 +201,19 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 //		mFindFragment=new FindFragment();
 		mFragments = new Fragment[] {
 				mNewGoodFragment};
-//		// 添加显示第一个fragment
+		// 添加显示第一个fragment
 //		getSupportFragmentManager()
 //		    .beginTransaction().add(R.id.fragment_container, mChatHistoryFragment)
 //			.add(R.id.fragment_container, mContactListFragment)
 //			.hide(mContactListFragment).show(mChatHistoryFragment)
 //			.commit();
+		if(currentTabIndex == -1){
+			currentTabIndex = 0;
+			index = 0;
+			drawableNewGood = getmDrawable(R.drawable.menu_item_new_good_selected);
+            mivNewGood.setImageDrawable(drawableNewGood);
+			FragmentUtils.startFragment(mContext, mFragments[0]);
+		}
     }
 
     private void initDB() {
