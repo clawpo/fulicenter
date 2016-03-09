@@ -28,6 +28,7 @@
     <color name="btn_gray_pressed">#666667</color>
     <color name="btn_blue_normal">#1e90ff</color>
     <color name="btn_blue_pressed">#0066FF</color>
+    <color name="white">#FFFFFF</color>
     <color name="orange">#FFA500</color>
     <color name="gray_pressed">#b5b5b6</color>
     <color name="gray_normal">#666667</color>
@@ -49,4 +50,5 @@
     <color name="good_detail_bg_white">#FFFFFF</color>
     <color name="good_detail_currency_price">#CC2E2E</color>
     <color name="good_detaul_flow_indicator_focus">#FF5300</color>
+    <color name="cart_buy_bg">#FF8000</color>
 </resources>
