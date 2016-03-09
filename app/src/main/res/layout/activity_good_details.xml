@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#fff">
+    android:background="@color/good_detail_bg">
 
     <RelativeLayout
         android:id="@+id/layout_title"
@@ -82,8 +82,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/layout_title"
-        android:layout_marginTop="5dp"
-        android:padding="5dp" >
+        android:layout_marginTop="15dp"
+        android:padding="50dp"
+        android:background="@color/good_detail_bg_white" >
 
         <TextView
             android:id="@+id/tvGoodEnglishName"
@@ -115,19 +116,20 @@
             android:layout_alignParentRight="true"
             android:layout_below="@id/tvShopPrice"
             android:text="￥1,900"
-            android:textColor="#000" />
+            android:textColor="@color/good_detail_currency_price" />
 
         <RelativeLayout
             android:id="@+id/layout_banner"
             android:layout_width="match_parent"
             android:layout_height="190dp"
             android:layout_below="@id/tvCurrencyPrice"
-            android:layout_marginTop="5dp" >
+            android:layout_marginTop="25dp" >
 
             <cn.ucai.fulicenter.view.SlideAutoLoopView
                 android:id="@+id/salv"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:background="@color/good_detail_bg_white" />
 
             <cn.ucai.fulicenter.view.FlowIndicator
                 android:id="@+id/indicator"
@@ -136,10 +138,10 @@
                 android:layout_alignParentBottom="true"
                 app:count="4"
                 app:focus="0"
-                app:focus_color="#ff4b93"
+                app:focus_color="@color/good_detaul_flow_indicator_focus"
                 app:normal_color="#a1d1d1d1"
-                app:r="10dp"
-                app:space="5dp" />
+                app:r="5dp"
+                app:space="3dp" />
         </RelativeLayout>
 
         <LinearLayout
@@ -162,7 +164,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/layoutColor"
-            android:background="#fff" />
+            android:layout_margin="10dp"
+            android:background="@color/good_detail_bg_white" />
     </RelativeLayout>
 
 </RelativeLayout>

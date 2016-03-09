@@ -1,13 +1,16 @@
 package cn.ucai.fulicenter.activity;
 
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ImageView;
@@ -25,6 +28,7 @@ import cn.ucai.fulicenter.adapter.MessageAdapter;
 import cn.ucai.fulicenter.bean.AlbumBean;
 import cn.ucai.fulicenter.bean.CartBean;
 import cn.ucai.fulicenter.bean.GoodDetailsBean;
+import cn.ucai.fulicenter.bean.MessageBean;
 import cn.ucai.fulicenter.bean.NewGoodBean;
 import cn.ucai.fulicenter.bean.UserBean;
 import cn.ucai.fulicenter.utils.ImageLoader;
@@ -37,6 +41,7 @@ import cn.ucai.fulicenter.view.SlideAutoLoopView;
  * Created by ucai001 on 2016/3/8.
  */
 public class GoodDetailsActivity extends BaseActivity {
+    public static final String TAG = GoodDetailsActivity.class.getName();
     GoodDetailsActivity mContext;
     GoodDetailsBean mGoodDetails;
     int mGoodsId;
@@ -60,9 +65,9 @@ public class GoodDetailsActivity extends BaseActivity {
     ImageView mivAddCart;
     TextView mtvCartCount;
 
-//    GoodDetailsUpdateReceiver mReceiver;
-//
-//    CartChangedReceiver mCartChangedReceiver;
+    GoodDetailsUpdateReceiver mReceiver;
+    
+    CartChangedReceiver mCartChangedReceiver;
 
     ArrayList<CartBean> mCartList;
     @Override
@@ -72,6 +77,63 @@ public class GoodDetailsActivity extends BaseActivity {
         mContext=this;
         initView();
         initData();
+        setListener();
+        registerGoodDetailsUpdateReceiver();
+        registerCartChangedReceiver();
+    }
+
+    private void registerCartChangedReceiver() {
+        mCartChangedReceiver=new CartChangedReceiver();
+        IntentFilter filter=new IntentFilter("cartChanged");
+        registerReceiver(mCartChangedReceiver, filter);
+    }
+
+    private void registerGoodDetailsUpdateReceiver() {
+        mReceiver=new GoodDetailsUpdateReceiver();
+        IntentFilter filter=new IntentFilter("good_details_update");
+        registerReceiver(mReceiver, filter);
+    }
+    private void setListener() {
+        setCollectClickListener();
+        setReturnClickListener();
+        
+        setAddCartClickListener();
+    }
+
+    private void setAddCartClickListener() {
+        mivAddCart.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.e(TAG,"mGoodDetails="+mGoodDetails);
+                Utils.addCart(mContext,mGoodDetails);
+            }
+        });
+    }
+
+    private void setReturnClickListener() {
+        findViewById(R.id.ivReturn).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+    }
+
+    /**
+     * 设置收藏/取消收藏按钮的点击事件监听
+     */
+    private void setCollectClickListener() {
+        mivCollect.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String userName=FuLiCenterApplication.getInstance().getUserName();
+                if(userName==null){
+                    Utils.showToast(mContext, "请先登陆", Toast.LENGTH_LONG);
+                    return ;
+                }
+                new CollectTask(mContext,userName,mGoodDetails,mivCollect,misCollect).execute();
+            }
+        });
     }
 
     /**
@@ -80,6 +142,7 @@ public class GoodDetailsActivity extends BaseActivity {
     private void initData() {
         mGoodsId=getIntent().getIntExtra(D.GoodDetails.KEY_GOODS_ID, 0);
         new DownloadGoodDetailsTask(mContext, mGoodsId).execute();
+        initCartData();
     }
 
     private void initView() {
@@ -155,6 +218,7 @@ public class GoodDetailsActivity extends BaseActivity {
             }else{
                 this.isCollect=false;
             }
+            Log.i(TAG,"getDetail="+goodDetails);
             return goodDetails;
         }
 
@@ -180,10 +244,11 @@ public class GoodDetailsActivity extends BaseActivity {
                 mivCollect.setImageResource(R.drawable.bg_collect_in);
             }
 
+//            mHolder.tvShopPrice.setText(result.getShopPrice());
             mHolder.tvCurrencyPrice.setText(result.getCurrencyPrice());
             mHolder.tvGoodEngishName.setText(result.getGoodsEnglishName());
             mHolder.tvGoodName.setText(result.getGoodsName());
-            mHolder.wvGoodBrief.loadDataWithBaseURL(null, result.getGoodsBrief(), D.TEXT_HTML, D.UTF_8, null);
+            mHolder.wvGoodBrief.loadDataWithBaseURL(null, result.getGoodsBrief().trim(), D.TEXT_HTML, D.UTF_8, null);
 
             //初始化颜色面板
             initColorsBanner();
@@ -246,5 +311,106 @@ public class GoodDetailsActivity extends BaseActivity {
             mSlideAutoLoopView.startPlayLoop(mFlowIndicator, albumImgUrl, albumImgUrl.length);
         }
 
+    }
+    /**
+     * 收藏操作
+     */
+    class CollectTask extends AsyncTask<Void, Void, MessageBean>{
+        Context context;
+        String userName;
+        GoodDetailsBean goodDetails;
+        ImageView ivCollect;
+        boolean isCollect;
+        public CollectTask(Context context,String userName,GoodDetailsBean goodDetails,
+                ImageView ivCollect,boolean isCollect) {
+            super();
+            this.context=context;
+            this.userName=userName;
+            this.goodDetails=goodDetails;
+            this.ivCollect=ivCollect;
+            this.isCollect=isCollect;
+        }
+        
+        @Override
+        protected MessageBean doInBackground(Void... params) {
+            MessageBean msg=null;
+            if(isCollect){
+                msg=NetUtil.deleteCollect(userName, goodDetails.getGoodsId());
+            }else {
+                msg=NetUtil.addCollect(userName,goodDetails);
+            }
+            return msg;
+        }
+        
+        @Override
+        protected void onPostExecute(MessageBean result) {
+            if(result==null){
+                Utils.showToast(context, "操作失败", Toast.LENGTH_LONG);
+                return ;
+            }
+            Utils.showToast(context, result.getMsg(), Toast.LENGTH_LONG);
+            if(result.getMsg().equals("收藏成功")){
+                if(result.isSuccess()){
+                    mivCollect.setImageResource(R.drawable.bg_collect_out);
+                    sendBroadcast(new Intent("good_details_update")
+                        .putExtra("is_collect", true));
+                }
+            }else if(result.getMsg().equals("删除收藏成功")){
+                if(result.isSuccess()){
+                    mivCollect.setImageResource(R.drawable.bg_collect_in);
+                    sendBroadcast(new Intent("good_details_update")
+                    .putExtra("is_collect", false));
+                }
+            }
+        }
+    }
+    
+    /**
+     * 接收商品详情下载的广播
+     * @author yao
+     *
+     */
+    class GoodDetailsUpdateReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            GoodDetailsBean goodDetails=(GoodDetailsBean) intent.getSerializableExtra("good_details");
+            if(goodDetails!=null){
+                mGoodDetails=goodDetails;
+            }
+            misCollect=intent.getBooleanExtra("is_collect", false);
+        }
+    }
+    
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(mReceiver!=null){
+            unregisterReceiver(mReceiver);
+        }
+        if(mCartChangedReceiver!=null){
+            unregisterReceiver(mCartChangedReceiver);
+        }
+    }
+
+    private void initCartData(){
+        mCartList=FuLiCenterApplication.getInstance().getCartList();
+        Log.e(TAG,"CartChangedReceiver.mCartList="+mCartList);
+        if(!mCartList.isEmpty()){
+            mtvCartCount.setVisibility(View.VISIBLE);
+            int count=Utils.sumCartCount();
+            Log.e(TAG,"CartChangedReceiver.count="+count);
+            mtvCartCount.setText(""+count);
+        }
+    }
+
+    /**
+     * 接收来自DownloadCartTask发送的购物车数据改变的广播
+     * @author yao
+     */
+    class CartChangedReceiver extends BroadcastReceiver{
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            initCartData();
+        }
     }
 }

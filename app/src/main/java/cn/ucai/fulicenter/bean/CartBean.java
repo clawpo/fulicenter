@@ -1,5 +1,8 @@
 package cn.ucai.fulicenter.bean;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonProperty;
+
 import java.io.Serializable;
 
 /**
@@ -20,6 +23,7 @@ public class CartBean implements Serializable {
     private int goodsId;
     private GoodDetailsBean goods;
     private int count;
+    @JsonProperty("isChecked")
     private boolean isChecked;
 
     public void setId(int id) {
@@ -42,7 +46,7 @@ public class CartBean implements Serializable {
         return goods;
     }
 
-    public void setIsChecked(boolean isChecked) {
+    public void setChecked(boolean isChecked) {
         this.isChecked = isChecked;
     }
 
@@ -66,7 +70,8 @@ public class CartBean implements Serializable {
         this.goods = goods;
     }
 
-    public boolean isIsChecked() {
+    @JsonIgnore
+    public boolean isChecked() {
         return isChecked;
     }
 
@@ -79,5 +84,17 @@ public class CartBean implements Serializable {
         this.goodsId = goodsId;
         this.count = count;
         this.isChecked = isChecked;
+    }
+
+    @Override
+    public String toString() {
+        return "CartBean{" +
+                "id=" + id +
+                ", userName='" + userName + '\'' +
+                ", goodsId=" + goodsId +
+                ", goods=" + goods +
+                ", count=" + count +
+                ", isChecked=" + isChecked +
+                '}';
     }
 }

@@ -21,7 +21,8 @@ public interface I {
     public static final String AVATAR_TYPE="avatarType";
     public static final String FILE_NAME="file_name";
     
-    
+    public static final int PAGE_ID_DEFAULT = 0;
+    public static final int PAGE_SIZE_DEFAULT = 10;
     
     class Cart{
         public static final String ID="id";

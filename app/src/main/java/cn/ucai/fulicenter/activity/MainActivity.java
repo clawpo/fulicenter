@@ -14,9 +14,11 @@
 package cn.ucai.fulicenter.activity;
 
 import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
@@ -71,8 +73,10 @@ import java.util.UUID;
 import cn.ucai.fulicenter.Constant;
 import cn.ucai.fulicenter.DemoHXSDKHelper;
 import cn.ucai.fulicenter.FuLiCenterApplication;
+import cn.ucai.fulicenter.I;
 import cn.ucai.fulicenter.R;
 import cn.ucai.fulicenter.applib.controller.HXSDKHelper;
+import cn.ucai.fulicenter.bean.CartBean;
 import cn.ucai.fulicenter.bean.ContactBean;
 import cn.ucai.fulicenter.bean.GroupBean;
 import cn.ucai.fulicenter.bean.UserBean;
@@ -86,6 +90,7 @@ import cn.ucai.fulicenter.fragment.FindFragment;
 import cn.ucai.fulicenter.fragment.NewGoodFragment;
 import cn.ucai.fulicenter.fragment.SettingsFragment;
 import cn.ucai.fulicenter.task.DeleteContactsTask;
+import cn.ucai.fulicenter.task.DownloadCartTask;
 import cn.ucai.fulicenter.utils.CommonUtils;
 import cn.ucai.fulicenter.utils.FragmentUtils;
 import cn.ucai.fulicenter.utils.NetUtil;
@@ -153,6 +158,7 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 	
     UserBean mUser;
 
+    CartChangedReceiver mCartChangedReceiver;
 	@Override
 	public boolean onMenuItemSelected(int featureId, MenuItem item) {
 		return super.onMenuItemSelected(featureId, item);
@@ -179,6 +185,7 @@ public class MainActivity extends BaseActivity implements EMEventListener {
             showAccountRemovedDialog();
         }
         mUser = FuLiCenterApplication.getInstance().getUserBean();
+		new DownloadCartTask(mContext, I.PAGE_ID_DEFAULT,I.PAGE_SIZE_DEFAULT).execute();
 //		initDB();
 		
 //		setListener();
@@ -512,6 +519,9 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 //		if(groupChangeListener != null){
 //		    EMGroupManager.getInstance().removeGroupChangeListener(groupChangeListener);
 //		}
+        if(mCartChangedReceiver!=null){
+            unregisterReceiver(mCartChangedReceiver);
+        }
 	}
 
 	/**
@@ -1041,6 +1051,7 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 	@Override
 	protected void onResume() {
 		super.onResume();
+        registerCartChangedReceiver();
         if (!isConflict && !isCurrentAccountRemoved && mUser!=null) {
 			updateUnreadLabel();
 			updateUnreadAddressLable();
@@ -1319,4 +1330,26 @@ public class MainActivity extends BaseActivity implements EMEventListener {
         drawableNewGood.setBounds(bounds);
         mivNewGood.setImageDrawable(drawableNewGood);
     }
+    /**
+     * 接收来自DownloadCartTask发送的购物车数据改变的广播
+     * @author yao
+     */
+    class CartChangedReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            //统计购物车中的商品件数
+			int count=Utils.sumCartCount();
+            //显示购物车中的商品件数
+            mtvCartHint.setText(""+count);
+            mtvCartHint.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void registerCartChangedReceiver() {
+        mCartChangedReceiver=new CartChangedReceiver();
+        IntentFilter filter=new IntentFilter("cartChanged");
+        registerReceiver(mCartChangedReceiver, filter);
+    }
+    
+    
 }

@@ -1,6 +1,8 @@
 package cn.ucai.fulicenter.utils;
 
 import android.content.Context;
+import android.nfc.Tag;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.easemob.chat.EMMessage.ChatType;
@@ -11,9 +13,14 @@ import java.util.HashMap;
 import java.util.List;
 
 import cn.ucai.fulicenter.FuLiCenterApplication;
+import cn.ucai.fulicenter.bean.CartBean;
+import cn.ucai.fulicenter.bean.GoodDetailsBean;
 import cn.ucai.fulicenter.bean.UserBean;
+import cn.ucai.fulicenter.task.UpdateCartTask;
+import cn.ucai.fulicenter.task.UploadCartTask;
 
 public class Utils {
+    public static final String TAG = Utils.class.getName();
     
     public static String getPackageName(Context context) {
         return context.getPackageName();
@@ -99,4 +106,80 @@ public class Utils {
         int density = (int) context.getResources().getDisplayMetrics().density;
         return dp*density;
     }
+    
+    /**
+     * 统计购物车中商品的件数
+     * @return
+     */
+    public static int sumCartCount(){
+        ArrayList<CartBean> cartList = FuLiCenterApplication.getInstance().getCartList();
+        int count=0;
+        for(int i=0;i<cartList.size();i++){
+            count+=cartList.get(i).getCount();
+        }
+        return count;
+    }
+    /**
+     * 将商品添加至购物车
+     * @param context
+     * @param goods
+     */
+    public static void addCart(Context context,GoodDetailsBean goods) {
+        boolean isExists=false;
+        String userName=null;
+        UserBean user=FuLiCenterApplication.getInstance().getUserBean();
+        if(user!=null){
+            userName = user.getUserName();
+        }else{
+            userName = "";
+        }
+        ArrayList<CartBean> cartList=FuLiCenterApplication.getInstance().getCartList();
+        int goodsId = goods.getGoodsId();
+        CartBean cart=null;
+        Log.e(TAG,"addCart,cartList="+cartList+",goods="+goods);
+        for(int i=0;i<cartList.size()&&!isExists;i++){
+            if(goodsId==cartList.get(i).getGoodsId()){
+                //重复的商品，件数加1
+                int count = cartList.get(i).getCount();
+                cartList.get(i).setCount(++count);
+                cart=cartList.get(i);
+                isExists=true;
+            }
+        }
+        Log.e(TAG,"addCart,cart="+cart+",isExists="+isExists);
+        if(!isExists){//新商品
+            cart=new CartBean(0,userName, goods.getGoodsId(),1,true);
+            cartList.add(cart);
+            //向服务端上传新添加至购物车中的商品信息
+            new UploadCartTask(context, cart).execute();
+        }else{
+            new UpdateCartTask(context, cart.getId(), cart.getCount()).execute();
+        }
+    }
+    
+    /**
+     * 从购物车中减去商品件数
+     * @param context
+     * @param goods
+     */
+    public static void delCart(Context context,GoodDetailsBean goods) {
+        boolean isExists=false;
+        CartBean cart=null;
+        ArrayList<CartBean> cartList=FuLiCenterApplication.getInstance().getCartList();
+        int goodsId = goods.getGoodsId();
+        for(int i=0;i<cartList.size()&&!isExists;i++){
+            if(goodsId==cartList.get(i).getGoodsId()){
+                int count = cartList.get(i).getCount();
+                if(count>1){
+                    cartList.get(i).setCount(count-1);
+                    cart=cartList.get(i);
+                    isExists=true;
+                }
+            }
+        }
+        if(isExists){
+            new UpdateCartTask(context, cart.getId(), cart.getCount()).execute();
+        }
+    }
+    
 }

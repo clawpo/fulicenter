@@ -27,6 +27,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
+import android.os.Message;
 import android.util.Log;
 
 import com.pingplusplus.model.Charge;
@@ -867,13 +868,18 @@ public final class NetUtil {
         params.add(new BasicNameValuePair(I.KEY_REQUEST, I.REQUEST_ADD_CART));
         params.add(new BasicNameValuePair(I.Cart.COUNT, cart.getCount()+""));
         params.add(new BasicNameValuePair(I.Cart.GOODS_ID, cart.getGoodsId()+""));
-        params.add(new BasicNameValuePair(I.Cart.IS_CHECKED, cart.isIsChecked()+""));
+        params.add(new BasicNameValuePair(I.Cart.IS_CHECKED, cart.isChecked()+""));
         params.add(new BasicNameValuePair(I.Cart.USER_NAME, cart.getUserName()));
         try {
+			Log.e(TAG,"addCart,cart="+cart);
+            Log.e(TAG,"addCart,params="+params.toString());
             InputStream in = httpUtils.getInputStream(FuLiCenterApplication.SERVER_ROOT, params, HttpUtils.METHOD_GET);
             ObjectMapper om=new ObjectMapper();
-            Integer id = om.readValue(in, Integer.class);
-            return id;
+            MessageBean msg = om.readValue(in, MessageBean.class);
+            Log.e(TAG,"addCart,msg="+msg);
+            if(msg.isSuccess()){
+                return Integer.parseInt(msg.getMsg());
+            }
         } catch (IllegalStateException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -902,9 +908,12 @@ public final class NetUtil {
         params.add(new BasicNameValuePair(I.Cart.COUNT, count+""));
         params.add(new BasicNameValuePair(I.Cart.ID, cartId+""));
         try {
+            Log.e(TAG,"addCart,cartId="+cartId+",count="+count);
+            Log.e(TAG,"addCart,params="+params.toString());
             InputStream in = httpUtils.getInputStream(FuLiCenterApplication.SERVER_ROOT, params, HttpUtils.METHOD_GET);
             ObjectMapper om=new ObjectMapper();
             MessageBean msg= om.readValue(in, MessageBean.class);
+            Log.e(TAG,"addCart,msg="+msg.toString());
             return msg.isSuccess();
         } catch (IllegalStateException e) {
             // TODO Auto-generated catch block
