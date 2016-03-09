@@ -77,21 +77,32 @@
                 android:layout_below="@id/ivCart"
                 android:text="购物车" />
             <!-- android:drawableTop="@drawable/menu_cart" -->
+            <LinearLayout
+                android:id="@+id/shopping_cart_num_bg"
+                android:layout_width="55dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="3dp"
+                android:layout_centerInParent="true"
+                android:layout_alignParentTop="true"
+                android:gravity="center"
+                android:orientation="vertical" >
 
             <TextView
                 android:id="@+id/tvCartHint"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
                 android:background="@drawable/cart_hint"
+                android:layout_marginLeft="15dp"
                 android:gravity="center"
                 android:padding="2dp"
+                android:paddingLeft="50dp"
                 android:text="13"
                 android:textColor="#fff"
                 android:textSize="12dp"
-                android:layout_marginRight="13dp"
-                android:visibility="gone" />
+                android:visibility="visible" />
+            </LinearLayout>
         </RelativeLayout>
 
         <RelativeLayout
