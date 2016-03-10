@@ -1,14 +1,18 @@
 package cn.ucai.fulicenter.utils;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapFactory.Options;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import cn.ucai.fulicenter.utils.ImageLoader.OnImageLoadListener;
 
 public final class BitmapUtils {
 	/**
@@ -73,4 +77,35 @@ public final class BitmapUtils {
 			e.printStackTrace();
 		}
 	}
+	
+	/**
+	 * 异步加载图片，在适配器的getView方法中显示指定的图片
+	 * @param context:适配器所在的Activity
+	 * @param imageLoader：图片异步加载的线程
+	 * @param parent：ListView或GridView
+	 * @param ivImg：显示图片的view
+	 * @param imgUrl：图片的下载的完整地址
+	 * @param imgPath:图片下载的不完整地址,保存在手机sd卡的路径
+	 * @return
+	 */
+	public static Bitmap showGoodsThumb(Context context, ImageLoader imageLoader,
+			final ViewGroup parent, ImageView ivImg, String imgUrl, String imgPath) {
+        ivImg.setTag(imgUrl);
+        Bitmap bitmap = imageLoader.displayImage(imgUrl, imgPath, Utils.dp2px(context, 42), Utils.dp2px(context, 42), new OnImageLoadListener() {
+            @Override
+            public void onSuccess(String path, Bitmap bitmap) {
+                ImageView iv=(ImageView) parent.findViewWithTag(path);
+                if(iv!=null){
+                    iv.setImageBitmap(bitmap);
+                }
+            }
+            
+            @Override
+            public void error(String errorMsg) {
+                // TODO Auto-generated method stub
+            }
+        });
+        return bitmap;
+    }
+	
 }

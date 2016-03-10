@@ -1345,9 +1345,13 @@ public class MainActivity extends BaseActivity implements EMEventListener {
         public void onReceive(Context context, Intent intent) {
             //统计购物车中的商品件数
 			int count=Utils.sumCartCount();
-            //显示购物车中的商品件数
-            mtvCartHint.setText(""+count);
-            mtvCartHint.setVisibility(View.VISIBLE);
+			if(count>0){
+				//显示购物车中的商品件数
+				mtvCartHint.setText(""+count);
+				mtvCartHint.setVisibility(View.VISIBLE);
+			} else {
+				mtvCartHint.setVisibility(View.GONE);
+			}
         }
     }
 

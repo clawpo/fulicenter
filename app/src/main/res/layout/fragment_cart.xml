@@ -14,7 +14,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:text="合计：￥3500"
+            android:text="合计：￥0.00"
             android:textColor="#f09"
             android:textSize="18sp" />
 
@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_alignLeft="@id/tvSumPrice"
             android:layout_below="@id/tvSumPrice"
-            android:text="节省：￥450"
+            android:text="节省：￥0.00"
             android:textColor="#36f"
             android:textSize="15sp"
             android:layout_marginBottom="1dp"/>
@@ -58,5 +58,15 @@
         android:layout_height="match_parent"
         android:divider="@color/fragment_bg"
         android:dividerHeight="5dp" />
+    <TextView
+        android:id="@+id/tv_nothing"
+        android:layout_below="@id/view_divide_line"
+        android:layout_marginTop="50dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical|center_horizontal"
+        android:text="购物车空空如也"
+        android:textSize="18sp"
+        android:textColor="@color/orange" />
 
 </RelativeLayout>

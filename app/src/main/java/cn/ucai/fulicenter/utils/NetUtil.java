@@ -901,14 +901,15 @@ public final class NetUtil {
      * @param count
      * @return
      */
-    public static boolean updateCart(int cartId, int count) {
+    public static boolean updateCart(int cartId, int count, boolean isChecked) {
         HttpUtils httpUtils=new HttpUtils();
         ArrayList<BasicNameValuePair> params=new ArrayList<BasicNameValuePair>();
         params.add(new BasicNameValuePair(I.KEY_REQUEST, I.REQUEST_UPDATE_CART));
         params.add(new BasicNameValuePair(I.Cart.COUNT, count+""));
         params.add(new BasicNameValuePair(I.Cart.ID, cartId+""));
+        params.add(new BasicNameValuePair(I.Cart.IS_CHECKED, isChecked+""));
         try {
-            Log.e(TAG,"addCart,cartId="+cartId+",count="+count);
+            Log.e(TAG,"addCart,cartId="+cartId+",count="+count+",isChecked="+isChecked);
             Log.e(TAG,"addCart,params="+params.toString());
             InputStream in = httpUtils.getInputStream(FuLiCenterApplication.SERVER_ROOT, params, HttpUtils.METHOD_GET);
             ObjectMapper om=new ObjectMapper();
@@ -929,6 +930,38 @@ public final class NetUtil {
         }
         return false;
     }
+	/**
+	 * 删除服务端指定用户的购物车中的商品件数
+	 * @param cartId
+	 * @return
+	 */
+	public static boolean deleteCart(int cartId) {
+		HttpUtils httpUtils=new HttpUtils();
+		ArrayList<BasicNameValuePair> params=new ArrayList<BasicNameValuePair>();
+		params.add(new BasicNameValuePair(I.KEY_REQUEST, I.REQUEST_DELETE_CART));
+		params.add(new BasicNameValuePair(I.Cart.ID, cartId+""));
+		try {
+			Log.e(TAG,"addCart,cartId="+cartId);
+			Log.e(TAG,"addCart,params="+params.toString());
+			InputStream in = httpUtils.getInputStream(FuLiCenterApplication.SERVER_ROOT, params, HttpUtils.METHOD_GET);
+			ObjectMapper om=new ObjectMapper();
+			MessageBean msg= om.readValue(in, MessageBean.class);
+			Log.e(TAG,"addCart,msg="+msg.toString());
+			return msg.isSuccess();
+		} catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally{
+			httpUtils.closeClient();
+		}
+		return false;
+	}
 
     public static HashMap<String, Object> findCharege(){
         HashMap chargeMap =null;

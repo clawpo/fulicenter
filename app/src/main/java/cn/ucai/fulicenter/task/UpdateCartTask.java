@@ -17,17 +17,24 @@ public class UpdateCartTask extends AsyncTask<Void, Void, Boolean> {
     Context context;
     int count;
     int cartId;
+    boolean isChecked;
     
-    public UpdateCartTask(Context context, int cartId, int count) {
+    public UpdateCartTask(Context context, int cartId, int count,boolean isChecked) {
         super();
         this.context = context;
         this.count = count;
         this.cartId = cartId;
+        this.isChecked = isChecked;
     }
 
     @Override
     protected Boolean doInBackground(Void... params) {
-        boolean isSuccess= NetUtil.updateCart(cartId,count);
+        boolean isSuccess = false;
+        if(count<=0){
+            isSuccess = NetUtil.deleteCart(cartId);
+        }else{
+            isSuccess = NetUtil.updateCart(cartId,count,isChecked);
+        }
         Log.e(TAG,"doInBackground,isSuccess="+isSuccess);
         return isSuccess;
     }
@@ -36,11 +43,11 @@ public class UpdateCartTask extends AsyncTask<Void, Void, Boolean> {
     protected void onPostExecute(Boolean result) {
         Log.e(TAG,"onPostExecute,result="+result);
         if(result){
-            Utils.showToast(context, "添加成功", Toast.LENGTH_SHORT);
+            Utils.showToast(context, "操作成功", Toast.LENGTH_SHORT);
             Intent intent=new Intent("cartChanged");
             context.sendBroadcast(intent);
         }else{
-            Utils.showToast(context, "添加失败", Toast.LENGTH_SHORT);
+            Utils.showToast(context, "操作失败", Toast.LENGTH_SHORT);
         }
     }
 

@@ -62,7 +62,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:src="@drawable/menu_item_cart_selected" />
+                android:src="@drawable/bg_cart_selected" />
 
             <TextView
                 android:id="@+id/tvCartCount"

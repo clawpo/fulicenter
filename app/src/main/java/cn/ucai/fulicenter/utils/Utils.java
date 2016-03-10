@@ -153,7 +153,7 @@ public class Utils {
             //向服务端上传新添加至购物车中的商品信息
             new UploadCartTask(context, cart).execute();
         }else{
-            new UpdateCartTask(context, cart.getId(), cart.getCount()).execute();
+            new UpdateCartTask(context, cart.getId(), cart.getCount(),cart.isChecked()).execute();
         }
     }
     
@@ -170,15 +170,15 @@ public class Utils {
         for(int i=0;i<cartList.size()&&!isExists;i++){
             if(goodsId==cartList.get(i).getGoodsId()){
                 int count = cartList.get(i).getCount();
-                if(count>1){
+//                if(count>1){
                     cartList.get(i).setCount(count-1);
                     cart=cartList.get(i);
                     isExists=true;
-                }
+//                }
             }
         }
         if(isExists){
-            new UpdateCartTask(context, cart.getId(), cart.getCount()).execute();
+            new UpdateCartTask(context, cart.getId(), cart.getCount(),cart.isChecked()).execute();
         }
     }
     

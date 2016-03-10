@@ -98,7 +98,7 @@
                 android:gravity="center"
                 android:padding="2dp"
                 android:paddingLeft="50dp"
-                android:text="13"
+                android:text="1300"
                 android:textColor="#fff"
                 android:textSize="12dp"
                 android:visibility="visible" />
