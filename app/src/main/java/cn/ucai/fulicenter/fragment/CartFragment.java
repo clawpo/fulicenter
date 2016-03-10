@@ -300,4 +300,12 @@ public class CartFragment extends Fragment {
         IntentFilter filter=new IntentFilter("cartChanged");
         getActivity().registerReceiver(mCartChangedReceiver, filter);
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if(mCartChangedReceiver!=null) {
+            getActivity().unregisterReceiver(mCartChangedReceiver);
+        }
+    }
 }
