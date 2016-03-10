@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bottom_bar_normal_bg_top" >
-
     <LinearLayout
         android:id="@+id/main_bottom"
         android:layout_width="match_parent"
@@ -123,6 +122,15 @@
         </RelativeLayout>
 
     </LinearLayout>
+
+    <!--<View-->
+        <!--android:id="@+id/main_view_divide_line"-->
+        <!--android:layout_above="@id/main_bottom"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="1dp"-->
+        <!--android:layout_marginTop="3dp"-->
+        <!--android:layout_marginBottom="3dp"-->
+        <!--android:background="#ccc"/>-->
 
     <RelativeLayout
         android:id="@+id/fragment_container"

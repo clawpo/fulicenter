@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" 
+    android:background="#fff">
+
+    <cn.ucai.fulicenter.utils.PullRefreshView
+        android:id="@+id/prfvBoutique"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <ListView
+            android:id="@+id/lvBoutique"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" 
+            android:cacheColorHint="#000"/>
+    </cn.ucai.fulicenter.utils.PullRefreshView>
+
+</LinearLayout>

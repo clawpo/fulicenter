@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/layout_boutique_item"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="10dp"
+    android:layout_marginBottom="10dp">
+    <ImageView 
+        android:id="@+id/ivBoutiqueImg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+		android:src="@drawable/boutique_bg"
+        android:scaleType="fitXY"/>
+	<LinearLayout 
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="vertical"
+	    android:layout_marginLeft="150dp"
+	    android:layout_alignParentRight="true"
+	    android:layout_alignParentBottom="true"
+	    android:background="#bb000000">
+	    <TextView 
+	        android:id="@+id/tvBoutiqueTitle"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:textColor="#fff"
+	        android:text="Aug 28 201"/>
+	    <TextView 
+	        android:id="@+id/tvBoutiqueName"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:textColor="#fff"
+	        android:text="冬秋衣橱大换血"/>
+	    <TextView 
+	        android:id="@+id/tvBoutiqueDescription"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:textColor="#fff"
+	        android:text="2015F/W Trends Report"/>
+	    
+	</LinearLayout>
+</RelativeLayout>
