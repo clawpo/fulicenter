@@ -1,0 +1,45 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="#ebebe9"
+	android:orientation="vertical">
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="35dp"
+		android:background="@color/good_detail_title_bg">
+		<ImageView
+			android:id="@+id/ivReturn"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentBottom="true"
+			android:layout_alignParentLeft="true"
+			android:padding="5dp"
+			android:src="@drawable/selector_return_bg"/>
+		<TextView
+			android:id="@+id/tvBoutiqueChildName"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_centerVertical="true"
+			android:layout_marginLeft="5dp"
+			android:layout_toRightOf="@id/ivReturn"
+			android:text="精品商品"
+			android:textColor="#fff"
+			android:textSize="18sp"/>
+	</RelativeLayout>
+	<cn.ucai.fulicenter.utils.PullRefreshView
+		android:id="@+id/prfvBoutiqueChild"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:orientation="vertical" >
+
+		<GridView
+			android:id="@+id/gvBoutiqueChild"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:columnWidth="150dp"
+			android:horizontalSpacing="10dp"
+			android:numColumns="auto_fit"
+			android:verticalSpacing="10dp" />
+	</cn.ucai.fulicenter.utils.PullRefreshView>
+
+</LinearLayout>

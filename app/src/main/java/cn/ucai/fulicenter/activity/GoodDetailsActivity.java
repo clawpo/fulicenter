@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -261,7 +262,7 @@ public class GoodDetailsActivity extends BaseActivity {
                 mCurrentColor=i;
                 View layout=View.inflate(context, R.layout.layout_property_color, null);
                 final ImageView ivColor=(ImageView) layout.findViewById(R.id.ivColorItem);
-                Log.i("main",goodDetails.getProperties()[i].toString());
+                Log.i(TAG,"initColorsBanner.goodDetails="+goodDetails.getProperties()[i].toString());
                 String colorImg = goodDetails.getProperties()[i].getColorImg();
                 if(colorImg.isEmpty()){
                     continue;
@@ -270,6 +271,8 @@ public class GoodDetailsActivity extends BaseActivity {
                         +"?"+I.KEY_REQUEST+"="+I.REQUEST_DOWNLOAD_COLOR_IMG
                         +"&"+I.Color.COLOR_IMG+"="+colorImg;
                 String imgName="images/"+colorImg;
+                Log.i(TAG,"initColorsBanner.url="+url);
+                Log.i(TAG,"initColorsBanner.imgName="+imgName);
                 Bitmap bitmap = imageLoader.displayImage(url, imgName, 32, 32, new ImageLoader.OnImageLoadListener() {
 
                     @Override
@@ -280,11 +283,11 @@ public class GoodDetailsActivity extends BaseActivity {
                     @Override
                     public void error(String errorMsg) {
                         // TODO Auto-generated method stub
-
                     }
                 });
+                Log.i(TAG,"initColorsBanner.bitmap="+bitmap);
                 if(bitmap==null){
-                    ivColor.setImageResource(R.drawable.bg_good);
+//                    ivColor.setImageResource(R.drawable.bg_good);
                 }else{
                     ivColor.setImageBitmap(bitmap);
                 }

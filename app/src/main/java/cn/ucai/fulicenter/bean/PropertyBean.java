@@ -77,6 +77,9 @@ public class PropertyBean implements Serializable {
     }
 
     public String getColorImg() {
+        if(colorImg.indexOf("/")==0){
+            return colorImg.substring(1);
+        }
         return colorImg;
     }
 

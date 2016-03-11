@@ -26,6 +26,7 @@ import cn.ucai.fulicenter.D;
 import cn.ucai.fulicenter.I;
 import cn.ucai.fulicenter.I.ActionType;
 import cn.ucai.fulicenter.R;
+import cn.ucai.fulicenter.activity.BoutiqueChildActivity;
 import cn.ucai.fulicenter.bean.BoutiqueBean;
 import cn.ucai.fulicenter.utils.ImageLoader;
 import cn.ucai.fulicenter.utils.ImageLoader.OnImageLoadListener;
@@ -171,11 +172,11 @@ public class BoutiqueFragment extends Fragment {
             holder.layoutItem.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    Log.i("main",boutique.toString());
-//                    Intent intent=new Intent(context, BoutiqueChildActivity.class);
-//                    intent.putExtra(I.Boutique.ID, boutique.getId());
-//                    intent.putExtra(I.Boutique.NAME, boutique.getName());
-//                    context.startActivity(intent);
+                    Log.i("main",boutique.toString());
+                    Intent intent=new Intent(context, BoutiqueChildActivity.class);
+                    intent.putExtra(I.Boutique.ID, boutique.getId());
+                    intent.putExtra(I.Boutique.NAME, boutique.getName());
+                    context.startActivity(intent);
                 }
             });
             return layout;
