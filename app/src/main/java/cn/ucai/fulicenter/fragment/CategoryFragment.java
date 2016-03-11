@@ -26,6 +26,7 @@ import java.util.ArrayList;
 
 import cn.ucai.fulicenter.I;
 import cn.ucai.fulicenter.R;
+import cn.ucai.fulicenter.activity.CategoryChildActivity;
 import cn.ucai.fulicenter.bean.CategoryChildBean;
 import cn.ucai.fulicenter.bean.CategoryGroupBean;
 import cn.ucai.fulicenter.utils.ImageLoader;
@@ -255,12 +256,12 @@ public class CategoryFragment extends Fragment {
             holder.layoutItem.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    Intent intent=new Intent(mContext, CategoryChildActivity.class);
-//                    intent.putExtra(I.CategoryChild.CAT_ID, child.getId());
-//                    ArrayList<CategoryChildBean> children = childList.get(groupPosition);
-//                    intent.putExtra("children", children);
-//                    intent.putExtra(I.CategoryGroup.NAME, getGroup(groupPosition).getName());
-//                    mContext.startActivity(intent);
+                    Intent intent=new Intent(mContext, CategoryChildActivity.class);
+                    intent.putExtra(I.CategoryChild.CAT_ID, child.getId());
+                    ArrayList<CategoryChildBean> children = childList.get(groupPosition);
+                    intent.putExtra("children", children);
+                    intent.putExtra(I.CategoryGroup.NAME, getGroup(groupPosition).getName());
+                    mContext.startActivity(intent);
                 }
             });
             return layout;
