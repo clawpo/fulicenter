@@ -86,6 +86,7 @@ import cn.ucai.fulicenter.domain.InviteMessage;
 import cn.ucai.fulicenter.domain.User;
 import cn.ucai.fulicenter.fragment.BoutiqueFragment;
 import cn.ucai.fulicenter.fragment.CartFragment;
+import cn.ucai.fulicenter.fragment.CategoryFragment;
 import cn.ucai.fulicenter.fragment.ChatAllHistoryFragment;
 import cn.ucai.fulicenter.fragment.ContactlistFragment;
 import cn.ucai.fulicenter.fragment.FindFragment;
@@ -130,7 +131,7 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 	private Button[] mTabs;
 	private NewGoodFragment mNewGoodFragment;
 	private BoutiqueFragment mBoutiqueFragment;
-	// private ChatHistoryFragment chatHistoryFragment;
+	 private CategoryFragment mCategoryFragment;
 //	private ChatAllHistoryFragment mChatHistoryFragment;
     private CartFragment mCartFragment;
 //	private FindFragment mFindFragment;
@@ -204,6 +205,7 @@ public class MainActivity extends BaseActivity implements EMEventListener {
     private void initFragment() {
 		mNewGoodFragment = new NewGoodFragment();
         mBoutiqueFragment = new BoutiqueFragment();
+		mCategoryFragment = new CategoryFragment();
 		mCartFragment = new CartFragment();
 		// 显示所有人消息记录的fragment
 //		mChatHistoryFragment = new ChatAllHistoryFragment();
@@ -211,7 +213,7 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 //		mSettingFragment = new SettingsFragment();
 //		mFindFragment=new FindFragment();
 		mFragments = new Fragment[] {
-				mNewGoodFragment,mBoutiqueFragment,mCartFragment};
+				mNewGoodFragment,mBoutiqueFragment,mCategoryFragment,mCartFragment};
 		// 添加显示第一个fragment
 //		getSupportFragmentManager()
 //		    .beginTransaction().add(R.id.fragment_container, mChatHistoryFragment)
@@ -259,6 +261,7 @@ public class MainActivity extends BaseActivity implements EMEventListener {
         MenuItemClickListener listener=new MenuItemClickListener();
         mLayoutNewGood.setOnClickListener(listener);
         mLayoutBoutique.setOnClickListener(listener);
+		mLayoutCategory.setOnClickListener(listener);
 		mLayoutCart.setOnClickListener(listener);
 //        mTabs[0].setOnClickListener(listener);
 //        mTabs[1].setOnClickListener(listener);
@@ -1269,9 +1272,10 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 	        case R.id.layout_category:
 	            index=2;
                 drawableCategory = getmDrawable(R.drawable.menu_item_category_selected);
+				fragment = mCategoryFragment;
 	            break;
 	        case R.id.layout_cart:
-	            index =2;
+	            index =3;
                 drawableCart = getmDrawable(R.drawable.menu_item_cart_selected);
                 fragment = mCartFragment;
 	            break;
@@ -1339,6 +1343,8 @@ public class MainActivity extends BaseActivity implements EMEventListener {
         mivNewGood.setImageDrawable(drawableNewGood);
         drawableBoutique.setBounds(bounds);
         mivBoutique.setImageDrawable(drawableBoutique);
+		drawableCategory.setBounds(bounds);
+		mivCategory.setImageDrawable(drawableCategory);
         drawableCart.setBounds(bounds);
         mivCart.setImageDrawable(drawableCart);
     }

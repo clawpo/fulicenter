@@ -301,5 +301,19 @@
     <string name="toast_updatenick_fail">update nickname fail!</string>
     <string name="toast_updatephoto_success">update photo success!</string>
     <string name="toast_updatephoto_fail">update photo fail!</string>
+    <string name="title_activity_good_details">GoodDetailsActivity</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_boutique_child">BoutiqueChildActivity</string>
+    <string name="title_activity_category_child">CategoryChildActivity</string>
+    <string name="title_activity_my_setting">MySettingActivity</string>
+    <string name="title_activity_cart">CartActivity</string>
+    <string name="title_activity_buy">BuyActivity</string>
     <string name="near_people_hint">See nearby people\'s function will get your location information, your location information will be kept for a period of time. Through the list of the top right corner to remove functions can be manually remove location information at any time.</string>
+
+    <!-- 支付的字符串资源 -->
+    <string name="title_activity_pay">支付</string>
+    <string name="title_activity_pay_sucessed">支付成功</string>
+    <string name="title_activity_pay_filed">支付失败</string>
+    <string name="title_activity_success">支付成功</string>
 </resources>
