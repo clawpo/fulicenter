@@ -91,6 +91,7 @@ import cn.ucai.fulicenter.fragment.ChatAllHistoryFragment;
 import cn.ucai.fulicenter.fragment.ContactlistFragment;
 import cn.ucai.fulicenter.fragment.FindFragment;
 import cn.ucai.fulicenter.fragment.NewGoodFragment;
+import cn.ucai.fulicenter.fragment.PersonalCenterFragment;
 import cn.ucai.fulicenter.fragment.SettingsFragment;
 import cn.ucai.fulicenter.task.DeleteContactsTask;
 import cn.ucai.fulicenter.task.DownloadCartTask;
@@ -132,8 +133,8 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 	private NewGoodFragment mNewGoodFragment;
 	private BoutiqueFragment mBoutiqueFragment;
 	 private CategoryFragment mCategoryFragment;
-//	private ChatAllHistoryFragment mChatHistoryFragment;
     private CartFragment mCartFragment;
+	private PersonalCenterFragment mPersonalCenterFragment;
 //	private FindFragment mFindFragment;
 	private Fragment[] mFragments;
 	private int index;
@@ -207,13 +208,15 @@ public class MainActivity extends BaseActivity implements EMEventListener {
         mBoutiqueFragment = new BoutiqueFragment();
 		mCategoryFragment = new CategoryFragment();
 		mCartFragment = new CartFragment();
+		mPersonalCenterFragment = new PersonalCenterFragment();
 		// 显示所有人消息记录的fragment
 //		mChatHistoryFragment = new ChatAllHistoryFragment();
 //		mContactListFragment = new ContactlistFragment();
 //		mSettingFragment = new SettingsFragment();
 //		mFindFragment=new FindFragment();
 		mFragments = new Fragment[] {
-				mNewGoodFragment,mBoutiqueFragment,mCategoryFragment,mCartFragment};
+				mNewGoodFragment,mBoutiqueFragment,
+				mCategoryFragment,mCartFragment,mPersonalCenterFragment};
 		// 添加显示第一个fragment
 //		getSupportFragmentManager()
 //		    .beginTransaction().add(R.id.fragment_container, mChatHistoryFragment)
@@ -263,6 +266,7 @@ public class MainActivity extends BaseActivity implements EMEventListener {
         mLayoutBoutique.setOnClickListener(listener);
 		mLayoutCategory.setOnClickListener(listener);
 		mLayoutCart.setOnClickListener(listener);
+		mLayoutPersonalCenter.setOnClickListener(listener);
 //        mTabs[0].setOnClickListener(listener);
 //        mTabs[1].setOnClickListener(listener);
 //        mTabs[2].setOnClickListener(listener);
@@ -1280,8 +1284,13 @@ public class MainActivity extends BaseActivity implements EMEventListener {
                 fragment = mCartFragment;
 	            break;
             case R.id.layout_personal_center:
-                index = 4;
-                drawablePersonalCenter = getmDrawable(R.drawable.menu_item_personal_center_selected);
+                if(mUser!=null) {
+                    index = 4;
+                    drawablePersonalCenter = getmDrawable(R.drawable.menu_item_personal_center_selected);
+                    fragment = mPersonalCenterFragment;
+                }else{
+                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                }
                 break;
 	        }
 //	        if (currentTabIndex != index) {
@@ -1347,6 +1356,8 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 		mivCategory.setImageDrawable(drawableCategory);
         drawableCart.setBounds(bounds);
         mivCart.setImageDrawable(drawableCart);
+		drawablePersonalCenter.setBounds(bounds);
+		mivPersonalCenter.setImageDrawable(drawablePersonalCenter);
     }
     /**
      * 接收来自DownloadCartTask发送的购物车数据改变的广播

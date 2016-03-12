@@ -16,6 +16,7 @@
     <color name="divider_list">#d4d4d4</color>
     <color name="top_bar_normal_bg">#ffffff</color>
     <color name="error_item_color">#F6EBE6</color>
+    <color name="bottom_bar_taobao_bg">#F9F7F4</color>
     <color name="bottom_bar_normal_bg">#FFFFFF</color>
     <color name="bottom_bar_normal_bg_top">#C0BFBF</color>
     <color name="bottom_text_color_normal">#ffffff</color>
@@ -54,4 +55,5 @@
     <color name="list_item_title">#ED6F73</color>
     <color name="list_item_name">#131313</color>
     <color name="list_item_des">#DCDCDC</color>
+    <color name="personal_center_top_bg">#FF5000</color>
 </resources>
