@@ -57,7 +57,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:divider="@color/fragment_bg"
-        android:dividerHeight="5dp" />
+        android:layout_marginRight="15dp"
+        android:layout_marginLeft="15dp"
+        android:dividerHeight="15dp"
+        android:layout_marginTop="5dp"
+        android:cacheColorHint="@color/list_background" />
     <TextView
         android:id="@+id/tv_nothing"
         android:layout_below="@id/view_divide_line"

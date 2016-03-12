@@ -3,7 +3,7 @@
     android:id="@+id/mainLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bottom_bar_normal_bg_top" >
+    android:background="@color/list_background" >
     <LinearLayout
         android:id="@+id/main_bottom"
         android:layout_width="match_parent"

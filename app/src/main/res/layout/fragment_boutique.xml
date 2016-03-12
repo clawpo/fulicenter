@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" 
-    android:background="#fff">
+    android:background="@color/list_background">
 
     <cn.ucai.fulicenter.utils.PullRefreshView
         android:id="@+id/prfvBoutique"
@@ -14,8 +14,10 @@
         <ListView
             android:id="@+id/lvBoutique"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" 
-            android:cacheColorHint="#000"/>
+            android:layout_height="match_parent"
+            android:dividerHeight="15dp"
+            android:layout_marginTop="15dp"
+            android:cacheColorHint="@color/list_background"/>
     </cn.ucai.fulicenter.utils.PullRefreshView>
 
 </LinearLayout>

@@ -108,6 +108,7 @@ public class CategoryFragment extends Fragment {
 
     private void initView(View layout) {
         melvCategory=(ExpandableListView) layout.findViewById(R.id.elvCategory);
+        melvCategory.setGroupIndicator(null);
         mGroupList=new ArrayList<CategoryGroupBean>();
         mChildList=new ArrayList<ArrayList<CategoryChildBean>>();
         mAdapter=new CategoryAdapter(mContext, mGroupList, mChildList);

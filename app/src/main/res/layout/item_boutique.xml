@@ -3,40 +3,50 @@
 	android:id="@+id/layout_boutique_item"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="10dp"
-    android:layout_marginBottom="10dp">
+    android:layout_marginTop="20dp"
+    android:layout_marginBottom="20dp">
     <ImageView 
         android:id="@+id/ivBoutiqueImg"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
 		android:src="@drawable/boutique_bg"
         android:scaleType="fitXY"/>
 	<LinearLayout 
 	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
+	    android:layout_height="200dp"
 	    android:orientation="vertical"
-	    android:layout_marginLeft="150dp"
-	    android:layout_alignParentRight="true"
-	    android:layout_alignParentBottom="true"
-	    android:background="#bb000000">
+        android:gravity="top"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+		android:layout_toRightOf="@id/ivBoutiqueImg"
+	    android:background="@color/white">
 	    <TextView 
 	        android:id="@+id/tvBoutiqueTitle"
-	        android:layout_width="wrap_content"
+	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
-	        android:textColor="#fff"
+			android:textColor="@color/list_item_title"
+            android:layout_marginTop="20dp"
+            android:ellipsize="end"
+            android:textSize="16sp"
 	        android:text="Aug 28 201"/>
 	    <TextView 
 	        android:id="@+id/tvBoutiqueName"
-	        android:layout_width="wrap_content"
+	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
-	        android:textColor="#fff"
+			android:textColor="@color/list_item_name"
+            android:layout_marginTop="20dp"
+            android:ellipsize="end"
+            android:textSize="20sp"
 	        android:text="冬秋衣橱大换血"/>
 	    <TextView 
 	        android:id="@+id/tvBoutiqueDescription"
-	        android:layout_width="wrap_content"
+	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
-	        android:textColor="#fff"
+	        android:textColor="@color/gray_normal"
+            android:layout_marginTop="10dp"
+            android:textSize="18sp"
+            android:maxLines="2"
+            android:ellipsize="end"
 	        android:text="2015F/W Trends Report"/>
-	    
 	</LinearLayout>
 </RelativeLayout>
