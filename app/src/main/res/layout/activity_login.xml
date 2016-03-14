@@ -2,30 +2,31 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#eff2f6"
+    android:background="@color/fragment_bg"
     android:orientation="vertical" >
     <RelativeLayout
         android:id="@+id/layout_title"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="@drawable/tb_bg_actionbar">
+        android:layout_height="50dp"
+        android:background="@color/white">
         <ImageView
             android:id="@+id/ivReturn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
-            android:padding="15dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:padding="5dp"
             android:src="@drawable/back_press" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="账户登录"
+            android:textColor="#000"
             android:textSize="20sp"
             android:layout_centerInParent="true"/>
 
     </RelativeLayout>
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dip"
@@ -36,8 +37,8 @@
             android:id="@+id/rl_username"
             android:layout_width="match_parent"
             android:layout_height="54dp"
-            android:layout_marginLeft="28dp"
-            android:layout_marginRight="28dp"
+            android:paddingRight="10dp"
+            android:paddingLeft="10dp"
             android:background="#fff" >
 
             <ImageView
@@ -67,9 +68,9 @@
             android:layout_width="match_parent"
             android:layout_height="54dp"
             android:layout_below="@id/rl_username"
-            android:layout_marginLeft="28dp"
-            android:layout_marginRight="28dp"
-            android:layout_marginTop="10dp"
+            android:paddingRight="10dp"
+            android:layout_marginTop="1dp"
+            android:paddingLeft="10dp"
             android:background="#fff" >
 
             <ImageView
@@ -109,8 +110,6 @@
                 android:id="@+id/btnLogin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dip"
-                android:layout_marginRight="10dip"
                 android:background="@drawable/tb_btn_login_orange_normal"
                 android:gravity="center"
                 android:paddingBottom="7dp"
@@ -128,8 +127,9 @@
                 android:background="@drawable/tb_regiser_bg"
                 android:gravity="center"
                 android:layout_marginTop="20dp"
+                android:padding="15dp"
                 android:text="@string/register"
-                android:textColor="@android:color/black"
+                android:textColor="@color/orange"
                 android:textSize="18sp" />
 
         </LinearLayout>
