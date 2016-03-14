@@ -106,6 +106,7 @@ public class RegisterActivity extends BaseActivity {
                     metUserName.setError(mContext.getResources().getString(R.string.User_name_cannot_be_empty));
                     return;
                 }
+                Log.e(TAG,"setRegisterClickListener.username="+username);
                 if(!username.matches("[\\w][\\w\\d_]+")){
                     metUserName.requestFocus();
                     metUserName.setError("账号只能包含英文、数字和下划线");

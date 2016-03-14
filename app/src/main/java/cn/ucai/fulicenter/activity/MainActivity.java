@@ -151,6 +151,11 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 
     FragmentActivity mContext;
 
+    private int [] mMenuDrawableNormal = {R.drawable.menu_item_new_good_normal,R.drawable.boutique_normal,
+            R.drawable.menu_item_category_normal,R.drawable.menu_item_cart_normal,R.drawable.menu_item_personal_center_normal};
+    private int [] mMenuDrawableSelected = {R.drawable.menu_item_new_good_selected,R.drawable.boutique_selected,
+            R.drawable.menu_item_category_selected,R.drawable.menu_item_cart_selected,R.drawable.menu_item_personal_center_selected};
+
 	/**
 	 * 检查当前用户是否被删除
 	 */
@@ -224,12 +229,16 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 //			.hide(mContactListFragment).show(mChatHistoryFragment)
 //			.commit();
 		if(currentTabIndex == -1){
-			currentTabIndex = 0;
-			index = 0;
-			drawableNewGood = getmDrawable(R.drawable.menu_item_new_good_selected);
-            mivNewGood.setImageDrawable(drawableNewGood);
-			FragmentUtils.startFragment(mContext, mFragments[0]);
+            setFragment(0);
 		}
+    }
+
+    private void setFragment(int newIndex){
+        currentTabIndex = newIndex;
+        index = newIndex;
+        drawableNewGood = getmDrawable(mMenuDrawableSelected[newIndex]);
+        mivNewGood.setImageDrawable(drawableNewGood);
+        FragmentUtils.startFragment(mContext, mFragments[newIndex]);
     }
 
     private void initDB() {
@@ -1284,12 +1293,16 @@ public class MainActivity extends BaseActivity implements EMEventListener {
                 fragment = mCartFragment;
 	            break;
             case R.id.layout_personal_center:
+                mUser = FuLiCenterApplication.getInstance().getUserBean();
+                Log.e(TAG,"mUser="+mUser);
                 if(mUser!=null) {
                     index = 4;
                     drawablePersonalCenter = getmDrawable(R.drawable.menu_item_personal_center_selected);
                     fragment = mPersonalCenterFragment;
                 }else{
-                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
+//                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                    Intent intent = new Intent(MainActivity.this,LoginActivity.class);
+                    startActivityForResult(intent,I.ACTIVITY_LOGIN_REQUEST_CODE);
                 }
                 break;
 	        }
@@ -1326,7 +1339,19 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 	    }
 	}
 
-//    @SuppressLint("Override")
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.e(TAG,"onActivityResult,requestCode="+requestCode+",resultCode="+resultCode+",data="+data);
+        switch (requestCode){
+            case I.ACTIVITY_LOGIN_REQUEST_CODE:
+                if(resultCode==I.RESULT_CODE_OK){
+                    setFragment(4);
+                }
+                break;
+        }
+    }
+
+    //    @SuppressLint("Override")
     public Drawable getmDrawable(int id){
         Resources res = getResources();
         Drawable drawable = res.getDrawable(id);

@@ -23,6 +23,11 @@ public interface I {
     
     public static final int PAGE_ID_DEFAULT = 0;
     public static final int PAGE_SIZE_DEFAULT = 10;
+
+    public static final int ACTIVITY_LOGIN_REQUEST_CODE = 1;
+    public static final int ACTIVITY_REGISTER_REQUEST_CODE = 2;
+    public static final int RESULT_CODE_OK = 1;
+    public static final int RESULT_CODE_FAILED = 2;
     
     class Cart{
         public static final String ID="id";

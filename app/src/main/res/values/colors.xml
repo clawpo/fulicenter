@@ -30,6 +30,7 @@
     <color name="btn_blue_normal">#1e90ff</color>
     <color name="btn_blue_pressed">#0066FF</color>
     <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
     <color name="orange">#FFA500</color>
     <color name="gray_pressed">#b5b5b6</color>
     <color name="gray_normal">#666667</color>
@@ -56,4 +57,5 @@
     <color name="list_item_name">#131313</color>
     <color name="list_item_des">#DCDCDC</color>
     <color name="personal_center_top_bg">#FF5000</color>
+    <color name="bg_gray_light">#EEEEEE</color>
 </resources>
