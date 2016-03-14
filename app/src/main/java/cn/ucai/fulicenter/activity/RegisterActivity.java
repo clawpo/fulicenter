@@ -66,8 +66,18 @@ public class RegisterActivity extends BaseActivity {
 
 	private void setListener() {
 		setRegisterClickListener();
-		setLoginClickListener();
 		setUserAvatarClickListener();
+		setReturnClickListener();
+	}
+
+
+	private void setReturnClickListener() {
+		findViewById(R.id.ivReturn).setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				finish();
+			}
+		});
 	}
 
     /**
@@ -82,14 +92,6 @@ public class RegisterActivity extends BaseActivity {
         });
     }
 
-	private void setLoginClickListener() {
-		findViewById(R.id.btnLogin).setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				startActivity(new Intent(mContext,LoginActivity.class));
-			}
-		});
-	}
 
 	private void setRegisterClickListener() {
         findViewById(R.id.btnRegister).setOnClickListener(new OnClickListener() {

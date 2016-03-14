@@ -105,7 +105,17 @@ public class LoginActivity extends BaseActivity {
         setLoginClickListener();
         setRegisterClickListener();
 		setServerUrlClickListener();
+		setReturnClickListener();
     }
+
+	private void setReturnClickListener() {
+		findViewById(R.id.ivReturn).setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				finish();
+			}
+		});
+	}
 
 	/**
 	 * 设置服务端地址的按钮事件监听

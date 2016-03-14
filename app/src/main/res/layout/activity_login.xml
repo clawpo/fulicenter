@@ -113,7 +113,7 @@
                 android:background="@drawable/tb_btn_login_orange_normal"
                 android:gravity="center"
                 android:paddingBottom="7dp"
-                android:paddingTop="7dp"
+                android:padding="7dp"
                 android:text="@string/login"
                 android:textColor="@android:color/white"
                 android:textSize="18sp" />
