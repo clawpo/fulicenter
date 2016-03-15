@@ -50,6 +50,7 @@ public class PersonalCenterFragment extends Fragment {
     UserBean mUser;
     DownloadCollectCountTask mDownloadCollectCountTask;
     CollectCountChangedReceiver mReceiver;
+    UpdateCollectCountChangedReceiver mUpdateReceiver;
     MyClickListener listener;
 
 
@@ -63,6 +64,7 @@ public class PersonalCenterFragment extends Fragment {
         initData();
         setListener();
         registerCollectCountReceiver();
+        registerUpdateCollectCountChangedReceiver();
         listener = new MyClickListener();
         return layout;
     }
@@ -148,4 +150,16 @@ public class PersonalCenterFragment extends Fragment {
         mtvCollectCount.setText(""+mCollectCount);
     }
 
+    class UpdateCollectCountChangedReceiver extends BroadcastReceiver{
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            new DownloadCollectCountTask(mContext,mUser.getUserName()).execute();
+        }
+    }
+    private void registerUpdateCollectCountChangedReceiver(){
+        mUpdateReceiver = new UpdateCollectCountChangedReceiver();
+        IntentFilter filter = new IntentFilter("good_details_update");
+        mContext.registerReceiver(mUpdateReceiver,filter);
+    }
 }

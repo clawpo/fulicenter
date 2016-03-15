@@ -4,6 +4,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.util.Log;
+
 import cn.ucai.fulicenter.bean.MessageBean;
 import cn.ucai.fulicenter.utils.NetUtil;
 
