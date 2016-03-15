@@ -21,8 +21,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import cn.ucai.fulicenter.FuLiCenterApplication;
+import cn.ucai.fulicenter.I;
 import cn.ucai.fulicenter.R;
 import cn.ucai.fulicenter.activity.CollectActivity;
+import cn.ucai.fulicenter.activity.LoginActivity;
+import cn.ucai.fulicenter.activity.SettingsActivity;
 import cn.ucai.fulicenter.adapter.OrderAdapter;
 import cn.ucai.fulicenter.bean.UserBean;
 import cn.ucai.fulicenter.task.DownloadCollectCountTask;
@@ -42,6 +45,7 @@ public class PersonalCenterFragment extends Fragment {
     ImageView mivUserAvarar;
     TextView mtvUserName;
     TextView mtvCollectCount;
+    TextView mtvSettings;
     LinearLayout mLayoutCenterCollet;
 
     ImageLoader mImageLoader;
@@ -56,9 +60,10 @@ public class PersonalCenterFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        checkUser();
         mContext = getActivity();
         View layout = View.inflate(mContext, R.layout.fragment_personal_center,null);
-        mUser = FuLiCenterApplication.getInstance().getUserBean();
+
         mImageLoader = ImageLoader.getInstance(mContext);
         initView(layout);
         initData();
@@ -68,10 +73,19 @@ public class PersonalCenterFragment extends Fragment {
         return layout;
     }
 
+    private void checkUser(){
+        mUser = FuLiCenterApplication.getInstance().getUserBean();
+        if(mUser==null){
+            Intent intent = new Intent(mContext,LoginActivity.class);
+            startActivityForResult(intent, I.REQUEST_CODE_LOGIN);
+        }
+    }
+
     private void setListener() {
         Log.e(TAG,"setListener....");
         listener = new MyClickListener();
         mLayoutCenterCollet.setOnClickListener(listener);
+        mtvSettings.setOnClickListener(listener);
     }
 
     class MyClickListener implements OnClickListener{
@@ -82,6 +96,9 @@ public class PersonalCenterFragment extends Fragment {
                 case R.id.layout_center_collect:
                     Log.e(TAG,"MyClickListener....startActivity(new Intent(mContext, CollectActivity.class));");
                     startActivity(new Intent(mContext, CollectActivity.class));
+                    break;
+                case R.id.tv_center_settings:
+                    startActivity(new Intent(mContext, SettingsActivity.class));
                     break;
             }
         }
@@ -131,6 +148,7 @@ public class PersonalCenterFragment extends Fragment {
         mtvUserName = (TextView) layout.findViewById(R.id.tv_user_name);
         mLayoutCenterCollet = (LinearLayout) layout.findViewById(R.id.layout_center_collect);
         mtvCollectCount = (TextView) layout.findViewById(R.id.tv_collect_count);
+        mtvSettings = (TextView) layout.findViewById(R.id.tv_center_settings);
     }
 
     class CollectCountChangedReceiver extends BroadcastReceiver{

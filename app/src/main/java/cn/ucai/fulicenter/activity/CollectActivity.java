@@ -103,7 +103,7 @@ public class CollectActivity extends BaseActivity {
             }
         }, mgvCollect);
     }
-    
+
     private void setReturnClickListener() {
         findViewById(R.id.ivReturn).setOnClickListener(new OnClickListener() {
             @Override
