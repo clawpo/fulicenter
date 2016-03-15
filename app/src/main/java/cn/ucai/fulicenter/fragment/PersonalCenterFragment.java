@@ -65,20 +65,22 @@ public class PersonalCenterFragment extends Fragment {
         setListener();
         registerCollectCountReceiver();
         registerUpdateCollectCountChangedReceiver();
-        listener = new MyClickListener();
         return layout;
     }
 
     private void setListener() {
+        Log.e(TAG,"setListener....");
+        listener = new MyClickListener();
         mLayoutCenterCollet.setOnClickListener(listener);
     }
 
     class MyClickListener implements OnClickListener{
-
         @Override
         public void onClick(View v) {
+            Log.e(TAG,"MyClickListener....v.getId()="+v.getId());
             switch (v.getId()){
                 case R.id.layout_center_collect:
+                    Log.e(TAG,"MyClickListener....startActivity(new Intent(mContext, CollectActivity.class));");
                     startActivity(new Intent(mContext, CollectActivity.class));
                     break;
             }

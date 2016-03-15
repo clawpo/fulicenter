@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/layout_collect_item">
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="vertical"
+		android:background="#fff"
+		android:gravity="center"
+		android:id="@+id/layoutGood"
+		android:weightSum="1">
+		<ImageView
+			android:id="@+id/ivGoodsThumb"
+			android:layout_width="match_parent"
+			android:layout_height="250dp"
+			android:scaleType="fitXY"
+			android:layout_gravity="center"
+			android:src="@drawable/nopic"
+			android:layout_weight="0.42" />
+		<TextView
+			android:id="@+id/tvGoodsName"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:textColor="@color/item_good_text"
+			android:textSize="13sp"
+			android:maxLines="1"
+			android:ellipsize="end"
+			android:layout_marginTop="10dp"
+			android:layout_marginBottom="10dp"
+			android:layout_marginLeft="20dp"
+			android:layout_marginRight="20dp"
+			android:text="商品名称商品名称商品名称商品名称商品名称商品名称商品名称" />
+	</LinearLayout>
+	<ImageView 
+	    android:id="@+id/ivDelGoods"
+	    android:layout_width="24dp"
+	    android:layout_height="24dp"
+	    android:src="@drawable/delete"
+	    android:layout_alignParentTop="true"
+	    android:layout_alignParentRight="true"/>
+</RelativeLayout>
