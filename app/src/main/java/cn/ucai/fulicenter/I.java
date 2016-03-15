@@ -24,10 +24,8 @@ public interface I {
     public static final int PAGE_ID_DEFAULT = 0;
     public static final int PAGE_SIZE_DEFAULT = 10;
 
-    public static final int ACTIVITY_LOGIN_REQUEST_CODE = 1;
+    public static final int REQUEST_CODE_LOGIN = 1;
     public static final int ACTIVITY_REGISTER_REQUEST_CODE = 2;
-    public static final int RESULT_CODE_OK = 1;
-    public static final int RESULT_CODE_FAILED = 2;
     
     class Cart{
         public static final String ID="id";
@@ -256,6 +254,8 @@ public interface I {
     String REQUEST_DELETE_COLLECT="delete_collect";
     /** 下载收藏的商品信息*/
     String REQUEST_FIND_COLLECTS="find_collects";
+    /** 下载收藏的商品数量信息*/
+    String REQUEST_FIND_COLLECT_COUNT="find_collect_count";
     
     String REQUEST_ADD_CART="add_cart";
     

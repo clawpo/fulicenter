@@ -234,6 +234,7 @@ public class MainActivity extends BaseActivity implements EMEventListener {
     }
 
     private void setFragment(int newIndex){
+        Log.e(TAG,"setFragment newIndex="+newIndex);
         currentTabIndex = newIndex;
         index = newIndex;
         drawableNewGood = getmDrawable(mMenuDrawableSelected[newIndex]);
@@ -1259,7 +1260,11 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 	    
 	}
 
-
+    private void startLogin(){
+        Log.e(TAG,"MenuItemClickListener startLogin");
+        Intent intent = new Intent(MainActivity.this,LoginActivity.class);
+        startActivityForResult(intent,I.REQUEST_CODE_LOGIN);
+    }
 	
 	/**
 	 * 底部菜单项点击事件监听器
@@ -1300,9 +1305,11 @@ public class MainActivity extends BaseActivity implements EMEventListener {
                     drawablePersonalCenter = getmDrawable(R.drawable.menu_item_personal_center_selected);
                     fragment = mPersonalCenterFragment;
                 }else{
+                    Log.e(TAG,"MenuItemClickListener startActivityForResult");
 //                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
-                    Intent intent = new Intent(MainActivity.this,LoginActivity.class);
-                    startActivityForResult(intent,I.ACTIVITY_LOGIN_REQUEST_CODE);
+//                    Intent intent = new Intent(MainActivity.this,LoginActivity.class);
+//                    startActivityForResult(intent,I.REQUEST_CODE_LOGIN);
+                    startLogin();
                 }
                 break;
 	        }
@@ -1341,14 +1348,13 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
         Log.e(TAG,"onActivityResult,requestCode="+requestCode+",resultCode="+resultCode+",data="+data);
-        switch (requestCode){
-            case I.ACTIVITY_LOGIN_REQUEST_CODE:
-                if(resultCode==I.RESULT_CODE_OK){
-                    setFragment(4);
-                }
-                break;
-        }
+		if (resultCode == RESULT_OK) {
+			if (requestCode == I.REQUEST_CODE_LOGIN){
+				setFragment(4);
+			}
+		}
     }
 
     //    @SuppressLint("Override")

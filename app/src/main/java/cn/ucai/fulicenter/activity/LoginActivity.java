@@ -272,12 +272,13 @@ public class LoginActivity extends BaseActivity {
 						}
 
 						// 进入主页面
-						Intent intent = new Intent(LoginActivity.this,
-								MainActivity.class);
-                        intent.putExtra("","");
-                        LoginActivity.this.setResult(I.RESULT_CODE_OK, intent);
+//						Intent intent = new Intent(LoginActivity.this,
+//								MainActivity.class);
+//
+//                        LoginActivity.this.setResult(RESULT_OK, intent);
 //						startActivity(intent);
-
+						Log.e(TAG,"LoginActivity setResult is ok");
+						setResult(RESULT_OK);
 						finish();
 					}
 

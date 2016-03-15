@@ -834,6 +834,40 @@ public final class NetUtil {
         return collectList;
     }
 
+	/**
+	 * 下载收藏商品数量
+	 * @param userName：当前用户账号
+	 * @return
+	 */
+	public static int findCollectCount(String userName) {
+		ArrayList<CollectBean> collectList=null;
+
+		HttpUtils httpUtils=new HttpUtils();
+		ArrayList<BasicNameValuePair> params=new ArrayList<BasicNameValuePair>();
+		params.add(new BasicNameValuePair(I.KEY_REQUEST, I.REQUEST_FIND_COLLECT_COUNT));
+		params.add(new BasicNameValuePair(I.User.USER_NAME, userName));
+		try {
+			InputStream in= httpUtils.getInputStream(FuLiCenterApplication.SERVER_ROOT, params, HttpUtils.METHOD_GET);
+			ObjectMapper om=new ObjectMapper();
+			MessageBean msg = om.readValue(in, MessageBean.class);
+			if(msg.isSuccess()){
+				return Integer.parseInt(msg.getMsg());
+			}
+		} catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally{
+			httpUtils.closeClient();
+		}
+		return 0;
+	}
+
     public static ArrayList<CartBean> findcartList(String userName, int pageId, int pageSize) {
         HttpUtils httpUtils=new HttpUtils();
         ArrayList<BasicNameValuePair> params=new ArrayList<BasicNameValuePair>();
