@@ -73,6 +73,8 @@ public class LoginActivity extends BaseActivity {
 	private String mUserName;
 	private String mPassword;
 
+    private String action;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -113,7 +115,7 @@ public class LoginActivity extends BaseActivity {
 		findViewById(R.id.ivReturn).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				finish();
+			startActivity(new Intent(LoginActivity.this, MainActivity.class).putExtra("action","back"));
 			}
 		});
 	}
@@ -272,13 +274,12 @@ public class LoginActivity extends BaseActivity {
 						}
 
 						// 进入主页面
-//						Intent intent = new Intent(LoginActivity.this,
-//								MainActivity.class);
+						Intent intent = new Intent(LoginActivity.this,
+								MainActivity.class).putExtra("action",action);
 //
 //                        LoginActivity.this.setResult(RESULT_OK, intent);
-//						startActivity(intent);
-						Log.e(TAG,"LoginActivity setResult is ok");
-						setResult(RESULT_OK);
+						startActivity(intent);
+//						setResult(RESULT_OK);
 						finish();
 					}
 
@@ -363,6 +364,7 @@ public class LoginActivity extends BaseActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+        action = getIntent().getStringExtra("action");
 		if (autoLogin) {
 			return;
 		}

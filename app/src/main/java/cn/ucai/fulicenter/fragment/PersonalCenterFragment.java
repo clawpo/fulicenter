@@ -25,6 +25,7 @@ import cn.ucai.fulicenter.I;
 import cn.ucai.fulicenter.R;
 import cn.ucai.fulicenter.activity.CollectActivity;
 import cn.ucai.fulicenter.activity.LoginActivity;
+import cn.ucai.fulicenter.activity.MainActivity;
 import cn.ucai.fulicenter.activity.SettingsActivity;
 import cn.ucai.fulicenter.adapter.OrderAdapter;
 import cn.ucai.fulicenter.bean.UserBean;
@@ -73,16 +74,17 @@ public class PersonalCenterFragment extends Fragment {
         return layout;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        checkUser();
+    }
+
     private void checkUser(){
         mUser = FuLiCenterApplication.getInstance().getUserBean();
-        if(mUser==null){
-            Intent intent = new Intent(mContext,LoginActivity.class);
-            startActivityForResult(intent, I.REQUEST_CODE_LOGIN);
-        }
     }
 
     private void setListener() {
-        Log.e(TAG,"setListener....");
         listener = new MyClickListener();
         mLayoutCenterCollet.setOnClickListener(listener);
         mtvSettings.setOnClickListener(listener);
@@ -91,10 +93,8 @@ public class PersonalCenterFragment extends Fragment {
     class MyClickListener implements OnClickListener{
         @Override
         public void onClick(View v) {
-            Log.e(TAG,"MyClickListener....v.getId()="+v.getId());
             switch (v.getId()){
                 case R.id.layout_center_collect:
-                    Log.e(TAG,"MyClickListener....startActivity(new Intent(mContext, CollectActivity.class));");
                     startActivity(new Intent(mContext, CollectActivity.class));
                     break;
                 case R.id.tv_center_settings:

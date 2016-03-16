@@ -150,24 +150,29 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 //	private MyGroupChangeListener groupChangeListener = null;
 
     FragmentActivity mContext;
+    /**
+     * 检查当前用户是否被删除
+     */
+    public boolean getCurrentAccountRemoved() {
+        return isCurrentAccountRemoved;
+    }
+
+    Drawable drawableNewGood,drawableBoutique,drawableCategory,drawableCart,drawablePersonalCenter;
 
     private int [] mMenuDrawableNormal = {R.drawable.menu_item_new_good_normal,R.drawable.boutique_normal,
             R.drawable.menu_item_category_normal,R.drawable.menu_item_cart_normal,R.drawable.menu_item_personal_center_normal};
     private int [] mMenuDrawableSelected = {R.drawable.menu_item_new_good_selected,R.drawable.boutique_selected,
             R.drawable.menu_item_category_selected,R.drawable.menu_item_cart_selected,R.drawable.menu_item_personal_center_selected};
-
-	/**
-	 * 检查当前用户是否被删除
-	 */
-	public boolean getCurrentAccountRemoved() {
-		return isCurrentAccountRemoved;
-	}
-
-    Drawable drawableNewGood,drawableBoutique,drawableCategory,drawableCart,drawablePersonalCenter;
+    private ImageView[] mImageViews = new ImageView[5];
+    private Drawable[] mDrawable = new Drawable[5];
 	
     UserBean mUser;
 
     CartChangedReceiver mCartChangedReceiver;
+
+    private String action;
+
+
 	@Override
 	public boolean onMenuItemSelected(int featureId, MenuItem item) {
 		return super.onMenuItemSelected(featureId, item);
@@ -204,9 +209,29 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 
     @Override
     protected void onStart() {
+        action = getIntent().getStringExtra("action");
         super.onStart();
         setListener();
     }
+
+
+    private void showWhat(){
+        action = getIntent().getStringExtra("action");
+        mUser = FuLiCenterApplication.getInstance().getUserBean();
+		if(action == null || action.equals("back")){
+            if(mUser==null && (currentTabIndex==-1 || currentTabIndex ==4 || currentTabIndex==0)){
+                initNewGood();
+            }else {
+                setFragment(currentTabIndex);
+            }
+		} else if(action.equals("person")){
+            if(mUser==null){
+                initNewGood();
+            }else {
+                setFragment(4);
+            }
+		}
+	}
 
     private void initFragment() {
 		mNewGoodFragment = new NewGoodFragment();
@@ -228,18 +253,34 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 //			.add(R.id.fragment_container, mContactListFragment)
 //			.hide(mContactListFragment).show(mChatHistoryFragment)
 //			.commit();
-		if(currentTabIndex == -1){
-            setFragment(0);
-		}
+    }
+
+    private void initNewGood(){
+        setMenuItemDefaultDrawable();
+        setMenuItemDrawable();
+        currentTabIndex = 0;
+        index = 0;
+        drawableNewGood = getmDrawable(R.drawable.menu_item_new_good_selected);
+        mivNewGood.setImageDrawable(drawableNewGood);
+        FragmentUtils.startFragment(mContext, mNewGoodFragment);
+//        FragmentUtils.showFragment(mContext,currentTabIndex,0,mFragments);
+            FragmentTransaction trx = getSupportFragmentManager().beginTransaction();
+            trx.hide(mFragments[1]).hide(mFragments[2]).hide(mFragments[3]).hide(mFragments[4]).show(mFragments[0]).commit();
+            currentTabIndex = index;
+            setMenuItemDrawable();
     }
 
     private void setFragment(int newIndex){
-        Log.e(TAG,"setFragment newIndex="+newIndex);
+        if(newIndex==-1){
+            newIndex=0;
+        }
+        setMenuItemDefaultDrawable();
+        setMenuItemDrawable();
+        mDrawable[newIndex] = getmDrawable(mMenuDrawableSelected[newIndex]);
+        mImageViews[newIndex].setImageDrawable(mDrawable[newIndex]);
+        FragmentUtils.showFragment(mContext,currentTabIndex,newIndex,mFragments);
         currentTabIndex = newIndex;
         index = newIndex;
-        drawableNewGood = getmDrawable(mMenuDrawableSelected[newIndex]);
-        mivNewGood.setImageDrawable(drawableNewGood);
-        FragmentUtils.startFragment(mContext, mFragments[newIndex]);
     }
 
     private void initDB() {
@@ -467,6 +508,18 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 		mLayoutCategory=getViewById(R.id.layout_category);
 		mLayoutNewGood=getViewById(R.id.layout_new_good);
 		mLayoutPersonalCenter=getViewById(R.id.layout_personal_center);
+
+        mImageViews[0]=mivNewGood;
+        mImageViews[1]=mivBoutique;
+        mImageViews[2]=mivCategory;
+        mImageViews[3]=mivCart;
+        mImageViews[4]=mivPersonalCenter;
+        setMenuItemDefaultDrawable();
+        mDrawable[0]=drawableNewGood;
+        mDrawable[1]=drawableBoutique;
+        mDrawable[2]=drawableCategory;
+        mDrawable[3]=drawableCart;
+        mDrawable[4]=drawablePersonalCenter;
 	}
 
     @Override
@@ -1075,6 +1128,7 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 	protected void onResume() {
 		super.onResume();
         registerCartChangedReceiver();
+        showWhat();
         if (!isConflict && !isCurrentAccountRemoved && mUser!=null) {
 			updateUnreadLabel();
 			updateUnreadAddressLable();
@@ -1194,11 +1248,13 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 	@Override
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
+        setIntent(intent);
 		if (getIntent().getBooleanExtra("conflict", false) && !isConflictDialogShow) {
 			showConflictDialog();
 		} else if (getIntent().getBooleanExtra(Constant.ACCOUNT_REMOVED, false) && !isAccountRemovedDialogShow) {
 			showAccountRemovedDialog();
 		}
+        action = getIntent().getStringExtra("action");
 	}
 
 	@Override
@@ -1260,10 +1316,11 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 	    
 	}
 
-    private void startLogin(){
-        Log.e(TAG,"MenuItemClickListener startLogin");
-        Intent intent = new Intent(MainActivity.this,LoginActivity.class);
-        startActivityForResult(intent,I.REQUEST_CODE_LOGIN);
+    private void startLogin(String action){
+        Log.e(TAG,"MenuItemClickListener startLogin,action="+action);
+        Intent intent = new Intent(MainActivity.this,LoginActivity.class).putExtra("action",action);
+        startActivity(intent);
+//        startActivityForResult(intent,I.REQUEST_CODE_LOGIN);
     }
 	
 	/**
@@ -1309,22 +1366,10 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 //                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
 //                    Intent intent = new Intent(MainActivity.this,LoginActivity.class);
 //                    startActivityForResult(intent,I.REQUEST_CODE_LOGIN);
-                    startLogin();
+                    startLogin("person");
                 }
                 break;
 	        }
-//	        if (currentTabIndex != index) {
-//	            FragmentTransaction trx = getSupportFragmentManager().beginTransaction();
-//	            trx.hide(mFragments[currentTabIndex]);
-//	            if (!mFragments[index].isAdded()) {
-//	                trx.add(R.id.fragment_container, mFragments[index]);
-//	            }
-//	            trx.show(mFragments[index]).commit();
-//	        }
-            Log.e(TAG,"MenuItemClickListener.1currentTabIndex="+currentTabIndex+",index="+index);
-//	        mTabs[currentTabIndex].setSelected(false);
-//	        // 把当前tab设为选中状态
-//	        mTabs[index].setSelected(true);
 
 	        if (currentTabIndex != index) {
 	            FragmentTransaction trx = getSupportFragmentManager().beginTransaction();
@@ -1336,7 +1381,6 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 	            }
 	            trx.show(mFragments[index]).commit();
                 currentTabIndex = index;
-                Log.e(TAG,"MenuItemClickListener2.currentTabIndex="+currentTabIndex+",index="+index);
                 setMenuItemDrawable();
 //                if(fragment!=null){
 //                    Log.e(TAG,"MenuItemClickListener.FragmentUtils.startFragment,fragment="+fragment);
@@ -1346,17 +1390,6 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 	    }
 	}
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-        Log.e(TAG,"onActivityResult,requestCode="+requestCode+",resultCode="+resultCode+",data="+data);
-		if (resultCode == RESULT_OK) {
-			if (requestCode == I.REQUEST_CODE_LOGIN){
-				setFragment(4);
-			}
-		}
-    }
-
     //    @SuppressLint("Override")
     public Drawable getmDrawable(int id){
         Resources res = getResources();
@@ -1365,7 +1398,6 @@ public class MainActivity extends BaseActivity implements EMEventListener {
     }
     /** 设置菜单项按钮顶部缺省显示的图片 */
     private void setMenuItemDefaultDrawable() {
-        Log.i(TAG,"setMenuItemDefaultDrawable..........");
         drawableNewGood = getmDrawable(R.drawable.menu_item_new_good_normal);
         drawableBoutique = getmDrawable(R.drawable.boutique_normal);
         drawableCategory = getmDrawable(R.drawable.menu_item_category_normal);

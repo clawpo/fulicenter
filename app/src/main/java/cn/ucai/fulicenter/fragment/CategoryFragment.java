@@ -318,10 +318,12 @@ public class CategoryFragment extends Fragment {
         @Override
         protected Boolean doInBackground(Void... params) {
             groupList= NetUtil.findCategoryGroup();
-            for(int i=0;i<groupList.size();i++){
-                CategoryGroupBean group = groupList.get(i);
-                ArrayList<CategoryChildBean> list=NetUtil.findCategoryChild(group.getId(),0,20);
-                childList.add(list);
+            if(groupList!=null) {
+                for (int i = 0; i < groupList.size(); i++) {
+                    CategoryGroupBean group = groupList.get(i);
+                    ArrayList<CategoryChildBean> list = NetUtil.findCategoryChild(group.getId(), 0, 20);
+                    childList.add(list);
+                }
             }
             return groupList!=null;
         }

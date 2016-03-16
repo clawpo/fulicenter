@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -20,7 +21,6 @@ import com.easemob.EMCallBack;
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMChatOptions;
 
-import cn.ucai.fulicenter.Constant;
 import cn.ucai.fulicenter.DemoHXSDKHelper;
 import cn.ucai.fulicenter.DemoHXSDKModel;
 import cn.ucai.fulicenter.FuLiCenterApplication;
@@ -84,10 +84,6 @@ public class SettingsActivity extends BaseActivity implements OnClickListener {
      */
     private ImageView iv_switch_close_speaker;
 
-    /**
-     * 声音和震动中间的那条线
-     */
-    private TextView textview1, textview2;
 
     private LinearLayout blacklistContainer;
 
@@ -114,6 +110,8 @@ public class SettingsActivity extends BaseActivity implements OnClickListener {
     private LinearLayout pushNick;
 
     DemoHXSDKModel model;
+
+    private ImageView iv_result;
 
 
     @Override
@@ -142,14 +140,14 @@ public class SettingsActivity extends BaseActivity implements OnClickListener {
         iv_switch_room_owner_leave_allow = (ImageView) getViewById(R.id.iv_switch_chatroom_owner_leave_allow);
         iv_switch_room_owner_leave_disallow = (ImageView) getViewById(R.id.iv_switch_chatroom_owner_leave_not_allow);
 
+        iv_result = (ImageView) getViewById(R.id.ivReturn);
+
 
         logoutBtn = (Button) getViewById(R.id.btn_logout);
         if(!TextUtils.isEmpty(EMChatManager.getInstance().getCurrentUser())){
             logoutBtn.setText(getString(R.string.button_logout) + "(" + EMChatManager.getInstance().getCurrentUser() + ")");
         }
 
-        textview1 = (TextView) getViewById(R.id.textview1);
-        textview2 = (TextView) getViewById(R.id.textview2);
 
         blacklistContainer = (LinearLayout) getViewById(R.id.ll_black_list);
         userProfileContainer = (LinearLayout) getViewById(R.id.ll_user_profile);
@@ -166,6 +164,8 @@ public class SettingsActivity extends BaseActivity implements OnClickListener {
         llDiagnose.setOnClickListener(this);
         pushNick.setOnClickListener(this);
         rl_switch_chatroom_leave.setOnClickListener(this);
+
+        iv_result.setOnClickListener(this);
 
         chatOptions = EMChatManager.getInstance().getChatOptions();
 
@@ -231,8 +231,6 @@ public class SettingsActivity extends BaseActivity implements OnClickListener {
                     iv_switch_close_notification.setVisibility(View.VISIBLE);
                     rl_switch_sound.setVisibility(View.GONE);
                     rl_switch_vibrate.setVisibility(View.GONE);
-                    textview1.setVisibility(View.GONE);
-                    textview2.setVisibility(View.GONE);
                     chatOptions.setNotificationEnable(false);
                     EMChatManager.getInstance().setChatOptions(chatOptions);
 
@@ -242,8 +240,6 @@ public class SettingsActivity extends BaseActivity implements OnClickListener {
                     iv_switch_close_notification.setVisibility(View.INVISIBLE);
                     rl_switch_sound.setVisibility(View.VISIBLE);
                     rl_switch_vibrate.setVisibility(View.VISIBLE);
-                    textview1.setVisibility(View.VISIBLE);
-                    textview2.setVisibility(View.VISIBLE);
                     chatOptions.setNotificationEnable(true);
                     EMChatManager.getInstance().setChatOptions(chatOptions);
                     HXSDKHelper.getInstance().getModel().setSettingMsgNotification(true);
@@ -326,12 +322,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener {
                 startActivity(new Intent(mContext, UserProfileActivity.class).putExtra("setting", true));
                 break;
             case R.id.ivReturn:
-                findViewById(R.id.ivReturn).setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        finish();
-                    }
-                });
+                finish();
                 break;
             default:
                 break;
@@ -352,6 +343,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener {
                 FuLiCenterApplication instance = FuLiCenterApplication.getInstance();
                 instance.getContactList().clear();
                 instance.getContacts().clear();
+                instance.setUserBean(null);
 //			    instance.getGroupList().clear();
 //			    instance.getGroupMembers().clear();
                 runOnUiThread(new Runnable() {
@@ -359,8 +351,8 @@ public class SettingsActivity extends BaseActivity implements OnClickListener {
                         pd.dismiss();
                         // 重新显示登陆页面
 //                        ((MainActivity) getActivity()).finish();
+                        startActivity(new Intent(mContext, LoginActivity.class).putExtra("action","settings"));
                         finish();
-                        startActivity(new Intent(mContext, LoginActivity.class));
 
                     }
                 });

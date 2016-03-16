@@ -168,9 +168,6 @@ public class SettingsFragment extends Fragment implements OnClickListener {
 		if(!TextUtils.isEmpty(EMChatManager.getInstance().getCurrentUser())){
 			logoutBtn.setText(getString(R.string.button_logout) + "(" + EMChatManager.getInstance().getCurrentUser() + ")");
 		}
-
-		textview1 = (TextView) getView().findViewById(R.id.textview1);
-		textview2 = (TextView) getView().findViewById(R.id.textview2);
 		
 		blacklistContainer = (LinearLayout) getView().findViewById(R.id.ll_black_list);
 		userProfileContainer = (LinearLayout) getView().findViewById(R.id.ll_user_profile);
