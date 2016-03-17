@@ -21,11 +21,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import cn.ucai.fulicenter.FuLiCenterApplication;
-import cn.ucai.fulicenter.I;
 import cn.ucai.fulicenter.R;
 import cn.ucai.fulicenter.activity.CollectActivity;
-import cn.ucai.fulicenter.activity.LoginActivity;
-import cn.ucai.fulicenter.activity.MainActivity;
 import cn.ucai.fulicenter.activity.SettingsActivity;
 import cn.ucai.fulicenter.activity.WeChatActivity;
 import cn.ucai.fulicenter.adapter.OrderAdapter;
@@ -63,16 +60,17 @@ public class PersonalCenterFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        checkUser();
         mContext = getActivity();
         View layout = View.inflate(mContext, R.layout.fragment_personal_center,null);
 
+        checkUser();
         mImageLoader = ImageLoader.getInstance(mContext);
         initView(layout);
         initData();
         setListener();
         registerCollectCountReceiver();
         registerUpdateCollectCountChangedReceiver();
+        registerUpdateUserChangedReceiver();
         return layout;
     }
 
@@ -82,8 +80,10 @@ public class PersonalCenterFragment extends Fragment {
         checkUser();
     }
 
+
     private void checkUser(){
         mUser = FuLiCenterApplication.getInstance().getUserBean();
+        Log.e(TAG,"checkUser,mUser="+mUser);
     }
 
     private void setListener() {
@@ -111,8 +111,9 @@ public class PersonalCenterFragment extends Fragment {
     }
 
     private void initData() {
-        mtvUserName.setText(mUser.getNick());
+        Log.e(TAG,"initData,mtvUserName="+mtvUserName);
         Log.e(TAG,"initData,mUser="+mUser);
+        mtvUserName.setText(mUser.getNick());
         Bitmap avatar = null;
         String path = mUser.getAvatar();
         Log.e(TAG,"initData,mCollectCount="+mCollectCount);
@@ -146,16 +147,16 @@ public class PersonalCenterFragment extends Fragment {
     }
 
     private void initView(View layout) {
-        mOrderList = (GridView) layout.findViewById(R.id.center_user_order_lis);
-        mOrderList.setSelector(new ColorDrawable(Color.TRANSPARENT));
-        mAdapter = new OrderAdapter(mContext,pic_path);
-        mOrderList.setAdapter(mAdapter);
         mivUserAvarar = (ImageView) layout.findViewById(R.id.iv_user_avatar);
         mtvUserName = (TextView) layout.findViewById(R.id.tv_user_name);
         mLayoutCenterCollet = (LinearLayout) layout.findViewById(R.id.layout_center_collect);
         mtvCollectCount = (TextView) layout.findViewById(R.id.tv_collect_count);
         mtvSettings = (TextView) layout.findViewById(R.id.tv_center_settings);
         mivMessage = (ImageView) layout.findViewById(R.id.iv_persona_center_msg);
+        mOrderList = (GridView) layout.findViewById(R.id.center_user_order_lis);
+        mOrderList.setSelector(new ColorDrawable(Color.TRANSPARENT));
+        mAdapter = new OrderAdapter(mContext,pic_path);
+        mOrderList.setAdapter(mAdapter);
     }
 
     class CollectCountChangedReceiver extends BroadcastReceiver{
@@ -174,7 +175,10 @@ public class PersonalCenterFragment extends Fragment {
     }
 
     private void refresh(){
+        Log.e(TAG,"refresh...............");
         mtvCollectCount.setText(""+mCollectCount);
+        mUser = FuLiCenterApplication.getInstance().getUserBean();
+        mtvUserName.setText(mUser.getNick());
     }
 
     class UpdateCollectCountChangedReceiver extends BroadcastReceiver{
@@ -188,5 +192,19 @@ public class PersonalCenterFragment extends Fragment {
         mUpdateReceiver = new UpdateCollectCountChangedReceiver();
         IntentFilter filter = new IntentFilter("good_details_update");
         mContext.registerReceiver(mUpdateReceiver,filter);
+    }
+
+    class UpdateUserChangerReceiver extends BroadcastReceiver{
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            refresh();
+        }
+    }
+    UpdateUserChangerReceiver mUpdateUserReceiver;
+    private void registerUpdateUserChangedReceiver(){
+        mUpdateUserReceiver = new UpdateUserChangerReceiver();
+        IntentFilter filter = new IntentFilter("update_user");
+        mContext.registerReceiver(mUpdateUserReceiver,filter);
     }
 }

@@ -130,10 +130,12 @@ public class MainActivity extends BaseActivity {
             }else {
                 setFragment(currentTabIndex);
             }
-		} else if(action.equals("person")){
+		} else if(action.equals("person") || action.equals("settings")){
             if(mUser==null){
                 initNewGood();
             }else {
+                sendBroadcast(new Intent("update_user"));
+                sendBroadcast(new Intent("update_collect_count"));
                 setFragment(4);
             }
 		}
