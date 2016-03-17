@@ -49,6 +49,7 @@ import android.widget.Toast;
 import cn.ucai.fulicenter.FuLiCenterApplication;
 import cn.ucai.fulicenter.activity.ChatActivity;
 import cn.ucai.fulicenter.activity.MainActivity;
+import cn.ucai.fulicenter.activity.WeChatActivity;
 import cn.ucai.fulicenter.applib.controller.HXSDKHelper;
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMContact;
@@ -188,7 +189,7 @@ public class ChatHistoryFragment extends Fragment {
 			adapter.notifyDataSetChanged();
 
 			// 更新消息未读数
-			((MainActivity) getActivity()).updateUnreadLabel();
+			((WeChatActivity) getActivity()).updateUnreadLabel();
 
 			return true;
 		}

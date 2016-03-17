@@ -43,7 +43,7 @@ import cn.ucai.fulicenter.Constant;
 import cn.ucai.fulicenter.FuLiCenterApplication;
 import cn.ucai.fulicenter.R;
 import cn.ucai.fulicenter.activity.ChatActivity;
-import cn.ucai.fulicenter.activity.MainActivity;
+import cn.ucai.fulicenter.activity.WeChatActivity;
 import cn.ucai.fulicenter.adapter.ChatAllHistoryAdapter;
 import cn.ucai.fulicenter.bean.GroupBean;
 import cn.ucai.fulicenter.bean.UserBean;
@@ -222,7 +222,7 @@ public class ChatAllHistoryFragment extends Fragment implements View.OnClickList
 		adapter.notifyDataSetChanged();
 
 		// 更新消息未读数
-		((MainActivity) getActivity()).updateUnreadLabel();
+		((WeChatActivity) getActivity()).updateUnreadLabel();
 		
 		return handled ? true : super.onContextItemSelected(item);
 	}
@@ -308,7 +308,7 @@ public class ChatAllHistoryFragment extends Fragment implements View.OnClickList
 	@Override
 	public void onResume() {
 		super.onResume();
-		if (!hidden && ! ((MainActivity)getActivity()).isConflict) {
+		if (!hidden && ! ((WeChatActivity)getActivity()).isConflict) {
 			refresh();
 		}
 	}
@@ -316,9 +316,9 @@ public class ChatAllHistoryFragment extends Fragment implements View.OnClickList
 	@Override
     public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-        if(((MainActivity)getActivity()).isConflict){
+        if(((WeChatActivity)getActivity()).isConflict){
         	outState.putBoolean("isConflict", true);
-        }else if(((MainActivity)getActivity()).getCurrentAccountRemoved()){
+        }else if(((WeChatActivity)getActivity()).getCurrentAccountRemoved()){
         	outState.putBoolean(Constant.ACCOUNT_REMOVED, true);
         }
     }

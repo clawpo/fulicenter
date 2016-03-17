@@ -43,7 +43,7 @@ import com.easemob.chat.EMMessage.ChatType;
 import com.easemob.chat.EMMessage.Type;
 
 import cn.ucai.fulicenter.activity.ChatActivity;
-import cn.ucai.fulicenter.activity.MainActivity;
+import cn.ucai.fulicenter.activity.WeChatActivity;
 import cn.ucai.fulicenter.activity.VideoCallActivity;
 import cn.ucai.fulicenter.activity.VoiceCallActivity;
 import cn.ucai.fulicenter.domain.RobotUser;
@@ -355,7 +355,7 @@ public class DemoHXSDKHelper extends HXSDKHelper{
     
     @Override
     protected void onConnectionConflict(){
-        Intent intent = new Intent(appContext, MainActivity.class);
+        Intent intent = new Intent(appContext, WeChatActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("conflict", true);
         appContext.startActivity(intent);
@@ -363,7 +363,7 @@ public class DemoHXSDKHelper extends HXSDKHelper{
     
     @Override
     protected void onCurrentAccountRemoved(){
-    	Intent intent = new Intent(appContext, MainActivity.class);
+    	Intent intent = new Intent(appContext, WeChatActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra(Constant.ACCOUNT_REMOVED, true);
         appContext.startActivity(intent);

@@ -387,6 +387,12 @@
             android:screenOrientation="portrait"
             android:theme="@style/horizontal_slide">
         </activity>
+        <activity
+            android:name="cn.ucai.fulicenter.activity.WeChatActivity"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask"
+            android:theme="@style/horizontal_slide">
+        </activity>
         
           </application>
 

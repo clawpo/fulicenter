@@ -27,6 +27,7 @@ import cn.ucai.fulicenter.activity.CollectActivity;
 import cn.ucai.fulicenter.activity.LoginActivity;
 import cn.ucai.fulicenter.activity.MainActivity;
 import cn.ucai.fulicenter.activity.SettingsActivity;
+import cn.ucai.fulicenter.activity.WeChatActivity;
 import cn.ucai.fulicenter.adapter.OrderAdapter;
 import cn.ucai.fulicenter.bean.UserBean;
 import cn.ucai.fulicenter.task.DownloadCollectCountTask;
@@ -47,6 +48,7 @@ public class PersonalCenterFragment extends Fragment {
     TextView mtvUserName;
     TextView mtvCollectCount;
     TextView mtvSettings;
+    ImageView mivMessage;
     LinearLayout mLayoutCenterCollet;
 
     ImageLoader mImageLoader;
@@ -88,6 +90,7 @@ public class PersonalCenterFragment extends Fragment {
         listener = new MyClickListener();
         mLayoutCenterCollet.setOnClickListener(listener);
         mtvSettings.setOnClickListener(listener);
+        mivMessage.setOnClickListener(listener);
     }
 
     class MyClickListener implements OnClickListener{
@@ -99,6 +102,9 @@ public class PersonalCenterFragment extends Fragment {
                     break;
                 case R.id.tv_center_settings:
                     startActivity(new Intent(mContext, SettingsActivity.class));
+                    break;
+                case R.id.iv_persona_center_msg:
+                    startActivity(new Intent(mContext, WeChatActivity.class));
                     break;
             }
         }
@@ -149,6 +155,7 @@ public class PersonalCenterFragment extends Fragment {
         mLayoutCenterCollet = (LinearLayout) layout.findViewById(R.id.layout_center_collect);
         mtvCollectCount = (TextView) layout.findViewById(R.id.tv_collect_count);
         mtvSettings = (TextView) layout.findViewById(R.id.tv_center_settings);
+        mivMessage = (ImageView) layout.findViewById(R.id.iv_persona_center_msg);
     }
 
     class CollectCountChangedReceiver extends BroadcastReceiver{

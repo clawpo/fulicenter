@@ -44,6 +44,7 @@ import cn.ucai.fulicenter.activity.LoginActivity;
 import cn.ucai.fulicenter.activity.MainActivity;
 import cn.ucai.fulicenter.activity.OfflinePushNickActivity;
 import cn.ucai.fulicenter.activity.UserProfileActivity;
+import cn.ucai.fulicenter.activity.WeChatActivity;
 import cn.ucai.fulicenter.applib.controller.HXSDKHelper;
 
 /**
@@ -401,9 +402,9 @@ public class SettingsFragment extends Fragment implements OnClickListener {
     @Override
     public void onSaveInstanceState(Bundle outState) {
     	super.onSaveInstanceState(outState);
-        if(((MainActivity)getActivity()).isConflict){
+        if(((WeChatActivity)getActivity()).isConflict){
         	outState.putBoolean("isConflict", true);
-        }else if(((MainActivity)getActivity()).getCurrentAccountRemoved()){
+        }else if(((WeChatActivity)getActivity()).getCurrentAccountRemoved()){
         	outState.putBoolean(Constant.ACCOUNT_REMOVED, true);
         }
     }

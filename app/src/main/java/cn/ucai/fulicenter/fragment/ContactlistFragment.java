@@ -65,6 +65,7 @@ import cn.ucai.fulicenter.activity.MainActivity;
 import cn.ucai.fulicenter.activity.NewFriendsMsgActivity;
 import cn.ucai.fulicenter.activity.PublicChatRoomsActivity;
 import cn.ucai.fulicenter.activity.RobotsActivity;
+import cn.ucai.fulicenter.activity.WeChatActivity;
 import cn.ucai.fulicenter.adapter.ContactAdapter;
 import cn.ucai.fulicenter.applib.controller.HXSDKHelper;
 import cn.ucai.fulicenter.applib.controller.HXSDKHelper.HXSyncListener;
@@ -539,9 +540,9 @@ public class ContactlistFragment extends Fragment {
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-	    if(((MainActivity)getActivity()).isConflict){
+	    if(((WeChatActivity)getActivity()).isConflict){
 	    	outState.putBoolean("isConflict", true);
-	    }else if(((MainActivity)getActivity()).getCurrentAccountRemoved()){
+	    }else if(((WeChatActivity)getActivity()).getCurrentAccountRemoved()){
 	    	outState.putBoolean(Constant.ACCOUNT_REMOVED, true);
 	    }
 	    

@@ -102,7 +102,7 @@ public class GroupsActivity extends BaseActivity {
 
 			@Override
 			public void onRefresh() {
-				MainActivity.asyncFetchGroupsFromServer();
+				WeChatActivity.asyncFetchGroupsFromServer();
 			}
 		});
 
