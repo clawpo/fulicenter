@@ -13,11 +13,11 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.SharedElementCallback;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.*;
 import android.view.ContextMenu;
-import android.widget.Button;
-import android.widget.ImageView;
+import android.view.KeyEvent;
+import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -109,7 +109,6 @@ public class WeChatActivity extends BaseActivity  implements EMEventListener {
 //	private TextView unreadAddressLable;
     float mDensity;
 
-    private Button[] mTabs;
     private int index;
     // 当前fragment的index
     private int currentTabIndex = -1;
@@ -131,8 +130,8 @@ public class WeChatActivity extends BaseActivity  implements EMEventListener {
         mContext = this;
         setContentView(R.layout.activity_wechat);
 
-        initFragment();
         initView();
+        initFragment();
         setListener();
 
 
@@ -167,6 +166,9 @@ public class WeChatActivity extends BaseActivity  implements EMEventListener {
                 .add(R.id.fragment_container_wechat, mContactListFragment)
                 .hide(mContactListFragment).show(mChatHistoryFragment)
                 .commit();
+        if(currentTabIndex==-1){
+            setFragment(currentTabIndex);
+        }
     }
 
     private void initDB() {
@@ -188,10 +190,35 @@ public class WeChatActivity extends BaseActivity  implements EMEventListener {
         mivReturn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+//                finish();
             }
         });
         setMenuItemClickListener();
+    }
+
+    private void setFragment(int newIndex){
+        if(newIndex==-1){
+            newIndex=0;
+        }
+//        setMenuItemDefaultDrawable();
+//        setMenuItemDrawable();
+        if(newIndex==0){
+            drawableConversation = getmDrawable(R.drawable.iconfont_xinxifill);
+            mivConversation.setImageDrawable(drawableConversation);
+            drawableContactList = getmDrawable(R.drawable.iconfont_pengyou);
+            mivContactList.setImageDrawable(drawableContactList);
+        }else{
+            drawableContactList = getmDrawable(R.drawable.iconfont_pengyoufill);
+            mivContactList.setImageDrawable(drawableContactList);
+            drawableConversation = getmDrawable(R.drawable.iconfont_xinxi);
+            mivConversation.setImageDrawable(drawableConversation);
+        }
+        currentTabIndex = (newIndex+1)%2;
+        index = newIndex;
+        FragmentTransaction trx = getSupportFragmentManager().beginTransaction();
+        trx.hide(mFragments[currentTabIndex]).show(mFragments[index]).commit();
+        currentTabIndex = index;
+//        setMenuItemDrawable();
     }
 
     private void setMenuItemClickListener() {
@@ -306,7 +333,7 @@ public class WeChatActivity extends BaseActivity  implements EMEventListener {
     class MenuItemClickListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            setMenuItemDefaultDrawable();
+//            setMenuItemDefaultDrawable();
             switch (v.getId()) {
                 case R.id.layout_wechat_conversation:
                     index = 0;
@@ -316,15 +343,16 @@ public class WeChatActivity extends BaseActivity  implements EMEventListener {
                     break;
             }
             if (currentTabIndex != index) {
-                FragmentTransaction trx = getSupportFragmentManager().beginTransaction();
-                trx.hide(mFragments[currentTabIndex]);
-                if (!mFragments[index].isAdded()) {
-                    trx.add(R.id.fragment_container_wechat, mFragments[index]);
-                }
-                trx.show(mFragments[index]).commit();
+//                FragmentTransaction trx = getSupportFragmentManager().beginTransaction();
+//                trx.hide(mFragments[currentTabIndex]);
+//                if (!mFragments[index].isAdded()) {
+//                    trx.add(R.id.fragment_container_wechat, mFragments[index]);
+//                }
+//                trx.show(mFragments[index]).commit();
+                setFragment(index);
             }
-            currentTabIndex = index;
-            setMenuItemDrawable();
+//            currentTabIndex = index;
+//            setMenuItemDrawable();
         }
     }
 

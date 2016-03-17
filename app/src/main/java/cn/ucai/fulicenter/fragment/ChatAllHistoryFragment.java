@@ -1,11 +1,5 @@
 package cn.ucai.fulicenter.fragment;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Hashtable;
-import java.util.List;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -31,6 +25,7 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -39,13 +34,19 @@ import android.widget.Toast;
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMConversation;
 import com.easemob.chat.EMConversation.EMConversationType;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Hashtable;
+import java.util.List;
+
 import cn.ucai.fulicenter.Constant;
 import cn.ucai.fulicenter.FuLiCenterApplication;
 import cn.ucai.fulicenter.R;
 import cn.ucai.fulicenter.activity.ChatActivity;
 import cn.ucai.fulicenter.activity.WeChatActivity;
 import cn.ucai.fulicenter.adapter.ChatAllHistoryAdapter;
-import cn.ucai.fulicenter.bean.GroupBean;
 import cn.ucai.fulicenter.bean.UserBean;
 import cn.ucai.fulicenter.db.InviteMessgeDao;
 import cn.ucai.fulicenter.utils.UserUtils;
@@ -64,6 +65,7 @@ public class ChatAllHistoryFragment extends Fragment implements View.OnClickList
 	public RelativeLayout errorItem;
 
 	public TextView errorText;
+	public ImageView mivReturn;
 	private boolean hidden;
 	private List<EMConversation> conversationList = new ArrayList<EMConversation>();
 	
@@ -82,7 +84,8 @@ public class ChatAllHistoryFragment extends Fragment implements View.OnClickList
             return;
 		inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
 		errorItem = (RelativeLayout) getView().findViewById(R.id.rl_error_item);
-		errorText = (TextView) errorItem.findViewById(R.id.tv_connect_errormsg);		
+		errorText = (TextView) errorItem.findViewById(R.id.tv_connect_errormsg);
+		mivReturn = (ImageView) getView().findViewById(R.id.ivReturn);
 		
 		conversationList.addAll(loadConversationsWithRecentChat());
 		
@@ -182,6 +185,12 @@ public class ChatAllHistoryFragment extends Fragment implements View.OnClickList
 			public void onClick(View v) {
 				query.getText().clear();
 				hideSoftKeyboard();
+			}
+		});
+		mivReturn.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				getActivity().finish();
 			}
 		});
 		

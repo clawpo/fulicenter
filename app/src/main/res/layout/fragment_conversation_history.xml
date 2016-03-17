@@ -16,9 +16,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="@string/session"
-            android:textColor="#fff"
+            android:text="@string/message"
+            android:textColor="#000"
             android:textSize="18sp" />
+
+        <ImageView
+            android:id="@+id/ivReturn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:padding="5dp"
+            android:src="@drawable/back_press" />
 
     </RelativeLayout>
     <include layout="@layout/search_bar" />

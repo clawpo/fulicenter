@@ -73,7 +73,9 @@
     <string name="yangshengqi">Use speaker</string>
     <string name="book_black">Black list</string>
     <string name="session">Conversation</string>
+    <string name="message">Messages</string>
     <string name="address_book">Address book</string>
+    <string name="contact_list">Contact List</string>
     <string name="setting">Settings</string>
     <string name="now_refresh_list">Refreshing contact list</string>
     <string name="Application_and_notify">Invitation and notification</string>

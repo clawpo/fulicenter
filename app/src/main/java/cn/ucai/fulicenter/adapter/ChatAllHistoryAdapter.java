@@ -30,8 +30,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TextView.BufferType;
 
-import com.easemob.chat.EMChatManager;
-import com.easemob.chat.EMChatRoom;
 import com.easemob.chat.EMConversation;
 import com.easemob.chat.EMConversation.EMConversationType;
 import com.easemob.chat.EMGroup;
@@ -49,11 +47,10 @@ import java.util.Map;
 
 import cn.ucai.fulicenter.Constant;
 import cn.ucai.fulicenter.DemoHXSDKHelper;
+import cn.ucai.fulicenter.FuLiCenterApplication;
 import cn.ucai.fulicenter.I;
 import cn.ucai.fulicenter.R;
-import cn.ucai.fulicenter.FuLiCenterApplication;
 import cn.ucai.fulicenter.applib.controller.HXSDKHelper;
-import cn.ucai.fulicenter.bean.GroupBean;
 import cn.ucai.fulicenter.bean.UserBean;
 import cn.ucai.fulicenter.domain.RobotUser;
 import cn.ucai.fulicenter.utils.DateUtils;
@@ -132,6 +129,8 @@ public class ChatAllHistoryAdapter extends ArrayAdapter<EMConversation> {
         IntentFilter filter = new IntentFilter("update_contacts");
         mContext.registerReceiver(mReceiver, filter);
     }
+
+
 
     
     @Override

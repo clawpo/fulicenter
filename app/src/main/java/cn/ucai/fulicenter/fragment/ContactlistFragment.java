@@ -61,7 +61,6 @@ import cn.ucai.fulicenter.R;
 import cn.ucai.fulicenter.activity.AddContactActivity;
 import cn.ucai.fulicenter.activity.ChatActivity;
 import cn.ucai.fulicenter.activity.GroupsActivity;
-import cn.ucai.fulicenter.activity.MainActivity;
 import cn.ucai.fulicenter.activity.NewFriendsMsgActivity;
 import cn.ucai.fulicenter.activity.PublicChatRoomsActivity;
 import cn.ucai.fulicenter.activity.RobotsActivity;
@@ -257,10 +256,20 @@ public class ContactlistFragment extends Fragment {
         setContactItemClickListener();
 		setContactListTouchListener();
 		setAddContactListener();
+		setReturnListener();
         
     }
 
-    /** 进入添加好友页*/
+	private void setReturnListener() {
+		getView().findViewById(R.id.ivReturn).setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				getActivity().finish();
+			}
+		});
+	}
+
+	/** 进入添加好友页*/
     private void setAddContactListener() {
 		getView().findViewById(R.id.iv_new_contact).setOnClickListener(new OnClickListener() {
             @Override
