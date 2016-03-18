@@ -60,10 +60,7 @@ import cn.ucai.fulicenter.FuLiCenterApplication;
 import cn.ucai.fulicenter.R;
 import cn.ucai.fulicenter.activity.AddContactActivity;
 import cn.ucai.fulicenter.activity.ChatActivity;
-import cn.ucai.fulicenter.activity.GroupsActivity;
 import cn.ucai.fulicenter.activity.NewFriendsMsgActivity;
-import cn.ucai.fulicenter.activity.PublicChatRoomsActivity;
-import cn.ucai.fulicenter.activity.RobotsActivity;
 import cn.ucai.fulicenter.activity.WeChatActivity;
 import cn.ucai.fulicenter.adapter.ContactAdapter;
 import cn.ucai.fulicenter.applib.controller.HXSDKHelper;
@@ -73,9 +70,9 @@ import cn.ucai.fulicenter.bean.UserBean;
 import cn.ucai.fulicenter.db.EMUserDao;
 import cn.ucai.fulicenter.db.InviteMessgeDao;
 import cn.ucai.fulicenter.domain.User;
+import cn.ucai.fulicenter.task.DeleteContactsTask;
 import cn.ucai.fulicenter.utils.UserUtils;
 import cn.ucai.fulicenter.widget.Sidebar;
-import cn.ucai.fulicenter.task.DeleteContactsTask;
 
 /**
  * 联系人列表页
@@ -231,7 +228,8 @@ public class ContactlistFragment extends Fragment {
 
 		
 		registerForContextMenu(listView);
-		
+
+        //todu
 		progressBar = (View) getView().findViewById(R.id.progress_bar);
 
 		contactSyncListener = new HXContactSyncListener();
@@ -307,16 +305,18 @@ public class ContactlistFragment extends Fragment {
 					User user = ((DemoHXSDKHelper)HXSDKHelper.getInstance()).getContactList().get(Constant.NEW_FRIENDS_USERNAME);
 					user.setUnreadMsgCount(0);
 					startActivity(new Intent(getActivity(), NewFriendsMsgActivity.class));
-				} else if (Constant.GROUP_USERNAME.equals(username)) {
-					// 进入群聊列表页面
-					startActivity(new Intent(getActivity(), GroupsActivity.class));
-				} else if(Constant.CHAT_ROOM.equals(username)){
-					//进入聊天室列表页面
-				    startActivity(new Intent(getActivity(), PublicChatRoomsActivity.class));
-				}else if(Constant.CHAT_ROBOT.equals(username)){
-					//进入Robot列表页面
-					startActivity(new Intent(getActivity(), RobotsActivity.class));
-				}else {
+				}
+//				else if (Constant.GROUP_USERNAME.equals(username)) {
+//					// 进入群聊列表页面
+//					startActivity(new Intent(getActivity(), GroupsActivity.class));
+//				} else if(Constant.CHAT_ROOM.equals(username)){
+//					//进入聊天室列表页面
+//				    startActivity(new Intent(getActivity(), PublicChatRoomsActivity.class));
+//				}else if(Constant.CHAT_ROBOT.equals(username)){
+//					//进入Robot列表页面
+//					startActivity(new Intent(getActivity(), RobotsActivity.class));
+//				}
+				else {
 					// demo中直接进入聊天页面，实际一般是进入用户详情页
 					startActivity(new Intent(getActivity(), ChatActivity.class)
 					    .putExtra("userId", adapter.getItem(position).getUserName()));
@@ -337,7 +337,7 @@ public class ContactlistFragment extends Fragment {
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
-		if (((AdapterContextMenuInfo) menuInfo).position > 2) {
+		if (((AdapterContextMenuInfo) menuInfo).position > 1) {
 		    toBeProcessUser = adapter.getItem(((AdapterContextMenuInfo) menuInfo).position);
 		    toBeProcessUsername = toBeProcessUser.getUserName();
 			getActivity().getMenuInflater().inflate(R.menu.context_contact_list, menu);
@@ -594,23 +594,23 @@ public class ContactlistFragment extends Fragment {
 		Log.e("main","initContactList.contactList.size="+contactList.size()+",mContactList.size="+mContactList.size());
 
 		Resources res = getActivity().getResources();
-	    UserBean chatRoomUser = new UserBean();
-	    chatRoomUser.setUserName(Constant.CHAT_ROBOT);
-	    chatRoomUser.setNick(res.getString(R.string.chat_room));
-//        Log.e("main","mContactList.indexOf(chatRoomUser)="+mContactList.indexOf(chatRoomUser));
-	    if(mContactList.indexOf(chatRoomUser)==-1){
-	        mContactList.add(0,chatRoomUser);
-	    }
-        UserBean groupUser = new UserBean();
-        String strGroup = getActivity().getResources().getString(
-            R.string.group_chat);
-        groupUser.setUserName(Constant.GROUP_USERNAME);
-        groupUser.setNick(strGroup);
-        groupUser.setHeader("");
-//        Log.e("main","mContactList.indexOf(groupUser)="+mContactList.indexOf(groupUser));
-        if(mContactList.indexOf(groupUser)==-1){
-            mContactList.add(0, groupUser);
-        }
+//	    UserBean chatRoomUser = new UserBean();
+//	    chatRoomUser.setUserName(Constant.CHAT_ROBOT);
+//	    chatRoomUser.setNick(res.getString(R.string.chat_room));
+////        Log.e("main","mContactList.indexOf(chatRoomUser)="+mContactList.indexOf(chatRoomUser));
+//	    if(mContactList.indexOf(chatRoomUser)==-1){
+//	        mContactList.add(0,chatRoomUser);
+//	    }
+//        UserBean groupUser = new UserBean();
+//        String strGroup = getActivity().getResources().getString(
+//            R.string.group_chat);
+//        groupUser.setUserName(Constant.GROUP_USERNAME);
+//        groupUser.setNick(strGroup);
+//        groupUser.setHeader("");
+////        Log.e("main","mContactList.indexOf(groupUser)="+mContactList.indexOf(groupUser));
+//        if(mContactList.indexOf(groupUser)==-1){
+//            mContactList.add(0, groupUser);
+//        }
 		UserBean newFriends = new UserBean();
 		newFriends.setUserName(Constant.NEW_FRIENDS_USERNAME);
 		String strChat = getActivity().getResources().getString(
