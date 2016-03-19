@@ -1,6 +1,5 @@
 package cn.ucai.fulicenter.fragment;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -20,10 +19,8 @@ import cn.ucai.fulicenter.I;
 import cn.ucai.fulicenter.R;
 import cn.ucai.fulicenter.activity.MainActivity;
 import cn.ucai.fulicenter.adapter.GoodAdapterRS;
-import cn.ucai.fulicenter.adapter.HeaderViewRecyclerAdapter;
 import cn.ucai.fulicenter.bean.NewGoodBean;
-import cn.ucai.fulicenter.utils.DialogUtils;
-import cn.ucai.fulicenter.utils.NetUtil;
+import cn.ucai.fulicenter.task.DownloadGoodsTaskRS;
 
 /**
  * Created by clawpo on 16/3/18.
@@ -34,7 +31,6 @@ public class NewGoodFragmentRS extends Fragment {
 
     ArrayList<NewGoodBean> mGoodList;
     GoodAdapterRS mAdapter;
-    HeaderViewRecyclerAdapter mHeaderAdapter;
     /** 下拉刷新控件*/
     SwipeRefreshLayout mSwipeRefreshLayout;
     RecyclerView mRecyclerView;
@@ -48,12 +44,6 @@ public class NewGoodFragmentRS extends Fragment {
     /** 每行显示的数量*/
     int columNum = 2;
 
-    /** 下拉刷新*/
-    static final int ACTION_DOWNLOAD=0;
-    /** 第一次下载*/
-    static final int ACTION_PULL_DOWN=1;
-    /** 上拉刷新*/
-    static final int ACTION_PULL_UP=2;
 
     DownloadGoodsTaskRS mDownloadGoodsTask;
 
@@ -62,15 +52,15 @@ public class NewGoodFragmentRS extends Fragment {
         mContext = (MainActivity)getActivity();
         View layout = View.inflate(mContext, R.layout.fragment_new_good_swipe_refresh, null);
         initView(layout);
-        setListener(layout);
-        mDownloadGoodsTask = new DownloadGoodsTaskRS(
-                mGoodList, ACTION_DOWNLOAD,I.CAT_ID,I.NEW_GOOD);
+        setListener();
+        mDownloadGoodsTask = new DownloadGoodsTaskRS(mContext,mAdapter,
+                mSwipeRefreshLayout,mGoodList,mtvHint,I.ACTION_DOWNLOAD,I.CAT_ID,I.NEW_GOOD);
         mDownloadGoodsTask.execute(mPageId,PAGE_SIZE);
         return layout;
 
     }
 
-    private void setListener(View layout) {
+    private void setListener() {
         setPullDownRefreshListener();
         setPullUpRefreshListener();
     }
@@ -90,8 +80,8 @@ public class NewGoodFragmentRS extends Fragment {
                             if(mAdapter.isMore()){
                                 mSwipeRefreshLayout.setRefreshing(true);
                                 mPageId +=PAGE_SIZE;
-                                mDownloadGoodsTask = new DownloadGoodsTaskRS(
-                                        mGoodList, ACTION_PULL_UP,I.CAT_ID,I.NEW_GOOD);
+                                mDownloadGoodsTask = new DownloadGoodsTaskRS(mContext,mAdapter,
+                                        mSwipeRefreshLayout,mGoodList,mtvHint,I.ACTION_DOWNLOAD,I.CAT_ID,I.NEW_GOOD);
                                 mDownloadGoodsTask.execute(mPageId, PAGE_SIZE);
                             }
                         }
@@ -117,8 +107,8 @@ public class NewGoodFragmentRS extends Fragment {
                     public void onRefresh() {
                         mtvHint.setVisibility(View.VISIBLE);
                         mPageId = 0;
-                        mDownloadGoodsTask = new DownloadGoodsTaskRS(
-                                mGoodList, ACTION_PULL_DOWN,I.CAT_ID,I.NEW_GOOD);
+                        mDownloadGoodsTask = new DownloadGoodsTaskRS(mContext,mAdapter,
+                                mSwipeRefreshLayout,mGoodList,mtvHint,I.ACTION_DOWNLOAD,I.CAT_ID,I.NEW_GOOD);
                         mDownloadGoodsTask.execute(mPageId,PAGE_SIZE);
                     }
                 }
@@ -141,90 +131,9 @@ public class NewGoodFragmentRS extends Fragment {
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(mGridLayoutManager);
         mAdapter = new GoodAdapterRS(mContext,mGoodList,I.SORT_BY_ADDTIME_DESC);
-        mHeaderAdapter = new HeaderViewRecyclerAdapter(mAdapter);
-        mRecyclerView.setAdapter(mHeaderAdapter);
+        mRecyclerView.setAdapter(mAdapter);
         //添加分隔条,分隔条为网格布局方式
 //        mRecyclerView.addItemDecoration(
 //        new DividerGridItemDecoration(mContext));
-    }
-
-    class DownloadGoodsTaskRS extends AsyncTask<Integer,Void,ArrayList<NewGoodBean>> {
-        public final String TAG = DownloadGoodsTaskRS.class.getName();
-
-        int action;//加载数据的类型：0：重新下载，1：添加新的数据
-        int catId;
-        /** 0:新品或者精选;1:分类 */
-        int goodType;
-
-        public DownloadGoodsTaskRS(ArrayList<NewGoodBean> mGoodList, int action, int catId, int goodType) {
-            this.action = action;
-            this.catId = catId;
-            this.goodType = goodType;
-        }
-
-
-        @Override
-        protected void onPreExecute() {
-            mSwipeRefreshLayout.setRefreshing(true);
-            switch (action) {
-                case ACTION_DOWNLOAD:
-                    DialogUtils.showProgressDialog(mContext, "加载商品", "加载中...");
-                    break;
-                case ACTION_PULL_UP:
-                    if (mAdapter.isMore()) {
-                        mAdapter.setFooterText("正在加载数据...");
-                    }
-                    break;
-            }
-        }
-
-        @Override
-        protected ArrayList<NewGoodBean> doInBackground(Integer... params) {
-            int pageId=params[0];
-            int pageSize=params[1];
-            ArrayList<NewGoodBean> goodList=null;
-            try{
-                switch (goodType){
-                    case I.NEW_GOOD:
-                        goodList = NetUtil.findNewandBoutiqueGoods(catId,pageId,pageSize);
-                        break;
-                    case I.CATEGORY_GOOD:
-                        goodList = NetUtil.findGoodsDetails(mContext,catId,pageId,pageSize);
-                        break;
-                }
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-            return goodList;
-        }
-
-        @Override
-        protected void onPostExecute(ArrayList<NewGoodBean> goods) {
-            DialogUtils.closeProgressDialog();
-            mSwipeRefreshLayout.setRefreshing(false);
-            mtvHint.setVisibility(View.GONE);
-            if (goods == null || goods.size()==0) {
-                mAdapter.setMore(false);
-                if (action == ACTION_PULL_UP) {
-                    mAdapter.setFooterText("没有更多数据");
-                }
-                return;
-            }
-            mAdapter.setMore(true);
-            switch (action){
-                case ACTION_DOWNLOAD:
-                case ACTION_PULL_DOWN:
-                    mAdapter.initItems(goods);
-                    break;
-                case ACTION_PULL_UP:
-                    if(goods!=null){
-                        mAdapter.addItems(goods);
-                        mAdapter.setMore(true);
-                    } else {
-                        mAdapter.setMore(false);
-                    }
-                    break;
-            }
-        }
     }
 }

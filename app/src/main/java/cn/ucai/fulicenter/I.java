@@ -26,6 +26,13 @@ public interface I {
 
     public static final int REQUEST_CODE_LOGIN = 1;
     public static final int ACTIVITY_REGISTER_REQUEST_CODE = 2;
+
+    /** 下拉刷新*/
+    public static final int ACTION_DOWNLOAD=0;
+    /** 第一次下载*/
+    public static final int ACTION_PULL_DOWN=1;
+    /** 上拉刷新*/
+    public static final int ACTION_PULL_UP=2;
     
     class Cart{
         public static final String ID="id";
