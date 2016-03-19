@@ -30,6 +30,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import cn.ucai.fulicenter.FuLiCenterApplication;
 import cn.ucai.fulicenter.I;
 import cn.ucai.fulicenter.R;
@@ -37,7 +38,7 @@ import cn.ucai.fulicenter.bean.UserBean;
 import cn.ucai.fulicenter.fragment.BoutiqueFragment;
 import cn.ucai.fulicenter.fragment.CartFragment;
 import cn.ucai.fulicenter.fragment.CategoryFragment;
-import cn.ucai.fulicenter.fragment.NewGoodFragment;
+import cn.ucai.fulicenter.fragment.NewGoodFragmentRS;
 import cn.ucai.fulicenter.fragment.PersonalCenterFragment;
 import cn.ucai.fulicenter.task.DownloadCartTask;
 import cn.ucai.fulicenter.utils.FragmentUtils;
@@ -67,7 +68,7 @@ public class MainActivity extends BaseActivity {
 	RelativeLayout mLayoutCategory;
 	RelativeLayout mLayoutPersonalCenter;
 
-	private NewGoodFragment mNewGoodFragment;
+	private NewGoodFragmentRS mNewGoodFragment;
 	private BoutiqueFragment mBoutiqueFragment;
 	 private CategoryFragment mCategoryFragment;
     private CartFragment mCartFragment;
@@ -142,7 +143,7 @@ public class MainActivity extends BaseActivity {
 	}
 
     private void initFragment() {
-		mNewGoodFragment = new NewGoodFragment();
+		mNewGoodFragment = new NewGoodFragmentRS();
         mBoutiqueFragment = new BoutiqueFragment();
 		mCategoryFragment = new CategoryFragment();
 		mCartFragment = new CartFragment();
