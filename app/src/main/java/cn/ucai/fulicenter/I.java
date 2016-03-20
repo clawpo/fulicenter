@@ -33,6 +33,11 @@ public interface I {
     public static final int ACTION_PULL_DOWN=1;
     /** 上拉刷新*/
     public static final int ACTION_PULL_UP=2;
+
+
+    /** 表示列表项布局的两种类型*/
+    public static final int TYPE_ITEM=0;
+    public static final int TYPE_FOOTER=1;
     
     class Cart{
         public static final String ID="id";

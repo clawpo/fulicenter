@@ -36,7 +36,7 @@ import cn.ucai.fulicenter.I;
 import cn.ucai.fulicenter.R;
 import cn.ucai.fulicenter.bean.UserBean;
 import cn.ucai.fulicenter.fragment.BoutiqueFragment;
-import cn.ucai.fulicenter.fragment.CartFragment;
+import cn.ucai.fulicenter.fragment.CartFragmentRS;
 import cn.ucai.fulicenter.fragment.CategoryFragment;
 import cn.ucai.fulicenter.fragment.NewGoodFragmentRS;
 import cn.ucai.fulicenter.fragment.PersonalCenterFragment;
@@ -71,7 +71,7 @@ public class MainActivity extends BaseActivity {
 	private NewGoodFragmentRS mNewGoodFragment;
 	private BoutiqueFragment mBoutiqueFragment;
 	 private CategoryFragment mCategoryFragment;
-    private CartFragment mCartFragment;
+    private CartFragmentRS mCartFragment;
 	private PersonalCenterFragment mPersonalCenterFragment;
 //	private FindFragment mFindFragment;
 	private Fragment[] mFragments;
@@ -146,7 +146,7 @@ public class MainActivity extends BaseActivity {
 		mNewGoodFragment = new NewGoodFragmentRS();
         mBoutiqueFragment = new BoutiqueFragment();
 		mCategoryFragment = new CategoryFragment();
-		mCartFragment = new CartFragment();
+		mCartFragment = new CartFragmentRS();
 		mPersonalCenterFragment = new PersonalCenterFragment();
 		mFragments = new Fragment[] {
 				mNewGoodFragment,mBoutiqueFragment,

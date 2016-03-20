@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,9 +35,6 @@ public class GoodAdapterRS extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     boolean misMore;
     int sortBy;
 
-    /** 表示列表项布局的两种类型*/
-    static final int TYPE_ITEM=0;
-    static final int TYPE_FOOTER=1;
     
     /**RecyclerView*/
     ViewGroup parent;
@@ -97,10 +93,10 @@ public class GoodAdapterRS extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         LayoutInflater inflater = LayoutInflater.from(mContext);
         RecyclerView.ViewHolder holder = null;
         switch (viewType){
-            case TYPE_ITEM:
+            case I.TYPE_ITEM:
                 holder = new GoodViewHolder(inflater.inflate(R.layout.item_new_good, parent,false));
                 break;
-            case TYPE_FOOTER:
+            case I.TYPE_FOOTER:
                 holder = new FooterViewHolder(inflater.inflate(R.layout.item_footer, parent,false));
                 break;
         }
@@ -163,11 +159,10 @@ public class GoodAdapterRS extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     @Override
     public int getItemViewType(int position) {
         if(position == getItemCount()){
-            return TYPE_FOOTER;
+            return I.TYPE_FOOTER;
         }else{
-            return TYPE_ITEM;
+            return I.TYPE_ITEM;
         }
-
     }
 
     private void sort(final int sortBy){

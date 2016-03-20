@@ -9,17 +9,16 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -37,10 +36,10 @@ import cn.ucai.fulicenter.utils.Utils;
 /**
  * Created by ucai001 on 2016/3/9.
  */
-public class CartFragment extends Fragment {
-    public static final String TAG = CartFragment.class.getName();
-    ListView mlvCart;
-    CartAdapter mAdapter;
+public class CartFragmentRS extends Fragment {
+    public static final String TAG = CartFragmentRS.class.getName();
+    CartAdapterRS mAdapter;
+    RecyclerView mrvCart;
     
     TextView mtvSumPrice;
     TextView mtvSavePrice;
@@ -50,7 +49,7 @@ public class CartFragment extends Fragment {
     
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View layout=View.inflate(getActivity(), R.layout.fragment_cart, null);
+        View layout=View.inflate(getActivity(), R.layout.fragment_cart_rs, null);
         initView(layout);
         registerCartChangedReceiver();
         return layout;
@@ -60,24 +59,33 @@ public class CartFragment extends Fragment {
         mtvSumPrice=(TextView) layout.findViewById(R.id.tvSumPrice);
         mtvSavePrice=(TextView) layout.findViewById(R.id.tvSavePrice);
         mtvNothing= (TextView) layout.findViewById(R.id.tv_nothing);
-        
-        mlvCart=(ListView) layout.findViewById(R.id.lvCart);
-        mlvCart.setEmptyView(mtvNothing);
-        mAdapter=new CartAdapter(getActivity(),mtvSumPrice,mtvSavePrice);
-        mlvCart.setAdapter(mAdapter);
+
+        mrvCart = (RecyclerView) layout.findViewById(R.id.rv_cart);
+        mrvCart.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mAdapter=new CartAdapterRS(getActivity(),mtvSumPrice,mtvSavePrice);
+        mrvCart.setHasFixedSize(true);
+        mrvCart.setAdapter(mAdapter);
+        mtvNothing.setVisibility(View.VISIBLE);
     }
 
     /**
      * 购物车适配器
      */
-    class CartAdapter extends BaseAdapter {
+    class CartAdapterRS extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         Context context;
         ArrayList<CartBean> cartList;
         ImageLoader imageLoader;
         TextView tvSumPrice,tvSavePrice;
         boolean isUpdate;
 
-        public CartAdapter(Context context, TextView tvSumPrice, TextView tvSavePrice) {
+        FooterViewHolder footerHolder;
+        CartViewHolder cartHolder;
+
+        /**RecyclerView*/
+        ViewGroup parent;
+        String footerText;
+
+        public CartAdapterRS(Context context, TextView tvSumPrice, TextView tvSavePrice) {
             super();
             this.context = context;
             this.tvSumPrice = tvSumPrice;
@@ -89,81 +97,84 @@ public class CartFragment extends Fragment {
         }
 
         @Override
-        public void notifyDataSetChanged() {
-            sumPrice(tvSumPrice,tvSavePrice);
-            super.notifyDataSetChanged();
-        }
-
-        @Override
-        public int getCount() {
-            return cartList==null?0:cartList.size();
-        }
-
-        @Override
-        public CartBean getItem(int position) {
-            return cartList.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return 0;
-        }
-
-        @Override
-        public View getView(int position, View layout, final ViewGroup parent) {
-            ViewHolder holder=null;
-            if(layout==null){
-                layout=View.inflate(context, R.layout.item_cart, null);
-                holder=new ViewHolder();
-                holder.tvCartCount=(TextView) layout.findViewById(R.id.tvCartCount);
-                holder.tvGoodsName=(TextView) layout.findViewById(R.id.tvGoodsName);
-                holder.ivAddCart=(ImageView) layout.findViewById(R.id.ivAddCart);
-                holder.ivReduceCart=(ImageView) layout.findViewById(R.id.ivReduceCart);
-                holder.ivGoodsThumb=(ImageView) layout.findViewById(R.id.ivGoodsThumb);
-                holder.tvGoodsPrice=(TextView) layout.findViewById(R.id.tvGoodsPrice);
-                holder.chkChecked=(CheckBox) layout.findViewById(R.id.chkSelect);
-                layout.setTag(holder);
-            }else{
-                holder=(ViewHolder) layout.getTag();
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            this.parent = parent;
+            LayoutInflater inflater = LayoutInflater.from(context);
+            RecyclerView.ViewHolder holder = null;
+            switch (viewType){
+                case I.TYPE_ITEM:
+                    holder = new CartViewHolder(inflater.inflate(R.layout.item_cart, parent,false));
+                    break;
+                case I.TYPE_FOOTER:
+                    holder = new FooterViewHolder(inflater.inflate(R.layout.item_footer, parent,false));
+                    break;
             }
-            final CartBean cart = getItem(position);
-            Log.e("main","-----cart="+cart.toString());
-            GoodDetailsBean goods = cart.getGoods();
-            Log.e("main","-----goods="+goods);
-            if(goods==null){
-                return layout;
-            }
-            holder.tvGoodsName.setText(goods.getGoodsName());
-            holder.tvCartCount.setText("("+cart.getCount()+")");
-            holder.tvGoodsPrice.setText(goods.getCurrencyPrice());
-            
-            Bitmap bitmap = BitmapUtils.showGoodsThumb(context,imageLoader,
-                    parent, holder.ivGoodsThumb, 
-                    I.DOWNLOAD_GOODS_THUMB_URL+cart.getGoods().getGoodsThumb(),
-                    cart.getGoods().getGoodsThumb());
-            if(bitmap==null){
-                holder.ivGoodsThumb.setImageResource(R.drawable.nopic);
-            }else{
-                holder.ivGoodsThumb.setImageBitmap(bitmap);
-            }
-            AddDelCartListener listener=new AddDelCartListener(cart);
-            holder.ivAddCart.setOnClickListener(listener);
-            holder.ivReduceCart.setOnClickListener(listener);
-            holder.chkChecked.setChecked(cart.isChecked());
-            holder.chkChecked.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    cart.setChecked(isChecked);
 
-                    cart.setCount(cart.getCount()-1);
-                    Utils.addCart(getActivity(), cart.getGoods());
-                    notifyDataSetChanged();
+            return holder;
+        }
+
+        @Override
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+            if(holder instanceof FooterViewHolder){
+                footerHolder  = (FooterViewHolder) holder;
+                footerHolder.tvFooter.setText(footerText);
+                footerHolder.tvFooter.setVisibility(View.VISIBLE);
+                return;
+            }
+            if(position == cartList.size()){
+                return;
+            }
+            if(holder instanceof CartViewHolder){
+                cartHolder = (CartViewHolder) holder;
+                final CartBean cart = cartList.get(position);
+                GoodDetailsBean goods = cart.getGoods();
+                if(goods==null){
+                    return;
                 }
-            });
-            return layout;
+                cartHolder.tvGoodsName.setText(goods.getGoodsName());
+                cartHolder.tvCartCount.setText("("+cart.getCount()+")");
+                cartHolder.tvGoodsPrice.setText(goods.getCurrencyPrice());
+
+                Bitmap bitmap = BitmapUtils.showGoodsThumb(context,imageLoader,
+                        parent, cartHolder.ivGoodsThumb,
+                        I.DOWNLOAD_GOODS_THUMB_URL+cart.getGoods().getGoodsThumb(),
+                        cart.getGoods().getGoodsThumb());
+                if(bitmap==null){
+                    cartHolder.ivGoodsThumb.setImageResource(R.drawable.nopic);
+                }else{
+                    cartHolder.ivGoodsThumb.setImageBitmap(bitmap);
+                }
+                AddDelCartListener listener=new AddDelCartListener(cart);
+                cartHolder.ivAddCart.setOnClickListener(listener);
+                cartHolder.ivReduceCart.setOnClickListener(listener);
+                cartHolder.chkChecked.setChecked(cart.isChecked());
+                cartHolder.chkChecked.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        cart.setChecked(isChecked);
+
+                        cart.setCount(cart.getCount()-1);
+                        Utils.addCart(getActivity(), cart.getGoods());
+                        sumPrice(tvSumPrice,tvSavePrice);
+                        notifyDataSetChanged();
+                    }
+                });
+            }
         }
 
-        class ViewHolder{
+        @Override
+        public int getItemCount() {
+            int count = cartList==null?0:cartList.size();
+            if(count>0){
+                mtvNothing.setVisibility(View.GONE);
+            }else{
+                mtvNothing.setVisibility(View.VISIBLE);
+            }
+            return count;
+        }
+
+
+        class CartViewHolder extends RecyclerView.ViewHolder{
             TextView tvGoodsName;
             TextView tvCartCount;
             ImageView ivAddCart;
@@ -172,6 +183,25 @@ public class CartFragment extends Fragment {
             TextView tvGoodsPrice;
             
             CheckBox chkChecked;
+
+            public CartViewHolder(View itemView) {
+                super(itemView);
+                tvCartCount=(TextView) itemView.findViewById(R.id.tvCartCount);
+                tvGoodsName=(TextView) itemView.findViewById(R.id.tvGoodsName);
+                ivAddCart=(ImageView) itemView.findViewById(R.id.ivAddCart);
+                ivReduceCart=(ImageView) itemView.findViewById(R.id.ivReduceCart);
+                ivGoodsThumb=(ImageView) itemView.findViewById(R.id.ivGoodsThumb);
+                tvGoodsPrice=(TextView) itemView.findViewById(R.id.tvGoodsPrice);
+                chkChecked=(CheckBox) itemView.findViewById(R.id.chkSelect);
+            }
+        }
+
+        class FooterViewHolder extends RecyclerView.ViewHolder{
+            TextView tvFooter;
+            public FooterViewHolder(View itemView) {
+                super(itemView);
+                tvFooter = (TextView) itemView.findViewById(R.id.tvFooter);
+            }
         }
     }
 
@@ -204,6 +234,7 @@ public class CartFragment extends Fragment {
         @Override
         protected void onPostExecute(Boolean result) {
             if(result){
+                sumPrice(mtvSumPrice,mtvSavePrice);
                 mAdapter.notifyDataSetChanged();
             }
         }
@@ -261,10 +292,12 @@ public class CartFragment extends Fragment {
             if(cart.isChecked()){
                 //当同一种商品有多件时，需要多次累加该商品的价格
                 for(int k=0;k<cart.getCount();k++){
-                    int rankPrice = convertPrice(goods.getRankPrice());
-                    int currentPrice=convertPrice(goods.getCurrencyPrice());
-                    sumRankPrice+=rankPrice;
-                    sumCurrentPrice+=currentPrice;
+                    if(goods!=null) {
+                        int rankPrice = convertPrice(goods.getRankPrice());
+                        int currentPrice = convertPrice(goods.getCurrencyPrice());
+                        sumRankPrice += rankPrice;
+                        sumCurrentPrice += currentPrice;
+                    }
                 }
             }
         }

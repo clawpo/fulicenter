@@ -2,6 +2,7 @@ package cn.ucai.fulicenter.task;
 
 import android.os.AsyncTask;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -9,40 +10,33 @@ import java.util.ArrayList;
 
 import cn.ucai.fulicenter.I;
 import cn.ucai.fulicenter.activity.MainActivity;
-import cn.ucai.fulicenter.adapter.GoodAdapterRS;
-import cn.ucai.fulicenter.bean.NewGoodBean;
+import cn.ucai.fulicenter.adapter.BoutiqueAdapterRS;
+import cn.ucai.fulicenter.bean.BoutiqueBean;
 import cn.ucai.fulicenter.utils.DialogUtils;
 import cn.ucai.fulicenter.utils.NetUtil;
 
 /**
  * Created by clawpo on 16/3/19.
  */
-public class DownloadGoodsTaskRS  extends AsyncTask<Integer,Void,ArrayList<NewGoodBean>> {
-    public final String TAG = DownloadGoodsTaskRS.class.getName();
-
+public class DownloadBoutiqueTaskRS  extends AsyncTask<Void, Void, ArrayList<BoutiqueBean>> {
+    public static final String TAG = DownloadBoutiqueTaskRS.class.getName();
     int action;//加载数据的类型：0：重新下载，1：添加新的数据
-    int catId;
-    /** 0:新品或者精选;1:分类 */
-    int goodType;
-
     MainActivity mContext;
-    GoodAdapterRS mAdapter;
+    ArrayList<BoutiqueBean> boutiqueList;
+    BoutiqueAdapterRS mAdapter;
     /** 下拉刷新控件*/
     SwipeRefreshLayout mSwipeRefreshLayout;
     TextView mtvHint;
 
-    public DownloadGoodsTaskRS(MainActivity context, GoodAdapterRS adapter,
-                               SwipeRefreshLayout swipeRefreshLayout, ArrayList<NewGoodBean> mGoodList,
-                               TextView hint, int action, int catId, int goodType) {
-        this.mContext = context;
-        this.mAdapter = adapter;
-        this.mSwipeRefreshLayout = swipeRefreshLayout;
-        this.mtvHint = hint;
+    public DownloadBoutiqueTaskRS(int action, MainActivity mContext, ArrayList<BoutiqueBean> boutiqueList,
+                                  BoutiqueAdapterRS adapter, SwipeRefreshLayout mSwipeRefreshLayout, TextView mtvHint) {
         this.action = action;
-        this.catId = catId;
-        this.goodType = goodType;
+        this.mContext = mContext;
+        this.boutiqueList = boutiqueList;
+        this.mAdapter = adapter;
+        this.mSwipeRefreshLayout = mSwipeRefreshLayout;
+        this.mtvHint = mtvHint;
     }
-
 
     @Override
     protected void onPreExecute() {
@@ -59,32 +53,21 @@ public class DownloadGoodsTaskRS  extends AsyncTask<Integer,Void,ArrayList<NewGo
         }
     }
 
+
     @Override
-    protected ArrayList<NewGoodBean> doInBackground(Integer... params) {
-        int pageId=params[0];
-        int pageSize=params[1];
-        ArrayList<NewGoodBean> goodList=null;
-        try{
-            switch (goodType){
-                case I.NEW_GOOD:
-                    goodList = NetUtil.findNewandBoutiqueGoods(catId,pageId,pageSize);
-                    break;
-                case I.CATEGORY_GOOD:
-                    goodList = NetUtil.findGoodsDetails(mContext,catId,pageId,pageSize);
-                    break;
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        return goodList;
+    protected ArrayList<BoutiqueBean> doInBackground(Void... params) {
+        boutiqueList = NetUtil.findBoutiqueList();
+        Log.e(TAG,"doInBackground,list="+boutiqueList.size());
+        return boutiqueList;
     }
 
     @Override
-    protected void onPostExecute(ArrayList<NewGoodBean> goods) {
+    protected void onPostExecute(ArrayList<BoutiqueBean> list) {
+        Log.e(TAG,"onPostExecute,list="+list.size());
         DialogUtils.closeProgressDialog();
         mSwipeRefreshLayout.setRefreshing(false);
         mtvHint.setVisibility(View.GONE);
-        if (goods == null || goods.size()==0) {
+        if (list == null || list.size()==0) {
             mAdapter.setMore(false);
             if (action == I.ACTION_PULL_UP) {
                 mAdapter.setFooterText("没有更多数据");
@@ -95,11 +78,11 @@ public class DownloadGoodsTaskRS  extends AsyncTask<Integer,Void,ArrayList<NewGo
         switch (action){
             case I.ACTION_DOWNLOAD:
             case I.ACTION_PULL_DOWN:
-                mAdapter.initItems(goods);
+                mAdapter.initItems(list);
                 break;
             case I.ACTION_PULL_UP:
-                if(goods!=null){
-                    mAdapter.addItems(goods);
+                if(list!=null){
+                    mAdapter.addItems(list);
                     mAdapter.setMore(true);
                 } else {
                     mAdapter.setMore(false);
@@ -107,4 +90,5 @@ public class DownloadGoodsTaskRS  extends AsyncTask<Integer,Void,ArrayList<NewGo
                 break;
         }
     }
+
 }
