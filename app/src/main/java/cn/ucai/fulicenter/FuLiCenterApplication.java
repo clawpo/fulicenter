@@ -16,6 +16,7 @@ package cn.ucai.fulicenter;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.android.volley.Request;
@@ -28,7 +29,6 @@ import java.util.HashMap;
 
 import cn.ucai.fulicenter.bean.CartBean;
 import cn.ucai.fulicenter.bean.ContactBean;
-import cn.ucai.fulicenter.bean.GroupBean;
 import cn.ucai.fulicenter.bean.UserBean;
 
 public class FuLiCenterApplication extends Application {
@@ -95,9 +95,21 @@ public class FuLiCenterApplication extends Application {
 		req.setTag(TAG);
 		getRequestQueue().add(req);
 	}
-	public void cancel(){
-		mRequestQueue.cancelAll(TAG);
+	public <T> void add(Request<T> req, String tag) {
+		// set the default tag if tag is empty
+		req.setTag(TextUtils.isEmpty(tag) ? TAG : tag);
+		getRequestQueue().add(req);
 	}
+	public void cancel(){
+        if (mRequestQueue != null) {
+            mRequestQueue.cancelAll(TAG);
+        }
+	}
+    public void cancel(Object tag) {
+        if (mRequestQueue != null) {
+            mRequestQueue.cancelAll(tag);
+        }
+    }
 
 
 	public void initServerUrl() {

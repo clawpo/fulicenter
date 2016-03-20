@@ -49,7 +49,7 @@ public class DownloadGoodsTaskRS  extends AsyncTask<Integer,Void,ArrayList<NewGo
         mSwipeRefreshLayout.setRefreshing(true);
         switch (action) {
             case I.ACTION_DOWNLOAD:
-//                DialogUtils.showProgressDialog(mContext, "加载商品", "加载中...");
+                DialogUtils.showProgressDialog(mContext, "加载商品", "加载中...");
                 break;
             case I.ACTION_PULL_UP:
                 if (mAdapter.isMore()) {

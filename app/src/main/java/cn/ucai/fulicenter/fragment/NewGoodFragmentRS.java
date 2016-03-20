@@ -21,6 +21,7 @@ import cn.ucai.fulicenter.activity.MainActivity;
 import cn.ucai.fulicenter.adapter.GoodAdapterRS;
 import cn.ucai.fulicenter.bean.NewGoodBean;
 import cn.ucai.fulicenter.task.DownloadGoodsTaskRS;
+import cn.ucai.fulicenter.utils.NetUtilRS;
 
 /**
  * Created by clawpo on 16/3/18.
@@ -53,11 +54,18 @@ public class NewGoodFragmentRS extends Fragment {
         View layout = View.inflate(mContext, R.layout.fragment_new_good_rs, null);
         initView(layout);
         setListener();
-        mDownloadGoodsTask = new DownloadGoodsTaskRS(mContext,mAdapter,
-                mSwipeRefreshLayout,mGoodList,mtvHint,I.ACTION_DOWNLOAD,I.CAT_ID,I.NEW_GOOD);
-        mDownloadGoodsTask.execute(mPageId,PAGE_SIZE);
+        initData();
         return layout;
 
+    }
+
+    private void initData() {
+        try {
+            NetUtilRS.findNewandBoutiqueGoods(mAdapter,I.CAT_ID,mPageId,PAGE_SIZE,I.ACTION_DOWNLOAD,
+                    mSwipeRefreshLayout,mtvHint);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void setListener() {
@@ -80,9 +88,12 @@ public class NewGoodFragmentRS extends Fragment {
                             if(mAdapter.isMore()){
                                 mSwipeRefreshLayout.setRefreshing(true);
                                 mPageId +=PAGE_SIZE;
-                                mDownloadGoodsTask = new DownloadGoodsTaskRS(mContext,mAdapter,
-                                        mSwipeRefreshLayout,mGoodList,mtvHint,I.ACTION_PULL_UP,I.CAT_ID,I.NEW_GOOD);
-                                mDownloadGoodsTask.execute(mPageId, PAGE_SIZE);
+                                try {
+                                    NetUtilRS.findNewandBoutiqueGoods(mAdapter,I.CAT_ID,mPageId,
+                                            PAGE_SIZE,I.ACTION_PULL_UP,mSwipeRefreshLayout,mtvHint);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
                             }
                         }
                     }
@@ -107,9 +118,12 @@ public class NewGoodFragmentRS extends Fragment {
                     public void onRefresh() {
                         mtvHint.setVisibility(View.VISIBLE);
                         mPageId = 0;
-                        mDownloadGoodsTask = new DownloadGoodsTaskRS(mContext,mAdapter,
-                                mSwipeRefreshLayout,mGoodList,mtvHint,I.ACTION_DOWNLOAD,I.CAT_ID,I.NEW_GOOD);
-                        mDownloadGoodsTask.execute(mPageId,PAGE_SIZE);
+                        try {
+                            NetUtilRS.findNewandBoutiqueGoods(mAdapter,I.CAT_ID,mPageId,PAGE_SIZE,
+                                    I.ACTION_DOWNLOAD,mSwipeRefreshLayout,mtvHint);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
         );

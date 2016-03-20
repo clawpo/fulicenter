@@ -2,25 +2,27 @@ package cn.ucai.fulicenter.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
 import cn.ucai.fulicenter.D;
+import cn.ucai.fulicenter.FuLiCenterApplication;
 import cn.ucai.fulicenter.I;
 import cn.ucai.fulicenter.R;
 import cn.ucai.fulicenter.activity.GoodDetailsActivity;
 import cn.ucai.fulicenter.bean.NewGoodBean;
-import cn.ucai.fulicenter.utils.ImageLoader;
+import cn.ucai.fulicenter.utils.NetUtilRS;
 
 /**
  * Created by clawpo on 16/3/18.
@@ -45,7 +47,8 @@ public class GoodAdapterRS extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public GoodAdapterRS(Context mContext, ArrayList<NewGoodBean> goodList, int sortBy) {
         this.mContext = mContext;
         this.goodList = goodList;
-        this.imageLoader = ImageLoader.getInstance(mContext);
+        this.imageLoader = new ImageLoader(FuLiCenterApplication.getInstance().getRequestQueue(),
+                new NetUtilRS.BitmapCaches(mContext));
         setMore(true);
         this.sortBy = sortBy;
     }
@@ -122,29 +125,33 @@ public class GoodAdapterRS extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             goodHolder.tvCurrencyPrice.setText(good.getCurrencyPrice());
             goodHolder.tvGoodsName.setText(good.getGoodsName());
             String goodsThumb = good.getGoodsThumb();
-            goodHolder.ivGoodsThumb.setTag(goodsThumb);
-            String savePath = goodsThumb.substring(goodsThumb.indexOf("/images") + 1);
+//            goodHolder.ivGoodsThumb.setTag(goodsThumb);
+//            String savePath = goodsThumb.substring(goodsThumb.indexOf("/images") + 1);
             String url = I.SERVER_ROOT
                     + "?" + I.KEY_REQUEST + "=" + I.REQUEST_DOWNLOAD_NEW_GOOD
                     + "&" + I.FILE_NAME + "=" + goodsThumb;
-            Bitmap thumb = imageLoader.displayImage(url, savePath, 150, 250, new ImageLoader.OnImageLoadListener() {
-                @Override
-                public void onSuccess(String path, Bitmap bitmap) {
-                    ImageView iv = (ImageView) parent.findViewWithTag(path);
-                    if (iv != null) {
-                        iv.setImageBitmap(bitmap);
-                    }
-                }
+//            Bitmap thumb = imageLoader.displayImage(url, savePath, 150, 250, new ImageLoader.OnImageLoadListener() {
+//                @Override
+//                public void onSuccess(String path, Bitmap bitmap) {
+//                    ImageView iv = (ImageView) parent.findViewWithTag(path);
+//                    if (iv != null) {
+//                        iv.setImageBitmap(bitmap);
+//                    }
+//                }
+//
+//                @Override
+//                public void error(String errorMsg) {
+//                }
+//            });
+//            if (thumb != null) {
+//                goodHolder.ivGoodsThumb.setImageBitmap(thumb);
+//            } else {
+//                goodHolder.ivGoodsThumb.setImageResource(R.drawable.nopic);
+//            }
 
-                @Override
-                public void error(String errorMsg) {
-                }
-            });
-            if (thumb != null) {
-                goodHolder.ivGoodsThumb.setImageBitmap(thumb);
-            } else {
-                goodHolder.ivGoodsThumb.setImageResource(R.drawable.nopic);
-            }
+            goodHolder.ivGoodsThumb.setDefaultImageResId(R.drawable.nopic);
+            goodHolder.ivGoodsThumb.setErrorImageResId(R.drawable.nopic);
+            goodHolder.ivGoodsThumb.setImageUrl(url,imageLoader);
 
             goodHolder.layoutGood.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -204,14 +211,16 @@ public class GoodAdapterRS extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     class GoodViewHolder extends RecyclerView.ViewHolder{
         LinearLayout layoutGood;
-        ImageView ivGoodsThumb;
+        NetworkImageView ivGoodsThumb;
+//        ImageView ivGoodsThumb;
         TextView tvGoodsName;
         TextView tvCurrencyPrice;
 
         public GoodViewHolder(View itemView) {
             super(itemView);
             layoutGood = (LinearLayout) itemView.findViewById(R.id.layoutGood);
-            ivGoodsThumb=(ImageView) itemView.findViewById(R.id.ivGoodThumb);
+//            ivGoodsThumb=(ImageView) itemView.findViewById(R.id.ivGoodThumb);
+            ivGoodsThumb=(NetworkImageView) itemView.findViewById(R.id.ivGoodThumb);
             tvGoodsName=(TextView) itemView.findViewById(R.id.tvGoodName);
             tvCurrencyPrice=(TextView) itemView.findViewById(R.id.tvCurrencyPrice);
         }

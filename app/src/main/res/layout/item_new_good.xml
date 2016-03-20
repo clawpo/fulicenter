@@ -7,7 +7,7 @@
     android:layout_margin="5dp"
     android:id="@+id/layoutGood"
     android:weightSum="1">
-    <ImageView
+    <com.android.volley.toolbox.NetworkImageView
         android:id="@+id/ivGoodThumb"
         android:layout_width="match_parent"
         android:layout_height="250dp"
@@ -15,6 +15,14 @@
         android:layout_gravity="center"
         android:src="@drawable/nopic"
         android:layout_weight="0.42" />
+    <!--<ImageView-->
+        <!--android:id="@+id/ivGoodThumb"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="250dp"-->
+        <!--android:scaleType="fitXY"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:src="@drawable/nopic"-->
+        <!--android:layout_weight="0.42" />-->
     <TextView
         android:id="@+id/tvGoodName"
         android:layout_width="150dp"
