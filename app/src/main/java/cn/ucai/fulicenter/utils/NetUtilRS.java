@@ -43,7 +43,6 @@ public final class NetUtilRS {
                        int pageSize, final int action, final SwipeRefreshLayout swipeRefreshLayout,
                        final TextView hint) throws Exception {
 
-
         //requestParams集合封装了向服务端发送的get请求的参数
         ArrayList<Param> requestParams = new ArrayList<>();
         requestParams.add(new Param(I.KEY_REQUEST, I.REQUEST_FIND_NEW_BOUTIQUE_GOODS));
@@ -73,17 +72,8 @@ public final class NetUtilRS {
             public void onErrorResponse(VolleyError volleyError) {
 
             }
-        },NewGoodBean[].class)
-//        {
-//            @Override
-//            public Map<String, String> getHeaders() throws AuthFailureError {
-//                HashMap<String, String> headers = new HashMap<String, String>();
-//                headers.put("CUSTOM_HEADER", "Yahoo");
-//                headers.put("ANOTHER_CUSTOM_HEADER", "Google");
-//                return headers;
-//            }
-//        }
-        ;
+        },NewGoodBean[].class);
+        request.setTag(I.REQUEST_FIND_NEW_BOUTIQUE_GOODS);
         FuLiCenterApplication.getInstance().getRequestQueue().add(request);
     }
 

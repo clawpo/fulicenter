@@ -20,7 +20,6 @@ import cn.ucai.fulicenter.R;
 import cn.ucai.fulicenter.activity.MainActivity;
 import cn.ucai.fulicenter.adapter.GoodAdapterRS;
 import cn.ucai.fulicenter.bean.NewGoodBean;
-import cn.ucai.fulicenter.task.DownloadGoodsTaskRS;
 import cn.ucai.fulicenter.utils.NetUtilRS;
 
 /**
@@ -44,9 +43,6 @@ public class NewGoodFragmentRS extends Fragment {
     final int PAGE_SIZE=10;
     /** 每行显示的数量*/
     int columNum = 2;
-
-
-    DownloadGoodsTaskRS mDownloadGoodsTask;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
