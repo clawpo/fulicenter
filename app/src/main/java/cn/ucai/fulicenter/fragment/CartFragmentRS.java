@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import cn.ucai.fulicenter.FuLiCenterApplication;
 import cn.ucai.fulicenter.I;
 import cn.ucai.fulicenter.R;
+import cn.ucai.fulicenter.activity.BuyActivity;
 import cn.ucai.fulicenter.bean.CartBean;
 import cn.ucai.fulicenter.bean.GoodDetailsBean;
 import cn.ucai.fulicenter.utils.BitmapUtils;
@@ -51,8 +52,23 @@ public class CartFragmentRS extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View layout=View.inflate(getActivity(), R.layout.fragment_cart_rs, null);
         initView(layout);
+        setListener(layout);
         registerCartChangedReceiver();
         return layout;
+    }
+
+    private void setListener(View layout) {
+        setBuyClickListener(layout);
+    }
+
+    private void setBuyClickListener(View layout) {
+        layout.findViewById(R.id.btnBuy).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(getActivity(), BuyActivity.class);
+                getActivity().startActivity(intent);
+            }
+        });
     }
 
     private void initView(View layout) {

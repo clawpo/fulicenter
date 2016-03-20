@@ -1,5 +1,7 @@
 package cn.ucai.fulicenter.utils;
 
+import com.easemob.util.TimeInfo;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -9,7 +11,6 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 
 import cn.ucai.fulicenter.applib.controller.HXSDKHelper;
-import com.easemob.util.TimeInfo;
 
 public class DateUtils {
 
@@ -274,25 +275,16 @@ public class DateUtils {
     public static String getTimestampStr() {
         return Long.toString(System.currentTimeMillis());        
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+ 
+    /**
+     * 将日期转换为字符串格式
+     * @param date
+     * @param pattern
+     * @return
+     */
+    public static String date2String(Date date,String pattern){
+        SimpleDateFormat formater=new SimpleDateFormat(pattern);
+        String strDate = formater.format(date);
+        return strDate;
+    }
 }

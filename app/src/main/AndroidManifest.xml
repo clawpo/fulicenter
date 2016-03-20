@@ -393,7 +393,53 @@
             android:launchMode="singleTask"
             android:theme="@style/horizontal_slide">
         </activity>
-        
-          </application>
+        <activity
+            android:name="cn.ucai.fulicenter.activity.BuyActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/horizontal_slide">
+        </activity>
+        <!-- Ping++SDK -->
+        <activity
+            android:name="com.pingplusplus.android.PaymentActivity"
+            android:launchMode="singleTop"
+            android:configChanges="orientation|screenSize"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <!-- 微信支付 -->
+        <activity-alias
+            android:name=".wxapi.WXPayEntryActivity"
+            android:exported="true"
+            android:targetActivity="com.pingplusplus.android.PaymentActivity" />
+
+        <!-- 支付宝 -->
+        <activity
+            android:name="com.alipay.sdk.app.H5PayActivity"
+            android:configChanges="orientation|keyboardHidden|navigation"
+            android:exported="false"
+            android:screenOrientation="behind" />
+        <activity
+            android:name="com.alipay.sdk.auth.AuthActivity"
+            android:configChanges="orientation|keyboardHidden|navigation"
+            android:exported="false"
+            android:screenOrientation="behind" />
+
+        <!--&lt;!&ndash; 壹收款支付页面 &ndash;&gt;-->
+        <!--<activity-->
+            <!--android:configChanges="com.pingplusplus.libone.PayActivity"-->
+            <!--android:screenOrientation="@string/pingpp_title_activity_pay" />-->
+
+        <!--&lt;!&ndash; 壹收款支付成功页面 &ndash;&gt;-->
+        <!--<activity-->
+            <!--android:configChanges="com.pingplusplus.libone.PaySucessedActivity"-->
+            <!--android:screenOrientation="@string/pingpp_title_activity_success" />-->
+
+        <!--&lt;!&ndash; 壹收款支付失败页面 &ndash;&gt;-->
+        <!--<activity-->
+            <!--android:configChanges="com.pingplusplus.libone.PayFiledActivity"-->
+            <!--android:screenOrientation="@string/pingpp_title_activity_pay_filed" />-->
+
+        <!--&lt;!&ndash; 银联支付 &ndash;&gt;-->
+        <!--<activity android:name="com.unionpay.uppay.PayActivity" />-->
+    </application>
 
 </manifest>
