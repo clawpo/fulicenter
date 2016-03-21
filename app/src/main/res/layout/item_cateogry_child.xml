@@ -6,14 +6,8 @@
     android:layout_marginTop="8dp"
     android:layout_marginBottom="8dp"
     android:background="@drawable/divide_explist_child" >
-    <!--<ImageView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="1.5dp"-->
-        <!--android:layout_marginBottom="3dp"-->
-        <!--android:scaleType="fitXY"-->
-        <!--android:src="@drawable/divid_explist_group"/>-->
 
-    <ImageView 
+    <com.android.volley.toolbox.NetworkImageView
         android:id="@+id/ivCategoryChildThumb"
         android:layout_width="44dp"
         android:layout_height="44dp"
@@ -31,14 +25,5 @@
         android:text="鞋子"
         android:textColor="#000"
         android:textSize="18sp" />
-
-    <!--<ImageView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_marginRight="20dp"-->
-        <!--android:layout_height="1.5dp"-->
-        <!--android:layout_marginBottom="3dp"-->
-        <!--android:layout_alignParentBottom="true"-->
-        <!--android:scaleType="fitXY"-->
-        <!--android:src="@drawable/divid_explist_group"/>-->
 
 </RelativeLayout>

@@ -337,4 +337,7 @@
     <string name="bfb">百度钱包</string>
     <string name="upmp">银联支付</string>
 	<string name="continue_buy">继续购物</string>
+    <string name="generic_server_down">远端服务器关闭</string>
+    <string name="no_internet">网络异常</string>
+    <string name="generic_error">下载失败</string>
 </resources>

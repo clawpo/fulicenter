@@ -3,14 +3,12 @@ package cn.ucai.fulicenter.fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
@@ -22,16 +20,19 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
+
 import java.util.ArrayList;
 
+import cn.ucai.fulicenter.FuLiCenterApplication;
 import cn.ucai.fulicenter.I;
 import cn.ucai.fulicenter.R;
 import cn.ucai.fulicenter.activity.CategoryChildActivity;
 import cn.ucai.fulicenter.bean.CategoryChildBean;
 import cn.ucai.fulicenter.bean.CategoryGroupBean;
-import cn.ucai.fulicenter.utils.ImageLoader;
-import cn.ucai.fulicenter.utils.ImageLoader.OnImageLoadListener;
 import cn.ucai.fulicenter.utils.NetUtil;
+import cn.ucai.fulicenter.utils.NetUtilRS;
 import cn.ucai.fulicenter.utils.Utils;
 
 /**
@@ -126,7 +127,8 @@ public class CategoryFragment extends Fragment {
             this.context = context;
             this.groupList = groupList;
             this.childList = childList;
-            imageLoader = ImageLoader.getInstance(context);
+            this.imageLoader = new ImageLoader(FuLiCenterApplication.getInstance().getRequestQueue(),
+                    new NetUtilRS.BitmapCaches(mContext));
         }
 
         @Override
@@ -172,7 +174,7 @@ public class CategoryFragment extends Fragment {
                 layout=View.inflate(context, R.layout.item_category_group, null);
                 holder=new ViewGroupHolder();
                 holder.ivIndicator=(ImageView) layout.findViewById(R.id.ivIndicator);
-                holder.ivThumb=(ImageView) layout.findViewById(R.id.ivGroupThumb);
+                holder.ivThumb=(NetworkImageView) layout.findViewById(R.id.ivGroupThumb);
                 holder.tvGroupName=(TextView) layout.findViewById(R.id.tvGroupName);
                 layout.setTag(holder);
             }else{
@@ -182,33 +184,16 @@ public class CategoryFragment extends Fragment {
             holder.tvGroupName.setText(group.getName());
             String imgUrl=group.getImageUrl();
             String url= I.DOWNLOAD_DOWNLOAD_CATEGORY_GROUP_IMAGE_URL+imgUrl;
-            holder.ivThumb.setTag(url);
-            String imgName="images/"+imgUrl;
-            Bitmap bitmap = imageLoader.displayImage(url, imgName, Utils.dp2px(context, 66),
-                    Utils.dp2px(context, 44), new OnImageLoadListener() {
-                @Override
-                public void onSuccess(String path, Bitmap bitmap) {
-                    ImageView iv=(ImageView) parent.findViewWithTag(path);
-                    if(iv!=null){
-                        iv.setImageBitmap(bitmap);
-                    }
-                }
-                @Override
-                public void error(String errorMsg) {
-                    // TODO Auto-generated method stub
-                }
-            });
-            if(bitmap==null){
-                holder.ivThumb.setImageResource(R.drawable.nopic);
-            }else{
-                holder.ivThumb.setImageBitmap(bitmap);
-            }
+
+            holder.ivThumb.setDefaultImageResId(R.drawable.nopic);
+            holder.ivThumb.setErrorImageResId(R.drawable.nopic);
+            holder.ivThumb.setImageUrl(url,imageLoader);
             return layout;
         }
 
         class ViewGroupHolder{
             ImageView ivIndicator;
-            ImageView ivThumb;
+            NetworkImageView ivThumb;
             TextView tvGroupName;
         }
         
@@ -220,7 +205,7 @@ public class CategoryFragment extends Fragment {
                 layout=View.inflate(context, R.layout.item_cateogry_child, null);
                 holder=new ViewChildHolder();
                 holder.layoutItem=(RelativeLayout) layout.findViewById(R.id.layout_category_child);
-                holder.ivThumb=(ImageView) layout.findViewById(R.id.ivCategoryChildThumb);
+                holder.ivThumb=(NetworkImageView) layout.findViewById(R.id.ivCategoryChildThumb);
                 holder.tvChildName=(TextView) layout.findViewById(R.id.tvCategoryChildName);
                 layout.setTag(holder);
             }else{
@@ -232,27 +217,9 @@ public class CategoryFragment extends Fragment {
             
             String imgUrl=child.getImageUrl();
             String url=I.DOWNLOAD_DOWNLOAD_CATEGORY_CHILD_IMAGE_URL+imgUrl;
-            String imgName="images/"+imgUrl;
-            Bitmap bitmap = imageLoader.displayImage(url, imgName, 
-                    Utils.dp2px(context, 44), Utils.dp2px(context, 44), new OnImageLoadListener() {
-                @Override
-                public void onSuccess(String path, Bitmap bitmap) {
-                    ImageView iv=(ImageView) parent.findViewWithTag(path);
-                    if(iv!=null){
-                        iv.setImageBitmap(bitmap);
-                    }
-                }
-                
-                @Override
-                public void error(String errorMsg) {
-                    // TODO Auto-generated method stub
-                }
-            });
-            if(bitmap==null){
-                holder.ivThumb.setImageResource(R.drawable.nopic);
-            }else{
-                holder.ivThumb.setImageBitmap(bitmap);
-            }
+            holder.ivThumb.setDefaultImageResId(R.drawable.nopic);
+            holder.ivThumb.setErrorImageResId(R.drawable.nopic);
+            holder.ivThumb.setImageUrl(url,imageLoader);
             
             holder.layoutItem.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -270,7 +237,7 @@ public class CategoryFragment extends Fragment {
 
         class ViewChildHolder{
             RelativeLayout layoutItem;
-            ImageView ivThumb;
+            NetworkImageView ivThumb;
             TextView tvChildName;
         }
 		

@@ -125,30 +125,9 @@ public class GoodAdapterRS extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             goodHolder.tvCurrencyPrice.setText(good.getCurrencyPrice());
             goodHolder.tvGoodsName.setText(good.getGoodsName());
             String goodsThumb = good.getGoodsThumb();
-//            goodHolder.ivGoodsThumb.setTag(goodsThumb);
-//            String savePath = goodsThumb.substring(goodsThumb.indexOf("/images") + 1);
             String url = I.SERVER_ROOT
                     + "?" + I.KEY_REQUEST + "=" + I.REQUEST_DOWNLOAD_NEW_GOOD
                     + "&" + I.FILE_NAME + "=" + goodsThumb;
-//            Bitmap thumb = imageLoader.displayImage(url, savePath, 150, 250, new ImageLoader.OnImageLoadListener() {
-//                @Override
-//                public void onSuccess(String path, Bitmap bitmap) {
-//                    ImageView iv = (ImageView) parent.findViewWithTag(path);
-//                    if (iv != null) {
-//                        iv.setImageBitmap(bitmap);
-//                    }
-//                }
-//
-//                @Override
-//                public void error(String errorMsg) {
-//                }
-//            });
-//            if (thumb != null) {
-//                goodHolder.ivGoodsThumb.setImageBitmap(thumb);
-//            } else {
-//                goodHolder.ivGoodsThumb.setImageResource(R.drawable.nopic);
-//            }
-
             goodHolder.ivGoodsThumb.setDefaultImageResId(R.drawable.nopic);
             goodHolder.ivGoodsThumb.setErrorImageResId(R.drawable.nopic);
             goodHolder.ivGoodsThumb.setImageUrl(url,imageLoader);

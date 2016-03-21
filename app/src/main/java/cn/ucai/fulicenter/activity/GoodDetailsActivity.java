@@ -5,10 +5,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -19,21 +17,23 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
+
 import java.util.ArrayList;
 
 import cn.ucai.fulicenter.D;
 import cn.ucai.fulicenter.FuLiCenterApplication;
 import cn.ucai.fulicenter.I;
 import cn.ucai.fulicenter.R;
-import cn.ucai.fulicenter.adapter.MessageAdapter;
 import cn.ucai.fulicenter.bean.AlbumBean;
 import cn.ucai.fulicenter.bean.CartBean;
 import cn.ucai.fulicenter.bean.GoodDetailsBean;
 import cn.ucai.fulicenter.bean.MessageBean;
 import cn.ucai.fulicenter.bean.NewGoodBean;
 import cn.ucai.fulicenter.bean.UserBean;
-import cn.ucai.fulicenter.utils.ImageLoader;
 import cn.ucai.fulicenter.utils.NetUtil;
+import cn.ucai.fulicenter.utils.NetUtilRS;
 import cn.ucai.fulicenter.utils.Utils;
 import cn.ucai.fulicenter.view.FlowIndicator;
 import cn.ucai.fulicenter.view.SlideAutoLoopView;
@@ -195,7 +195,9 @@ public class GoodDetailsActivity extends BaseActivity {
             super();
             this.context = context;
             this.goodsId=goodsId;
-            imageLoader=ImageLoader.getInstance(context);
+//            imageLoader=ImageLoader.getInstance(context);
+            this.imageLoader = new com.android.volley.toolbox.ImageLoader(FuLiCenterApplication.getInstance().getRequestQueue(),
+                    new NetUtilRS.BitmapCaches(mContext));
         }
 
         public GoodDetailsBean getGoodDetails(){
@@ -261,7 +263,7 @@ public class GoodDetailsActivity extends BaseActivity {
             for(int i=0;i<goodDetails.getProperties().length;i++){
                 mCurrentColor=i;
                 View layout=View.inflate(context, R.layout.layout_property_color, null);
-                final ImageView ivColor=(ImageView) layout.findViewById(R.id.ivColorItem);
+                final NetworkImageView ivColor=(NetworkImageView) layout.findViewById(R.id.ivColorItem);
                 Log.i(TAG,"initColorsBanner.goodDetails="+goodDetails.getProperties()[i].toString());
                 String colorImg = goodDetails.getProperties()[i].getColorImg();
                 if(colorImg.isEmpty()){
@@ -270,27 +272,9 @@ public class GoodDetailsActivity extends BaseActivity {
                 String url= I.SERVER_ROOT
                         +"?"+I.KEY_REQUEST+"="+I.REQUEST_DOWNLOAD_COLOR_IMG
                         +"&"+I.Color.COLOR_IMG+"="+colorImg;
-                String imgName="images/"+colorImg;
-                Log.i(TAG,"initColorsBanner.url="+url);
-                Log.i(TAG,"initColorsBanner.imgName="+imgName);
-                Bitmap bitmap = imageLoader.displayImage(url, imgName, 32, 32, new ImageLoader.OnImageLoadListener() {
-
-                    @Override
-                    public void onSuccess(String path, Bitmap bitmap) {
-                        ivColor.setImageBitmap(bitmap);
-                    }
-
-                    @Override
-                    public void error(String errorMsg) {
-                        // TODO Auto-generated method stub
-                    }
-                });
-                Log.i(TAG,"initColorsBanner.bitmap="+bitmap);
-                if(bitmap==null){
-//                    ivColor.setImageResource(R.drawable.bg_good);
-                }else{
-                    ivColor.setImageBitmap(bitmap);
-                }
+                ivColor.setDefaultImageResId(R.drawable.bg_good);
+                ivColor.setErrorImageResId(R.drawable.bg_good);
+                ivColor.setImageUrl(url,imageLoader);
                 mLayoutColors.addView(layout);
                 layout.setOnClickListener(new View.OnClickListener() {
                     @Override

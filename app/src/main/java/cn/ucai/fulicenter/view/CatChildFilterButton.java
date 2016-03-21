@@ -1,10 +1,7 @@
 package cn.ucai.fulicenter.view;
 
-import java.util.ArrayList;
-
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -14,20 +11,22 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.LinearLayout.LayoutParams;
-import android.widget.ListAdapter;
 import android.widget.PopupWindow;
-import android.widget.PopupWindow.OnDismissListener;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
+
+import java.util.ArrayList;
+
+import cn.ucai.fulicenter.FuLiCenterApplication;
 import cn.ucai.fulicenter.I;
 import cn.ucai.fulicenter.R;
 import cn.ucai.fulicenter.activity.CategoryChildActivity;
 import cn.ucai.fulicenter.bean.CategoryChildBean;
-import cn.ucai.fulicenter.utils.ImageLoader;
-import cn.ucai.fulicenter.utils.ImageLoader.OnImageLoadListener;
+import cn.ucai.fulicenter.utils.NetUtilRS;
 import cn.ucai.fulicenter.utils.Utils;
 
 /**
@@ -110,7 +109,8 @@ public class CatChildFilterButton extends Button {
             super();
             this.context = context;
             this.Children = list;
-            imageLoader=ImageLoader.getInstance(context);
+            this.imageLoader = new ImageLoader(FuLiCenterApplication.getInstance().getRequestQueue(),
+                    new NetUtilRS.BitmapCaches(mContext));
         }
 
         @Override
@@ -136,7 +136,7 @@ public class CatChildFilterButton extends Button {
                 layout=View.inflate(context, R.layout.item_cat_filter, null);
                 holder=new ViewChildHolder();
                 holder.layoutItem=(RelativeLayout) layout.findViewById(R.id.layout_category_child);
-                holder.ivThumb=(ImageView) layout.findViewById(R.id.ivCategoryChildThumb);
+                holder.ivThumb=(NetworkImageView) layout.findViewById(R.id.ivCategoryChildThumb);
                 holder.tvChildName=(TextView) layout.findViewById(R.id.tvCategoryChildName);
                 layout.setTag(holder);
             }else{
@@ -147,29 +147,11 @@ public class CatChildFilterButton extends Button {
             holder.tvChildName.setText(name);
             String imgUrl=child.getImageUrl();
             String url=I.DOWNLOAD_DOWNLOAD_CATEGORY_CHILD_IMAGE_URL+imgUrl;
-            String imgName="images/"+imgUrl;
-            Bitmap bitmap = imageLoader.displayImage(url, imgName, 
-                    Utils.dp2px(context, 33), Utils.dp2px(context, 33), new OnImageLoadListener() {
-                @Override
-                public void onSuccess(String path, Bitmap bitmap) {
-                    ImageView iv=(ImageView) parent.findViewWithTag(path);
-                    if(iv!=null){
-                        iv.setImageBitmap(bitmap);
-                    }
-                }
-                
-                @Override
-                public void error(String errorMsg) {
-                    // TODO Auto-generated method stub
-                    
-                }
-            });
-            if(bitmap==null){
-                holder.ivThumb.setImageResource(R.drawable.nopic);
-            }else{
-                holder.ivThumb.setImageBitmap(bitmap);
-            }
-            
+
+            holder.ivThumb.setDefaultImageResId(R.drawable.nopic);
+            holder.ivThumb.setErrorImageResId(R.drawable.nopic);
+            holder.ivThumb.setImageUrl(url,imageLoader);
+
             holder.layoutItem.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -189,7 +171,7 @@ public class CatChildFilterButton extends Button {
 
         class ViewChildHolder{
             RelativeLayout layoutItem;
-            ImageView ivThumb;
+            NetworkImageView ivThumb;
             TextView tvChildName;
         }
     }

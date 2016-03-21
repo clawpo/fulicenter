@@ -319,4 +319,7 @@
     <string name="title_activity_pay_sucessed">支付成功</string>
     <string name="title_activity_pay_filed">支付失败</string>
     <string name="title_activity_success">支付成功</string>
+    <string name="generic_server_down">generic server down</string>
+    <string name="no_internet">no internet</string>
+    <string name="generic_error">generic error</string>
 </resources>

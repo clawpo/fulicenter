@@ -2,24 +2,25 @@ package cn.ucai.fulicenter.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
+
 import java.util.ArrayList;
 
-import cn.ucai.fulicenter.D;
+import cn.ucai.fulicenter.FuLiCenterApplication;
 import cn.ucai.fulicenter.I;
 import cn.ucai.fulicenter.R;
 import cn.ucai.fulicenter.activity.BoutiqueChildActivity;
 import cn.ucai.fulicenter.bean.BoutiqueBean;
-import cn.ucai.fulicenter.utils.ImageLoader;
+import cn.ucai.fulicenter.utils.NetUtilRS;
 
 /**
  * Created by clawpo on 16/3/19.
@@ -42,7 +43,8 @@ public class BoutiqueAdapterRS extends RecyclerView.Adapter<RecyclerView.ViewHol
     public BoutiqueAdapterRS(Context mContext, ArrayList<BoutiqueBean> boutiqueList) {
         this.mContext = mContext;
         this.boutiqueList = boutiqueList;
-        imageLoader = ImageLoader.getInstance(mContext);
+        this.imageLoader = new ImageLoader(FuLiCenterApplication.getInstance().getRequestQueue(),
+                new NetUtilRS.BitmapCaches(mContext));
     }
 
     /** 设置底部用于提示上拉刷新的文本*/
@@ -106,27 +108,10 @@ public class BoutiqueAdapterRS extends RecyclerView.Adapter<RecyclerView.ViewHol
             boutiqueViewHolder.tvDescription.setText(boutique.getDescription());
             boutiqueViewHolder.tvName.setText(boutique.getName());
             boutiqueViewHolder.tvTitle.setText(boutique.getTitle());
-
             String url = I.DOWNLOAD_BOUTIQUE_IMG_URL+boutique.getImageurl();
-            String imgName="images/"+boutique.getImageurl();
-            Bitmap bitmap = imageLoader.displayImage(url, imgName, D.Boutique.IMG_WIDTH, D.Boutique.IMG_HEIGHT, new ImageLoader.OnImageLoadListener() {
-                @Override
-                public void onSuccess(String path, Bitmap bitmap) {
-                    ImageView iv=(ImageView) parent.findViewWithTag(path);
-                    if(iv!=null){
-                        iv.setImageBitmap(bitmap);
-                    }
-                }
-
-                @Override
-                public void error(String errorMsg) {
-                }
-            });
-            if(bitmap==null){
-                boutiqueViewHolder.iv.setImageResource(R.drawable.nopic);
-            }else{
-                boutiqueViewHolder.iv.setImageBitmap(bitmap);
-            }
+            boutiqueViewHolder.iv.setDefaultImageResId(R.drawable.nopic);
+            boutiqueViewHolder.iv.setErrorImageResId(R.drawable.nopic);
+            boutiqueViewHolder.iv.setImageUrl(url,imageLoader);
 
             boutiqueViewHolder.layoutItem.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -160,7 +145,7 @@ public class BoutiqueAdapterRS extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     class BoutiqueViewHolder extends RecyclerView.ViewHolder{
         RelativeLayout layoutItem;
-        ImageView iv;
+        NetworkImageView iv;
         TextView tvTitle;
         TextView tvName;
         TextView tvDescription;
@@ -168,7 +153,7 @@ public class BoutiqueAdapterRS extends RecyclerView.Adapter<RecyclerView.ViewHol
         public BoutiqueViewHolder(View itemView) {
             super(itemView);
             layoutItem=(RelativeLayout) itemView.findViewById(R.id.layout_boutique_item);
-            iv=(ImageView) itemView.findViewById(R.id.ivBoutiqueImg);
+            iv=(NetworkImageView) itemView.findViewById(R.id.ivBoutiqueImg);
             tvDescription=(TextView) itemView.findViewById(R.id.tvBoutiqueDescription);
             tvName=(TextView) itemView.findViewById(R.id.tvBoutiqueName);
             tvTitle=(TextView) itemView.findViewById(R.id.tvBoutiqueTitle);
