@@ -17,9 +17,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.Resources;
-import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -27,8 +24,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import cn.ucai.fulicenter.FuLiCenterApplication;
@@ -50,51 +46,26 @@ public class MainActivity extends BaseActivity {
 
 	// 菜单项按钮
 	TextView mtvCartHint;
-	TextView mtvCart;
-	TextView mtvNewGood;
-	TextView mtvBoutique;
-	TextView mtvCategory;
-	TextView mtvPersonalCenter;
-
-	ImageView mivCart;
-	ImageView mivNewGood;
-	ImageView mivBoutique;
-	ImageView mivCategory;
-	ImageView mivPersonalCenter;
-
-	RelativeLayout mLayoutCart;
-	RelativeLayout mLayoutNewGood;
-	RelativeLayout mLayoutBoutique;
-	RelativeLayout mLayoutCategory;
-	RelativeLayout mLayoutPersonalCenter;
+    RadioButton mLayoutCart;
+    RadioButton mLayoutNewGood;
+    RadioButton mLayoutBoutique;
+    RadioButton mLayoutCategory;
+    RadioButton mLayoutPersonalCenter;
 
 	private NewGoodFragmentRS mNewGoodFragment;
 	private BoutiqueFragment mBoutiqueFragment;
-	 private CategoryFragment mCategoryFragment;
+    private CategoryFragment mCategoryFragment;
     private CartFragmentRS mCartFragment;
 	private PersonalCenterFragment mPersonalCenterFragment;
-//	private FindFragment mFindFragment;
 	private Fragment[] mFragments;
 	private int index;
 	// 当前fragment的index
 	private int currentTabIndex = -1;
 
-
     FragmentActivity mContext;
-
-    Drawable drawableNewGood,drawableBoutique,drawableCategory,drawableCart,drawablePersonalCenter;
-
-    private int [] mMenuDrawableNormal = {R.drawable.menu_item_new_good_normal,R.drawable.boutique_normal,
-            R.drawable.menu_item_category_normal,R.drawable.menu_item_cart_normal,R.drawable.menu_item_personal_center_normal};
-    private int [] mMenuDrawableSelected = {R.drawable.menu_item_new_good_selected,R.drawable.boutique_selected,
-            R.drawable.menu_item_category_selected,R.drawable.menu_item_cart_selected,R.drawable.menu_item_personal_center_selected};
-    private ImageView[] mImageViews = new ImageView[5];
-    private Drawable[] mDrawable = new Drawable[5];
-	
+    private RadioButton[] mRadios= new RadioButton[5];
     UserBean mUser;
-
     CartChangedReceiver mCartChangedReceiver;
-
     private String action;
 
 
@@ -118,7 +89,6 @@ public class MainActivity extends BaseActivity {
     protected void onStart() {
         action = getIntent().getStringExtra("action");
         super.onStart();
-        setListener();
     }
 
 
@@ -154,50 +124,74 @@ public class MainActivity extends BaseActivity {
     }
 
     private void initNewGood(){
-        setMenuItemDefaultDrawable();
-        setMenuItemDrawable();
         currentTabIndex = 0;
         index = 0;
-        drawableNewGood = getmDrawable(R.drawable.menu_item_new_good_selected);
-        mivNewGood.setImageDrawable(drawableNewGood);
         FragmentUtils.startFragment(mContext, mNewGoodFragment);
-//        FragmentUtils.showFragment(mContext,currentTabIndex,0,mFragments);
-            FragmentTransaction trx = getSupportFragmentManager().beginTransaction();
-            trx.hide(mFragments[1]).hide(mFragments[2]).hide(mFragments[3]).hide(mFragments[4]).show(mFragments[0]).commit();
-            currentTabIndex = index;
-            setMenuItemDrawable();
+        FragmentTransaction trx = getSupportFragmentManager().beginTransaction();
+        trx.hide(mFragments[1]).hide(mFragments[2]).hide(mFragments[3]).hide(mFragments[4]).show(mFragments[0]).commit();
+        currentTabIndex = index;
+        mLayoutNewGood.setChecked(true);
+        mLayoutPersonalCenter.setChecked(false);
     }
 
     private void setFragment(int newIndex){
         if(newIndex==-1){
             newIndex=0;
         }
-        setMenuItemDefaultDrawable();
-        setMenuItemDrawable();
-        mDrawable[newIndex] = getmDrawable(mMenuDrawableSelected[newIndex]);
-        mImageViews[newIndex].setImageDrawable(mDrawable[newIndex]);
+        Log.e(TAG,"setFragment,currentTabIndex="+currentTabIndex+",newIndex="+newIndex);
+        setRadioDefaultChecked(newIndex);
         FragmentUtils.showFragment(mContext,currentTabIndex,newIndex,mFragments);
         currentTabIndex = newIndex;
         index = newIndex;
     }
 
-	/**
-	 * 注册设置菜单项单击事件监听
-	 */
-	private void setListener() {
-        setMenuItemClickListener();
+    private void setRadioDefaultChecked(int index){
+        for(int i=0;i<mRadios.length;i++){
+            if(i==index){
+                mRadios[i].setChecked(true);
+            }else{
+                mRadios[i].setChecked(false);
+            }
+        }
     }
 
-	/**
-	 * 设置菜单项单击事件监听
-	 */
-    private void setMenuItemClickListener() {
-        MenuItemClickListener listener=new MenuItemClickListener();
-        mLayoutNewGood.setOnClickListener(listener);
-        mLayoutBoutique.setOnClickListener(listener);
-		mLayoutCategory.setOnClickListener(listener);
-		mLayoutCart.setOnClickListener(listener);
-		mLayoutPersonalCenter.setOnClickListener(listener);
+    public void onCheckedChange(View view){
+        switch (view.getId()) {
+            case R.id.layout_new_good:
+                index = 0;
+                break;
+            case R.id.layout_boutique:
+                index = 1;
+                break;
+            case R.id.layout_category:
+                index=2;
+                break;
+            case R.id.layout_cart:
+                index =3;
+                break;
+            case R.id.layout_personal_center:
+                mUser = FuLiCenterApplication.getInstance().getUserBean();
+                Log.e(TAG,"mUser="+mUser);
+                if(mUser!=null) {
+                    index = 4;
+                }else{
+                    startLogin("person");
+                }
+                break;
+        }
+
+        setRadioDefaultChecked(index);
+        if (currentTabIndex != index) {
+            FragmentTransaction trx = getSupportFragmentManager().beginTransaction();
+            if(currentTabIndex>-1){
+                trx.hide(mFragments[currentTabIndex]);
+            }
+            if (!mFragments[index].isAdded()) {
+                trx.add(R.id.fragment_container, mFragments[index]);
+            }
+            trx.show(mFragments[index]).commit();
+            currentTabIndex = index;
+        }
     }
 
 	/**
@@ -205,35 +199,17 @@ public class MainActivity extends BaseActivity {
 	 */
 	private void initView() {
 		mtvCartHint = getViewById(R.id.tvCartHint);
-		mtvCart = getViewById(R.id.tvCart);
-		mtvBoutique = getViewById(R.id.tvBoutique);
-		mtvCategory = getViewById(R.id.tvCategory);
-		mtvNewGood = getViewById(R.id.btnNewGood);
-		mtvPersonalCenter = getViewById(R.id.tvPersonalCenter);
-
-		mivBoutique=getViewById(R.id.ivBoutique);
-		mivCart=getViewById(R.id.ivCart);
-		mivCategory=getViewById(R.id.ivCategory);
-		mivNewGood=getViewById(R.id.ivNewGood);
-		mivPersonalCenter=getViewById(R.id.ivPersonalCenter);
-
 		mLayoutBoutique=getViewById(R.id.layout_boutique);
 		mLayoutCart=getViewById(R.id.layout_cart);
 		mLayoutCategory=getViewById(R.id.layout_category);
 		mLayoutNewGood=getViewById(R.id.layout_new_good);
 		mLayoutPersonalCenter=getViewById(R.id.layout_personal_center);
 
-        mImageViews[0]=mivNewGood;
-        mImageViews[1]=mivBoutique;
-        mImageViews[2]=mivCategory;
-        mImageViews[3]=mivCart;
-        mImageViews[4]=mivPersonalCenter;
-        setMenuItemDefaultDrawable();
-        mDrawable[0]=drawableNewGood;
-        mDrawable[1]=drawableBoutique;
-        mDrawable[2]=drawableCategory;
-        mDrawable[3]=drawableCart;
-        mDrawable[4]=drawablePersonalCenter;
+        mRadios[0]= mLayoutNewGood;
+        mRadios[1]= mLayoutBoutique;
+        mRadios[2]= mLayoutCategory;
+        mRadios[3]= mLayoutCart;
+        mRadios[4]= mLayoutPersonalCenter;
 	}
 
 
@@ -261,111 +237,10 @@ public class MainActivity extends BaseActivity {
 	}
 
     private void startLogin(String action){
-        Log.e(TAG,"MenuItemClickListener startLogin,action="+action);
         Intent intent = new Intent(MainActivity.this,LoginActivity.class).putExtra("action",action);
         startActivity(intent);
-//        startActivityForResult(intent,I.REQUEST_CODE_LOGIN);
     }
-	
-	/**
-	 * 底部菜单项点击事件监听器
-	 * @author yao
-	 *
-	 */
-	class MenuItemClickListener implements View.OnClickListener {
-	    @Override
-	    public void onClick(View v) {
-            setMenuItemDefaultDrawable();
-            Fragment fragment = null;
-            switch (v.getId()) {
-	        case R.id.layout_new_good:
-                index = 0;
-                drawableNewGood = getmDrawable(R.drawable.menu_item_new_good_selected);
-                fragment = mNewGoodFragment;
-	            break;
-	        case R.id.layout_boutique:
-	            index = 1;
-                drawableBoutique = getmDrawable(R.drawable.boutique_selected);
-                fragment = mBoutiqueFragment;
-	            break;
-	        case R.id.layout_category:
-	            index=2;
-                drawableCategory = getmDrawable(R.drawable.menu_item_category_selected);
-				fragment = mCategoryFragment;
-	            break;
-	        case R.id.layout_cart:
-	            index =3;
-                drawableCart = getmDrawable(R.drawable.menu_item_cart_selected);
-                fragment = mCartFragment;
-	            break;
-            case R.id.layout_personal_center:
-                mUser = FuLiCenterApplication.getInstance().getUserBean();
-                Log.e(TAG,"mUser="+mUser);
-                if(mUser!=null) {
-                    index = 4;
-                    drawablePersonalCenter = getmDrawable(R.drawable.menu_item_personal_center_selected);
-                    fragment = mPersonalCenterFragment;
-                }else{
-                    Log.e(TAG,"MenuItemClickListener startActivityForResult");
-//                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
-//                    Intent intent = new Intent(MainActivity.this,LoginActivity.class);
-//                    startActivityForResult(intent,I.REQUEST_CODE_LOGIN);
-                    startLogin("person");
-                }
-                break;
-	        }
 
-	        if (currentTabIndex != index) {
-	            FragmentTransaction trx = getSupportFragmentManager().beginTransaction();
-                if(currentTabIndex>-1){
-                    trx.hide(mFragments[currentTabIndex]);
-                }
-	            if (!mFragments[index].isAdded()) {
-	                trx.add(R.id.fragment_container, mFragments[index]);
-	            }
-	            trx.show(mFragments[index]).commit();
-                currentTabIndex = index;
-                setMenuItemDrawable();
-//                if(fragment!=null){
-//                    Log.e(TAG,"MenuItemClickListener.FragmentUtils.startFragment,fragment="+fragment);
-//                    FragmentUtils.startFragment(mContext,fragment);
-//                }
-	        }
-	    }
-	}
-
-    //    @SuppressLint("Override")
-    public Drawable getmDrawable(int id){
-        Resources res = getResources();
-        Drawable drawable = res.getDrawable(id);
-        return drawable;
-    }
-    /** 设置菜单项按钮顶部缺省显示的图片 */
-    private void setMenuItemDefaultDrawable() {
-        drawableNewGood = getmDrawable(R.drawable.menu_item_new_good_normal);
-        drawableBoutique = getmDrawable(R.drawable.boutique_normal);
-        drawableCategory = getmDrawable(R.drawable.menu_item_category_normal);
-        drawableCart = getmDrawable(R.drawable.menu_item_cart_normal);
-        drawablePersonalCenter = getmDrawable(R.drawable.menu_item_personal_center_normal);
-    }
-    float mDensity;
-    /** 设置菜单项按钮顶部某菜单项被选择后显示的图片 */
-    private void setMenuItemDrawable() {
-        int width = (int) (mDensity * 32);
-        int height = width;
-
-        Rect bounds = new Rect(0, 0, width, height);
-        drawableNewGood.setBounds(bounds);
-        mivNewGood.setImageDrawable(drawableNewGood);
-        drawableBoutique.setBounds(bounds);
-        mivBoutique.setImageDrawable(drawableBoutique);
-		drawableCategory.setBounds(bounds);
-		mivCategory.setImageDrawable(drawableCategory);
-        drawableCart.setBounds(bounds);
-        mivCart.setImageDrawable(drawableCart);
-		drawablePersonalCenter.setBounds(bounds);
-		mivPersonalCenter.setImageDrawable(drawablePersonalCenter);
-    }
     /**
      * 接收来自DownloadCartTask发送的购物车数据改变的广播
      * @author yao

@@ -12,114 +12,188 @@
         android:background="@color/bottom_bar_taobao_bg"
         android:gravity="center_vertical"
         android:orientation="horizontal" >
-        
-        <RelativeLayout
-            android:id="@+id/layout_new_good"
-            style="@style/style_menu_item">
-            <ImageView
-                android:id="@+id/ivNewGood"
-                style="@style/style_menu_iv"
-                android:src="@drawable/menu_new_good"/>
-            <TextView
-                android:id="@+id/btnNewGood"
-                style="@style/style_menu_btn"
-                android:layout_below="@id/ivNewGood"
-                android:text="新品"/>
-        </RelativeLayout>
+        <RadioGroup
+            android:id="@+id/rg_bottom_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+            <RadioButton
+                android:id="@+id/layout_new_good"
+                android:drawableTop="@drawable/selector_menu_item_new_good"
+                style="@style/menu_item_style"
+                android:text="新品"
+                android:button="@null"
+                android:textColor="@color/main_botton_text_color"
+                android:checked="true"/>
+            <RadioButton
+                android:id="@+id/layout_boutique"
+                android:drawableTop="@drawable/selector_menu_item_boutique"
+                style="@style/menu_item_style"
+                android:text="精选"
+                android:button="@null"
+                android:textColor="@color/main_botton_text_color"
+                android:checked="false"/>
+            <RadioButton
+                android:id="@+id/layout_category"
+                android:drawableTop="@drawable/selector_menu_item_category"
+                style="@style/menu_item_style"
+                android:text="分类"
+                android:button="@null"
+                android:textColor="@color/main_botton_text_color"
+                android:checked="false"/>
+            <RelativeLayout
+                style="@style/style_menu_item">
+                <RadioButton
+                    android:id="@+id/layout_cart"
+                    android:drawableTop="@drawable/selector_menu_item_cart"
+                    style="@style/menu_item_style_cart"
+                    android:text="购物车"
+                    android:textColor="@color/main_botton_text_color"
+                    android:button="@null"
+                    android:checked="false"/>
+                <LinearLayout
+                    android:id="@+id/shopping_cart_num_bg"
+                    android:layout_width="55dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="3dp"
+                    android:layout_centerInParent="true"
+                    android:layout_alignParentTop="true"
+                    android:gravity="center"
+                    android:orientation="vertical" >
 
-        <RelativeLayout
-            android:id="@+id/layout_boutique"
-            style="@style/style_menu_item" >
+                    <TextView
+                        android:id="@+id/tvCartHint"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:background="@drawable/cart_hint"
+                        android:layout_marginLeft="15dp"
+                        android:gravity="center"
+                        android:padding="2dp"
+                        android:paddingLeft="50dp"
+                        android:text="1300"
+                        android:textColor="#fff"
+                        android:textSize="12dp"
+                        android:visibility="visible" />
+                </LinearLayout>
+            </RelativeLayout>
+            <RadioButton
+                android:id="@+id/layout_personal_center"
+                android:drawableTop="@drawable/selector_menu_item_personal_center"
+                style="@style/menu_item_style"
+                android:text="我"
+                android:textColor="@color/main_botton_text_color"
+                android:button="@null"
+                android:checked="false"/>
+        </RadioGroup>
+        <!--<RelativeLayout-->
+            <!--android:id="@+id/layout_new_good"-->
+            <!--style="@style/style_menu_item">-->
+            <!--<ImageView-->
+                <!--android:id="@+id/ivNewGood"-->
+                <!--style="@style/style_menu_iv"-->
+                <!--android:src="@drawable/menu_new_good"/>-->
+            <!--<TextView-->
+                <!--android:id="@+id/btnNewGood"-->
+                <!--style="@style/style_menu_btn"-->
+                <!--android:layout_below="@id/ivNewGood"-->
+                <!--android:text="新品"/>-->
+        <!--</RelativeLayout>-->
 
-            <ImageView
-                android:id="@+id/ivBoutique"
-                style="@style/style_menu_iv"
-                android:src="@drawable/menu_boutique" />
+        <!--<RelativeLayout-->
+            <!--android:id="@+id/layout_boutique"-->
+            <!--style="@style/style_menu_item" >-->
 
-            <TextView
-                android:id="@+id/tvBoutique"
-                style="@style/style_menu_btn"
-                android:layout_below="@id/ivBoutique"
-                android:text="精选" />
-            <!-- android:drawableTop="@drawable/menu_boutique" -->
-        </RelativeLayout>
+            <!--<ImageView-->
+                <!--android:id="@+id/ivBoutique"-->
+                <!--style="@style/style_menu_iv"-->
+                <!--android:src="@drawable/menu_boutique" />-->
 
-        <RelativeLayout
-            android:id="@+id/layout_category"
-            style="@style/style_menu_item" >
+            <!--<TextView-->
+                <!--android:id="@+id/tvBoutique"-->
+                <!--style="@style/style_menu_btn"-->
+                <!--android:layout_below="@id/ivBoutique"-->
+                <!--android:text="精选" />-->
+            <!--&lt;!&ndash; android:drawableTop="@drawable/menu_boutique" &ndash;&gt;-->
+        <!--</RelativeLayout>-->
 
-            <ImageView
-                android:id="@+id/ivCategory"
-                style="@style/style_menu_iv"
-                android:src="@drawable/menu_category" />
+        <!--<RelativeLayout-->
+            <!--android:id="@+id/layout_category"-->
+            <!--style="@style/style_menu_item" >-->
 
-            <TextView
-                android:id="@+id/tvCategory"
-                style="@style/style_menu_btn"
-                android:layout_below="@id/ivCategory"
-                android:text="分类" />
-            <!-- android:drawableTop="@drawable/menu_category" -->
-        </RelativeLayout>
-        <RelativeLayout
-            android:id="@+id/layout_cart"
-            style="@style/style_menu_item"
-            android:layout_weight="1.1" >
+            <!--<ImageView-->
+                <!--android:id="@+id/ivCategory"-->
+                <!--style="@style/style_menu_iv"-->
+                <!--android:src="@drawable/menu_category" />-->
 
-            <ImageView
-                android:id="@+id/ivCart"
-                style="@style/style_menu_iv"
-                android:src="@drawable/menu_cart" />
+            <!--<TextView-->
+                <!--android:id="@+id/tvCategory"-->
+                <!--style="@style/style_menu_btn"-->
+                <!--android:layout_below="@id/ivCategory"-->
+                <!--android:text="分类" />-->
+            <!--&lt;!&ndash; android:drawableTop="@drawable/menu_category" &ndash;&gt;-->
+        <!--</RelativeLayout>-->
+        <!--<RelativeLayout-->
+            <!--android:id="@+id/layout_cart"-->
+            <!--style="@style/style_menu_item"-->
+            <!--android:layout_weight="1.1" >-->
 
-            <TextView
-                android:id="@+id/tvCart"
-                style="@style/style_menu_btn"
-                android:layout_below="@id/ivCart"
-                android:text="购物车" />
-            <!-- android:drawableTop="@drawable/menu_cart" -->
-            <LinearLayout
-                android:id="@+id/shopping_cart_num_bg"
-                android:layout_width="55dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="3dp"
-                android:layout_centerInParent="true"
-                android:layout_alignParentTop="true"
-                android:gravity="center"
-                android:orientation="vertical" >
+            <!--<ImageView-->
+                <!--android:id="@+id/ivCart"-->
+                <!--style="@style/style_menu_iv"-->
+                <!--android:src="@drawable/menu_cart" />-->
 
-            <TextView
-                android:id="@+id/tvCartHint"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:background="@drawable/cart_hint"
-                android:layout_marginLeft="15dp"
-                android:gravity="center"
-                android:padding="2dp"
-                android:paddingLeft="50dp"
-                android:text="1300"
-                android:textColor="#fff"
-                android:textSize="12dp"
-                android:visibility="visible" />
-            </LinearLayout>
-        </RelativeLayout>
+            <!--<TextView-->
+                <!--android:id="@+id/tvCart"-->
+                <!--style="@style/style_menu_btn"-->
+                <!--android:layout_below="@id/ivCart"-->
+                <!--android:text="购物车" />-->
+            <!--&lt;!&ndash; android:drawableTop="@drawable/menu_cart" &ndash;&gt;-->
+            <!--<LinearLayout-->
+                <!--android:id="@+id/shopping_cart_num_bg"-->
+                <!--android:layout_width="55dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="center_horizontal"-->
+                <!--android:layout_marginLeft="15dp"-->
+                <!--android:layout_marginTop="3dp"-->
+                <!--android:layout_centerInParent="true"-->
+                <!--android:layout_alignParentTop="true"-->
+                <!--android:gravity="center"-->
+                <!--android:orientation="vertical" >-->
 
-        <RelativeLayout
-            android:id="@+id/layout_personal_center"
-            style="@style/style_menu_item" >
+            <!--<TextView-->
+                <!--android:id="@+id/tvCartHint"-->
+                <!--android:layout_width="20dp"-->
+                <!--android:layout_height="20dp"-->
+                <!--android:background="@drawable/cart_hint"-->
+                <!--android:layout_marginLeft="15dp"-->
+                <!--android:gravity="center"-->
+                <!--android:padding="2dp"-->
+                <!--android:paddingLeft="50dp"-->
+                <!--android:text="1300"-->
+                <!--android:textColor="#fff"-->
+                <!--android:textSize="12dp"-->
+                <!--android:visibility="visible" />-->
+            <!--</LinearLayout>-->
+        <!--</RelativeLayout>-->
 
-            <ImageView
-                android:id="@+id/ivPersonalCenter"
-                style="@style/style_menu_iv"
-                android:src="@drawable/menu_person_center" />
+        <!--<RelativeLayout-->
+            <!--android:id="@+id/layout_personal_center"-->
+            <!--style="@style/style_menu_item" >-->
 
-            <TextView
-                android:id="@+id/tvPersonalCenter"
-                style="@style/style_menu_btn"
-                android:layout_below="@id/ivPersonalCenter"
-                android:text="我" />
-            <!-- android:drawableTop="@drawable/menu_person_center" -->
-        </RelativeLayout>
+            <!--<ImageView-->
+                <!--android:id="@+id/ivPersonalCenter"-->
+                <!--style="@style/style_menu_iv"-->
+                <!--android:src="@drawable/menu_person_center" />-->
+
+            <!--<TextView-->
+                <!--android:id="@+id/tvPersonalCenter"-->
+                <!--style="@style/style_menu_btn"-->
+                <!--android:layout_below="@id/ivPersonalCenter"-->
+                <!--android:text="我" />-->
+            <!--&lt;!&ndash; android:drawableTop="@drawable/menu_person_center" &ndash;&gt;-->
+        <!--</RelativeLayout>-->
 
     </LinearLayout>
 

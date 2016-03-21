@@ -43,6 +43,9 @@
 	<drawable name="menu_item_normal">#6A7077</drawable>
 	<drawable name="menu_item_pressed">#FF7A49</drawable>
 	<drawable name="menu_item_selected">#FF7A49</drawable>
+    <color name="menu_item_normal">#6A7077</color>
+    <color name="menu_item_pressed">#FF7A49</color>
+    <color name="menu_item_selected">#FF7A49</color>
 	<color name="fragment_bg">#EFEFEF</color>
     <color name="item_good_text">#313131</color>
     <color name="item_good_price">#df3131</color>
