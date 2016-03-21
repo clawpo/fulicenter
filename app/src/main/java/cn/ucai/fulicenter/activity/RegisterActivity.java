@@ -29,10 +29,10 @@ import com.easemob.EMError;
 import com.easemob.chat.EMChatManager;
 import com.easemob.exceptions.EaseMobException;
 
-import cn.ucai.fulicenter.R;
 import cn.ucai.fulicenter.FuLiCenterApplication;
+import cn.ucai.fulicenter.R;
 import cn.ucai.fulicenter.bean.UserBean;
-import cn.ucai.fulicenter.listener.OnSetAvatarListener;
+import cn.ucai.fulicenter.listener.OnSetAvatarListenerRS;
 import cn.ucai.fulicenter.utils.NetUtil;
 import cn.ucai.fulicenter.utils.Utils;
 
@@ -50,8 +50,8 @@ public class RegisterActivity extends BaseActivity {
 	private ImageView mivAvatar;
 
 	RegisterActivity mContext;
-	
-	OnSetAvatarListener mOnSetAvatarListener;
+
+	OnSetAvatarListenerRS mOnSetAvatarListener;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +87,12 @@ public class RegisterActivity extends BaseActivity {
         findViewById(R.id.layout_user_avatar).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                mOnSetAvatarListener = new OnSetAvatarListener(mContext, R.id.layout_register);
+				try {
+					mOnSetAvatarListener=new OnSetAvatarListenerRS(RegisterActivity.this,R.id.layout_register,getUserName(),"user_avatar");
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+//				mOnSetAvatarListener = new OnSetAvatarListener(mContext, R.id.layout_register);
             }
         });
     }
@@ -141,8 +146,8 @@ public class RegisterActivity extends BaseActivity {
         metUserName = getViewById(R.id.etUserName);
         metPassword = getViewById(R.id.etPassword);
         metConfirmPassword = getViewById(R.id.etConfirmPassword);
-        metNick=getViewById(R.id.etNick);
-        mivAvatar=getViewById(R.id.iv_avatar);
+        metNick= getViewById(R.id.etNick);
+        mivAvatar= getViewById(R.id.iv_avatar);
 	}
 
 	public void back(View view) {
@@ -175,7 +180,8 @@ public class RegisterActivity extends BaseActivity {
              * @param ivAvatar：显示头像的ImageView
              * @param userName：注册窗口输入的账号
              */
-			mOnSetAvatarListener.setAvatar(requestCode, data, mivAvatar, "user_avatar", userName);
+			mOnSetAvatarListener.setAvatar(requestCode, data, mivAvatar);
+//			mOnSetAvatarListener.setAvatar(requestCode, data, mivAvatar, "user_avatar", userName);
 		} catch (Exception e) {
 			Log.i(TAG, "onActivityResult-e="+e.getMessage());
 			e.printStackTrace();
@@ -226,28 +232,7 @@ public class RegisterActivity extends BaseActivity {
 					Log.i(TAG, "2-isSuccess="+isSuccess);
 					if(isSuccess){
 						// 调用sdk注册方法
-//                            EMChatManager.getInstance().createAccountOnServer(userName, password);
-
-//						try {
-							// 调用sdk注册方法
-							EMChatManager.getInstance().createAccountOnServer(userName, password);
-//						} catch (final EaseMobException e) {
-//							//注册失败
-//							int errorCode=e.getErrorCode();
-//							if(errorCode==EMError.NONETWORK_ERROR){
-//								Toast.makeText(getApplicationContext(), "网络异常，请检查网络！", Toast.LENGTH_SHORT).show();
-//							}else if(errorCode==EMError.USER_ALREADY_EXISTS){
-//								Toast.makeText(getApplicationContext(), "用户已存在！", Toast.LENGTH_SHORT).show();
-//							}else if(errorCode==EMError.UNAUTHORIZED){
-//								Toast.makeText(getApplicationContext(), "注册失败，无权限！", Toast.LENGTH_SHORT).show();
-//							}else{
-//								Toast.makeText(getApplicationContext(), "注册失败: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-//							}
-//							NetUtil.unRegister(userName);
-//						}
-//						Log.i(TAG, "EMChatManager.getInstance().createAccountOnServer=？？？？？成功？？？？？");
-
-
+						EMChatManager.getInstance().createAccountOnServer(userName, password);
 
 						// 保存用户名
 						FuLiCenterApplication.getInstance().setUserName(userBean.getUserName());

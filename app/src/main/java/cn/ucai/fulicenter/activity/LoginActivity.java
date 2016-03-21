@@ -48,7 +48,7 @@ import cn.ucai.fulicenter.bean.UserBean;
 import cn.ucai.fulicenter.db.EMUserDao;
 import cn.ucai.fulicenter.db.UserDao;
 import cn.ucai.fulicenter.domain.User;
-import cn.ucai.fulicenter.listener.OnSetAvatarListener;
+import cn.ucai.fulicenter.listener.OnSetAvatarListenerRS;
 import cn.ucai.fulicenter.task.DownloadContactsTask;
 import cn.ucai.fulicenter.utils.CommonUtils;
 import cn.ucai.fulicenter.utils.MD5;
@@ -234,7 +234,7 @@ public class LoginActivity extends BaseActivity {
                             return;
                         }
                         String avatar = FuLiCenterApplication.getInstance().getUserBean().getAvatar();
-                        File file = OnSetAvatarListener.getAvatarFile(mContext, avatar);
+                        File file = OnSetAvatarListenerRS.getAvatarFile(mContext, avatar);
                         NetUtil.downloadAvatar(file, "user_avatar", avatar);
                         //下载联系人
                         ArrayList<UserBean> contactList = FuLiCenterApplication.getInstance().getContactList();
