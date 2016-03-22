@@ -73,8 +73,8 @@
             android:textColor="#000" />
     </LinearLayout>
 
-    <cn.ucai.fulicenter.utils.PullRefreshView
-        android:id="@+id/prvCategoryChild"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/srl_category_child"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/layout_sort"
@@ -82,16 +82,30 @@
         android:paddingTop="10dp"
         android:background="@color/list_background">
 
-        <GridView
-            android:id="@+id/gvCategoryChild"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:columnWidth="150dp"
-            android:horizontalSpacing="10dp"
-            android:numColumns="auto_fit"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:verticalSpacing="10dp" />
-    </cn.ucai.fulicenter.utils.PullRefreshView>
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/tv_refresh_hint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:visibility="gone"
+                android:text="@string/now_refresh"
+                android:textSize="18sp"
+                android:textStyle="bold"/>
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_category_child"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:columnWidth="150dp"
+                android:horizontalSpacing="10dp"
+                android:numColumns="auto_fit"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:verticalSpacing="10dp" />
+        </LinearLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </RelativeLayout>

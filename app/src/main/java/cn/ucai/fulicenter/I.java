@@ -34,6 +34,9 @@ public interface I {
     /** 上拉刷新*/
     public static final int ACTION_PULL_UP=2;
 
+    /** 每行显示的数量columNum*/
+    public static final int COLUM_NUM = 2;
+
 
     /** 表示列表项布局的两种类型*/
     public static final int TYPE_ITEM=0;

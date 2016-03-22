@@ -2,20 +2,20 @@ package cn.ucai.fulicenter.activity;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.AbsListView;
-import android.widget.GridView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
 import cn.ucai.fulicenter.I;
 import cn.ucai.fulicenter.R;
-import cn.ucai.fulicenter.adapter.GoodAdapter;
+import cn.ucai.fulicenter.adapter.GoodAdapterRS;
 import cn.ucai.fulicenter.bean.NewGoodBean;
-import cn.ucai.fulicenter.task.DownloadGoodsTask;
-import cn.ucai.fulicenter.utils.PullRefreshView;
-import cn.ucai.fulicenter.utils.PullRefreshView.OnRefreshListener;
+import cn.ucai.fulicenter.utils.NetUtilRS;
 
 /**
  * Created by ucai001 on 2016/3/11.
@@ -23,13 +23,15 @@ import cn.ucai.fulicenter.utils.PullRefreshView.OnRefreshListener;
 public class BoutiqueChildActivity extends BaseActivity {
     Context mContext;
     ArrayList<NewGoodBean> mGoodList;
-    
-    PullRefreshView<GridView> mprvBoutiqueChild;
-    GridView mgvBoutiqueChild;
+
     TextView mtvBoutiqueChildName;
-    
-    GoodAdapter mAdapter;
-    DownloadGoodsTask mDownloadGoodsTask;
+
+    /** 下拉刷新控件*/
+    SwipeRefreshLayout mSwipeRefreshLayout;
+    RecyclerView mRecyclerView;
+    TextView mtvHint;
+    GridLayoutManager mGridLayoutManager;
+    GoodAdapterRS mAdapter;
     
     int mPageId;
     int mCatId;
@@ -49,42 +51,54 @@ public class BoutiqueChildActivity extends BaseActivity {
         setPullDownRefreshListener();
     }
 
-    private void setPullDownRefreshListener() {
-        mprvBoutiqueChild.setOnRefreshListener(new OnRefreshListener() {
-            @Override
-            public void loadData() {
-                mDownloadGoodsTask = new DownloadGoodsTask(mContext,mAdapter,
-                        mGoodList, I.ActionType.ACTION_PULL_DOWN,mCatId,I.NEW_GOOD);
-                mDownloadGoodsTask.execute(mPageId,I.PAGE_ID_DEFAULT);
-            }
+    private void setPullUpRefreshListener() {
+        mRecyclerView.setOnScrollListener(
+                new RecyclerView.OnScrollListener() {
+                    int lastItemPosition;
+                    @Override
+                    public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                        super.onScrollStateChanged(recyclerView, newState);
+                        if(newState == RecyclerView.SCROLL_STATE_IDLE &&
+                                lastItemPosition == mAdapter.getItemCount()-1){
+                            if(mAdapter.isMore()){
+                                mSwipeRefreshLayout.setRefreshing(true);
+                                mPageId=mPageId+I.PAGE_SIZE_DEFAULT;
+                                try {
+                                    NetUtilRS.findNewandBoutiqueGoods(mAdapter,mCatId,mPageId,
+                                            I.PAGE_SIZE_DEFAULT,I.ACTION_PULL_UP,mSwipeRefreshLayout,mtvHint);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                    }
 
-            @Override
-            public PullRefreshView.LoadStatus getLoadStatus() {
-                return mDownloadGoodsTask.getLoadStatus();
-            }
-        },mgvBoutiqueChild);
+                    @Override
+                    public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                        super.onScrolled(recyclerView, dx, dy);
+                        //获取最后列表项的下标
+                        lastItemPosition = mGridLayoutManager.findLastVisibleItemPosition();
+                    }
+                }
+        );
     }
 
-    private void setPullUpRefreshListener() {
-        mgvBoutiqueChild.setOnScrollListener(new AbsListView.OnScrollListener() {
-            int lastPosition;
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-                if(scrollState== AbsListView.OnScrollListener.SCROLL_STATE_IDLE
-                        && lastPosition==mAdapter.getCount()
-                        && mAdapter.isMore()){
-                    mPageId=mPageId+I.PAGE_SIZE_DEFAULT;
-                    mDownloadGoodsTask = new DownloadGoodsTask(mContext,mAdapter,
-                            mGoodList, I.ActionType.ACTION_SCROLL,mCatId,I.NEW_GOOD);
-                    mDownloadGoodsTask.execute(mPageId,I.PAGE_SIZE_DEFAULT);
+    private void setPullDownRefreshListener() {
+        mSwipeRefreshLayout.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener(){
+                    @Override
+                    public void onRefresh() {
+                        mtvHint.setVisibility(View.VISIBLE);
+                        mPageId = 0;
+                        try {
+                            NetUtilRS.findNewandBoutiqueGoods(mAdapter,mCatId,mPageId,I.PAGE_SIZE_DEFAULT,
+                                    I.ACTION_PULL_DOWN, mSwipeRefreshLayout,mtvHint);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                lastPosition=firstVisibleItem+totalItemCount-1;
-            }
-        });
+        );
     }
 
 
@@ -101,21 +115,36 @@ public class BoutiqueChildActivity extends BaseActivity {
      */
     private void initData() {
         mCatId=getIntent().getIntExtra(I.Boutique.ID, 0);
-        mDownloadGoodsTask=new DownloadGoodsTask(mContext, mAdapter, mGoodList, 
-            I.ActionType.ACTION_DOWNLOAD,mCatId,I.NEW_GOOD);
-        mDownloadGoodsTask.execute(mPageId,I.PAGE_SIZE_DEFAULT);
+        try {
+            NetUtilRS.findNewandBoutiqueGoods(mAdapter,mCatId,mPageId,I.PAGE_SIZE_DEFAULT,I.ACTION_DOWNLOAD,
+                    mSwipeRefreshLayout,mtvHint);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void initView() {
+        mSwipeRefreshLayout = getViewById(R.id.srl_boutique_child);
+        mSwipeRefreshLayout.setColorSchemeColors(
+                R.color.google_blue,
+                R.color.google_green,
+                R.color.google_red,
+                R.color.google_yellow
+        );
+        mtvHint = getViewById(R.id.tv_refresh_hint);
+        mGridLayoutManager = new GridLayoutManager(mContext, I.COLUM_NUM);
+        mGridLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mRecyclerView = getViewById(R.id.rv_boutique_child);
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setLayoutManager(mGridLayoutManager);
+        mGoodList=new ArrayList<NewGoodBean>();
+        mAdapter = new GoodAdapterRS(mContext,mGoodList,I.SORT_BY_ADDTIME_DESC);
+        mRecyclerView.setAdapter(mAdapter);
+
         mtvBoutiqueChildName=getViewById(R.id.tvBoutiqueChildName);
         String boutiqueChildName=getIntent().getStringExtra(I.Boutique.NAME);
         mtvBoutiqueChildName.setText(boutiqueChildName);
 
-        mprvBoutiqueChild=getViewById(R.id.prfvBoutiqueChild);
-        mgvBoutiqueChild=getViewById(R.id.gvBoutiqueChild);
-        mGoodList=new ArrayList<NewGoodBean>();
-        mAdapter=new GoodAdapter(mContext, mGoodList,I.SORT_BY_ADDTIME_DESC);
-        mgvBoutiqueChild.setAdapter(mAdapter);
     }
 
 }

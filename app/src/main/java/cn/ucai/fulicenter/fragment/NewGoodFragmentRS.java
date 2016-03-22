@@ -41,13 +41,12 @@ public class NewGoodFragmentRS extends Fragment {
     int mPageId=0;
     /** 每页下载商品的数量*/
     final int PAGE_SIZE=10;
-    /** 每行显示的数量*/
-    int columNum = 2;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mContext = (MainActivity)getActivity();
         View layout = View.inflate(mContext, R.layout.fragment_new_good_rs, null);
+        mGoodList = new ArrayList<NewGoodBean>();
         initView(layout);
         setListener();
         initData();
@@ -135,7 +134,7 @@ public class NewGoodFragmentRS extends Fragment {
                 R.color.google_yellow
         );
         mtvHint = (TextView) layout.findViewById(R.id.tv_refresh_hint);
-        mGridLayoutManager = new GridLayoutManager(mContext, columNum);
+        mGridLayoutManager = new GridLayoutManager(mContext, I.COLUM_NUM);
         mGridLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView = (RecyclerView) layout.findViewById(R.id.rv_newgood);
         mRecyclerView.setHasFixedSize(true);

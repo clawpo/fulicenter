@@ -31,7 +31,7 @@ import cn.ucai.fulicenter.FuLiCenterApplication;
 import cn.ucai.fulicenter.I;
 import cn.ucai.fulicenter.R;
 import cn.ucai.fulicenter.bean.UserBean;
-import cn.ucai.fulicenter.fragment.BoutiqueFragment;
+import cn.ucai.fulicenter.fragment.BoutiqueFragmentRS;
 import cn.ucai.fulicenter.fragment.CartFragmentRS;
 import cn.ucai.fulicenter.fragment.CategoryFragment;
 import cn.ucai.fulicenter.fragment.NewGoodFragmentRS;
@@ -53,7 +53,7 @@ public class MainActivity extends BaseActivity {
     RadioButton mLayoutPersonalCenter;
 
 	private NewGoodFragmentRS mNewGoodFragment;
-	private BoutiqueFragment mBoutiqueFragment;
+	private BoutiqueFragmentRS mBoutiqueFragment;
     private CategoryFragment mCategoryFragment;
     private CartFragmentRS mCartFragment;
 	private PersonalCenterFragment mPersonalCenterFragment;
@@ -114,7 +114,7 @@ public class MainActivity extends BaseActivity {
 
     private void initFragment() {
 		mNewGoodFragment = new NewGoodFragmentRS();
-        mBoutiqueFragment = new BoutiqueFragment();
+        mBoutiqueFragment = new BoutiqueFragmentRS();
 		mCategoryFragment = new CategoryFragment();
 		mCartFragment = new CartFragmentRS();
 		mPersonalCenterFragment = new PersonalCenterFragment();

@@ -1,9 +1,11 @@
 package cn.ucai.fulicenter.utils;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.v4.util.LruCache;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -22,8 +24,12 @@ import java.util.Set;
 
 import cn.ucai.fulicenter.FuLiCenterApplication;
 import cn.ucai.fulicenter.I;
+import cn.ucai.fulicenter.adapter.BoutiqueAdapterRS;
 import cn.ucai.fulicenter.adapter.GoodAdapterRS;
+import cn.ucai.fulicenter.bean.BoutiqueBean;
+import cn.ucai.fulicenter.bean.GoodDetailsBean;
 import cn.ucai.fulicenter.bean.NewGoodBean;
+import cn.ucai.fulicenter.bean.PropertyBean;
 
 /**
  * Created by clawpo on 16/3/20.
@@ -53,6 +59,7 @@ public final class NetUtilRS {
         //将URL和请求参数转换为url字符串格式
         String url=getUrl(FuLiCenterApplication.SERVER_ROOT, requestParams);
 
+        Log.e(TAG,"findGoodsDetails,url="+url);
         //创建用gson直接将文本解析为NewGoodBean数组的请求对象
         GsonRequest<NewGoodBean[]> request=new GsonRequest<>(url, new Response.Listener<NewGoodBean[]>() {
             @Override
@@ -62,6 +69,7 @@ public final class NetUtilRS {
                 //将数组转换为集合
                 ArrayList<NewGoodBean> list = NetUtilRS.array2List(apps);
                 if(action == I.ACTION_DOWNLOAD || action == I.ACTION_PULL_DOWN){
+                    Log.e(TAG,"list="+list.size());
                     mAdapter.initItems(list);
                 }else if(action == I.ACTION_PULL_UP) {
                     mAdapter.addItems(list);
@@ -74,6 +82,123 @@ public final class NetUtilRS {
             }
         },NewGoodBean[].class);
         request.setTag(I.REQUEST_FIND_NEW_BOUTIQUE_GOODS);
+        FuLiCenterApplication.getInstance().getRequestQueue().add(request);
+    }
+
+    /**
+     * 下载商品详情的集合
+     * 分类二级页面中颜色按钮下拉列表项被选择时，
+     * 分类二级页面:下载一组商品信息
+     * @param pageId
+     * @param pageSize
+     * @return
+     * @throws Exception
+     */
+    public static void findGoodsDetails(final GoodAdapterRS mAdapter, int catId, int pageId,
+                                                          int pageSize, final int action, final SwipeRefreshLayout swipeRefreshLayout,
+                                                          final TextView hint) throws Exception {
+
+        //requestParams集合封装了向服务端发送的get请求的参数
+        ArrayList<Param> requestParams = new ArrayList<>();
+        requestParams.add(new Param(I.KEY_REQUEST, I.REQUEST_FIND_GOODS_DETAILS));
+        requestParams.add(new Param(I.NewAndBoutiqueGood.CAT_ID, catId+""));
+        requestParams.add(new Param(I.PAGE_ID, pageId+""));
+        requestParams.add(new Param(I.PAGE_SIZE, pageSize+""));
+
+        //将URL和请求参数转换为url字符串格式
+        String url=getUrl(FuLiCenterApplication.SERVER_ROOT, requestParams);
+
+        Log.e(TAG,"findGoodsDetails,url="+url);
+        //创建用gson直接将文本解析为NewGoodBean数组的请求对象
+        GsonRequest<GoodDetailsBean[]> request=new GsonRequest<>(url, new Response.Listener<GoodDetailsBean[]>() {
+            @Override
+            public void onResponse(GoodDetailsBean[] apps) {
+                swipeRefreshLayout.setRefreshing(false);
+                hint.setVisibility(View.GONE);
+                //将数组转换为集合
+                ArrayList<GoodDetailsBean> list = NetUtilRS.array2List(apps);
+                Log.e(TAG,"findGoodsDetails,list.size="+list.size());
+                //将GoodDetailsBean类型的集合转换为NewGoodBean类型的集合
+                ArrayList<NewGoodBean> goodList=new ArrayList<NewGoodBean>();
+                for(int i=0;i<list.size();i++){
+                    GoodDetailsBean goodDetails = list.get(i);
+                    NewGoodBean good=new NewGoodBean();
+                    good.setAddTime(goodDetails.getAddTime());
+                    good.setCatId(goodDetails.getCatId());
+                    PropertyBean p = goodDetails.getProperties()[0];
+                    good.setColorCode(p.getColorCode());
+                    good.setColorId(p.getColorId());
+                    good.setColorName(p.getColorName());
+                    good.setColorUrl(p.getColorUrl());
+                    good.setCurrencyPrice(goodDetails.getCurrencyPrice());
+                    good.setGoodsBrief(goodDetails.getGoodsBrief());
+                    good.setGoodsEnglishName(goodDetails.getGoodsEnglishName());
+                    good.setGoodsId(goodDetails.getGoodsId());
+                    good.setGoodsImg(goodDetails.getGoodsImg());
+                    good.setGoodsName(goodDetails.getGoodsName());
+                    good.setGoodsThumb(goodDetails.getGoodsThumb());
+                    good.setId(goodDetails.getId());
+                    good.setPromote(goodDetails.isPromote());
+                    good.setPromotePrice(goodDetails.getPromotePrice());
+                    good.setRankPrice(goodDetails.getRankPrice());
+                    good.setShopPrice(goodDetails.getShopPrice());
+                    goodList.add(good);
+                }
+                if(action == I.ACTION_DOWNLOAD || action == I.ACTION_PULL_DOWN){
+                    mAdapter.initItems(goodList);
+                }else if(action == I.ACTION_PULL_UP) {
+                    mAdapter.addItems(goodList);
+                }
+
+                //向CatgeoryChildActivity发送
+                FuLiCenterApplication.applicationContext.sendBroadcast(
+                        new Intent("good_details_update").putExtra("goods_details", list));
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+
+            }
+        },GoodDetailsBean[].class);
+        request.setTag(I.REQUEST_FIND_GOODS_DETAILS);
+        FuLiCenterApplication.getInstance().getRequestQueue().add(request);
+
+    }
+    /**
+     * 下载精选首页数据
+     */
+    public static void findBoutiqueList(final BoutiqueAdapterRS mAdapter, final int action, final SwipeRefreshLayout swipeRefreshLayout,
+                                                           final TextView hint) throws Exception {
+        //requestParams集合封装了向服务端发送的get请求的参数
+        ArrayList<Param> requestParams = new ArrayList<>();
+        requestParams.add(new Param(I.KEY_REQUEST, I.REQUEST_FIND_BOUTIQUES));
+
+        //将URL和请求参数转换为url字符串格式
+        String url=getUrl(FuLiCenterApplication.SERVER_ROOT, requestParams);
+
+        Log.e(TAG,"findBoutiqueList,url="+url);
+        //创建用gson直接将文本解析为NewGoodBean数组的请求对象
+        GsonRequest<BoutiqueBean[]> request=new GsonRequest<>(url, new Response.Listener<BoutiqueBean[]>() {
+            @Override
+            public void onResponse(BoutiqueBean[] apps) {
+                swipeRefreshLayout.setRefreshing(false);
+                hint.setVisibility(View.GONE);
+                //将数组转换为集合
+                ArrayList<BoutiqueBean> list = NetUtilRS.array2List(apps);
+                if(action == I.ACTION_DOWNLOAD || action == I.ACTION_PULL_DOWN){
+                    Log.e(TAG,"list="+list.size());
+                    mAdapter.initItems(list);
+                }else if(action == I.ACTION_PULL_UP) {
+                    mAdapter.addItems(list);
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+
+            }
+        },BoutiqueBean[].class);
+        request.setTag(I.REQUEST_FIND_BOUTIQUES);
         FuLiCenterApplication.getInstance().getRequestQueue().add(request);
     }
 

@@ -74,7 +74,10 @@ public class GoodAdapterRS extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
     public void initItems(ArrayList<NewGoodBean> data){
-        goodList = data;
+        if(goodList!=null && !goodList.isEmpty()){
+            goodList.clear();
+        }
+        goodList.addAll(data);
         sort(sortBy);
         notifyDataSetChanged();
     }

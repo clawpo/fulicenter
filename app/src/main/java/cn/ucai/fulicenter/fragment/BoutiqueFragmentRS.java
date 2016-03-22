@@ -19,11 +19,13 @@ import cn.ucai.fulicenter.activity.MainActivity;
 import cn.ucai.fulicenter.adapter.BoutiqueAdapterRS;
 import cn.ucai.fulicenter.bean.BoutiqueBean;
 import cn.ucai.fulicenter.task.DownloadBoutiqueTaskRS;
+import cn.ucai.fulicenter.utils.NetUtilRS;
 
 /**
  * Created by clawpo on 16/3/19.
  */
 public class BoutiqueFragmentRS extends Fragment {
+    public static final String TAG = BoutiqueFragmentRS.class.getName();
 
     MainActivity mContext;
 
@@ -41,19 +43,25 @@ public class BoutiqueFragmentRS extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mContext = (MainActivity)getActivity();
-        View layout = View.inflate(mContext, R.layout.fragment_boutique_rs, null);
-        initView(layout);
-        setListener();
+        View layout = inflater.inflate(R.layout.fragment_boutique_rs,container,false);
         mBoutiqueList=new ArrayList<BoutiqueBean>();
-        mDownloadBoutiqueTaskRS = new DownloadBoutiqueTaskRS(I.ACTION_DOWNLOAD,mContext, mBoutiqueList,
-                mAdapter, mSwipeRefreshLayout, mtvHint);
-        mDownloadBoutiqueTaskRS.execute();
+        initView(layout);
+        initData();
+        setListener();
         return layout;
     }
 
     private void setListener() {
         setPullDownRefreshListener();
         setPullUpRefreshListener();
+    }
+    private void initData(){
+        try {
+            NetUtilRS.findBoutiqueList(mAdapter,I.ACTION_DOWNLOAD,mSwipeRefreshLayout,mtvHint);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
     /**
      * 上拉刷新事件监听
@@ -69,9 +77,11 @@ public class BoutiqueFragmentRS extends Fragment {
                                 lastItemPosition == mAdapter.getItemCount()-1){
                             if(mAdapter.isMore()){
                                 mSwipeRefreshLayout.setRefreshing(true);
-                                mDownloadBoutiqueTaskRS = new DownloadBoutiqueTaskRS(I.ACTION_PULL_UP,mContext, mBoutiqueList,
-                                        mAdapter, mSwipeRefreshLayout, mtvHint);
-                                mDownloadBoutiqueTaskRS.execute();
+                                try {
+                                    NetUtilRS.findBoutiqueList(mAdapter,I.ACTION_PULL_UP,mSwipeRefreshLayout,mtvHint);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
                             }
                         }
                     }
@@ -95,9 +105,11 @@ public class BoutiqueFragmentRS extends Fragment {
                     @Override
                     public void onRefresh() {
                         mtvHint.setVisibility(View.VISIBLE);
-                        mDownloadBoutiqueTaskRS = new DownloadBoutiqueTaskRS(I.ACTION_DOWNLOAD,mContext, mBoutiqueList,
-                                mAdapter, mSwipeRefreshLayout, mtvHint);
-                        mDownloadBoutiqueTaskRS.execute();
+                        try {
+                            NetUtilRS.findBoutiqueList(mAdapter,I.ACTION_DOWNLOAD,mSwipeRefreshLayout,mtvHint);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
         );
@@ -105,6 +117,7 @@ public class BoutiqueFragmentRS extends Fragment {
 
 
     private void initView(View layout) {
+        mAdapter = new BoutiqueAdapterRS(mContext,mBoutiqueList);
         mSwipeRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.sfl_boutique);
         mSwipeRefreshLayout.setColorSchemeColors(
                 R.color.google_blue,
@@ -118,7 +131,6 @@ public class BoutiqueFragmentRS extends Fragment {
         mRecyclerView = (RecyclerView) layout.findViewById(R.id.rv_boutique);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
-        mAdapter = new BoutiqueAdapterRS(mContext,mBoutiqueList);
         mRecyclerView.setAdapter(mAdapter);
     }
 }

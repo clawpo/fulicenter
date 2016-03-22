@@ -45,6 +45,7 @@ public class BoutiqueAdapterRS extends RecyclerView.Adapter<RecyclerView.ViewHol
         this.boutiqueList = boutiqueList;
         this.imageLoader = new ImageLoader(FuLiCenterApplication.getInstance().getRequestQueue(),
                 new NetUtilRS.BitmapCaches(mContext));
+
     }
 
     /** 设置底部用于提示上拉刷新的文本*/
@@ -62,8 +63,10 @@ public class BoutiqueAdapterRS extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     public void initItems(ArrayList<BoutiqueBean> list){
-        boutiqueList = list;
-        Log.e(TAG,"initItems,boutiqueList="+boutiqueList.size());
+        if(boutiqueList!=null){
+            boutiqueList.clear();
+        }
+        boutiqueList.addAll(list);
         notifyDataSetChanged();
     }
 
@@ -74,7 +77,6 @@ public class BoutiqueAdapterRS extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Log.e(TAG,"onCreateViewHolder......");
         this.parent = parent;
         LayoutInflater inflater = LayoutInflater.from(mContext);
         RecyclerView.ViewHolder holder = null;
@@ -92,7 +94,6 @@ public class BoutiqueAdapterRS extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        Log.e(TAG,"onBindViewHolder......");
         if(holder instanceof FooterViewHolder){
             footerHolder  = (FooterViewHolder) holder;
             footerHolder.tvFooter.setText(footerText);
@@ -128,7 +129,6 @@ public class BoutiqueAdapterRS extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public int getItemViewType(int position) {
-        Log.e(TAG,"getItemViewType,position="+position+",getItemCount="+getItemCount());
         if(position == getItemCount()){
             return I.TYPE_FOOTER;
         }else{
@@ -138,10 +138,8 @@ public class BoutiqueAdapterRS extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public int getItemCount() {
-        Log.e(TAG,"getItemCount......="+boutiqueList.size());
         return boutiqueList==null?0:boutiqueList.size();
     }
-
 
     class BoutiqueViewHolder extends RecyclerView.ViewHolder{
         RelativeLayout layoutItem;

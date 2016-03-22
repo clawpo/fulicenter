@@ -7,28 +7,28 @@ import android.content.IntentFilter;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.AbsListView;
-import android.widget.AbsListView.OnScrollListener;
 import android.widget.Button;
-import android.widget.GridView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
 import cn.ucai.fulicenter.I;
-import cn.ucai.fulicenter.I.ActionType;
 import cn.ucai.fulicenter.R;
-import cn.ucai.fulicenter.adapter.GoodAdapter;
+import cn.ucai.fulicenter.adapter.GoodAdapterRS;
 import cn.ucai.fulicenter.bean.CategoryChildBean;
 import cn.ucai.fulicenter.bean.ColorBean;
 import cn.ucai.fulicenter.bean.GoodDetailsBean;
 import cn.ucai.fulicenter.bean.NewGoodBean;
-import cn.ucai.fulicenter.task.DownloadGoodsTask;
+import cn.ucai.fulicenter.task.DownloadGoodsTaskRS;
 import cn.ucai.fulicenter.utils.NetUtil;
-import cn.ucai.fulicenter.utils.PullRefreshView;
-import cn.ucai.fulicenter.utils.PullRefreshView.LoadStatus;
-import cn.ucai.fulicenter.utils.PullRefreshView.OnRefreshListener;
+import cn.ucai.fulicenter.utils.NetUtilRS;
 import cn.ucai.fulicenter.view.CatChildFilterButton;
 import cn.ucai.fulicenter.view.ColorFilterButton;
 
@@ -36,6 +36,7 @@ import cn.ucai.fulicenter.view.ColorFilterButton;
  * Created by ucai001 on 2016/3/11.
  */
 public class CategoryChildActivity extends BaseActivity {
+    public static final String TAG = CategoryChildActivity.class.getName();
     Context mContext;
     /** 当前小类的数据集*/
     ArrayList<CategoryChildBean> mChildList;
@@ -43,10 +44,16 @@ public class CategoryChildActivity extends BaseActivity {
     String mGroupName;
     ArrayList<GoodDetailsBean> mGoodDetailsList;
     ArrayList<NewGoodBean> mGoodList;
-    DownloadGoodsTask mDownloadGoodsTask;
-    PullRefreshView<GridView> mprvChild;
-    GridView mgvChild;
-    GoodAdapter mAdapter;
+    DownloadGoodsTaskRS mDownloadGoodsTask;
+//    PullRefreshView<GridView> mprvChild;
+//    GridView mgvChild;
+
+    /** 下拉刷新控件*/
+    SwipeRefreshLayout mSwipeRefreshLayout;
+    RecyclerView mRecyclerView;
+    TextView mtvHint;
+    GridLayoutManager mGridLayoutManager;
+    GoodAdapterRS mAdapter;
     
     CatChildFilterButton mbtnCatFilter;
     ColorFilterButton mbtnColorFilter;
@@ -83,6 +90,7 @@ public class CategoryChildActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category_child);
         mContext=this;
+        mGoodList = new ArrayList<NewGoodBean>();
         initView();
         initData();
         setListener();
@@ -100,42 +108,54 @@ public class CategoryChildActivity extends BaseActivity {
     }
 
     private void setPullUpRefreshListener() {
-        mgvChild.setOnScrollListener(new OnScrollListener() {
-            int lastPosition;
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-                if(mAdapter.isMore() && scrollState==OnScrollListener.SCROLL_STATE_IDLE
-                        &&lastPosition==mAdapter.getCount()){
-                    mPageId++;
-                    mDownloadGoodsTask=new DownloadGoodsTask(mContext, mAdapter, 
-                        mGoodList, ActionType.ACTION_SCROLL, mCatId, I.NEW_GOOD);
-                    mDownloadGoodsTask.execute(mPageId,PAGE_SIZE);
+        mRecyclerView.setOnScrollListener(
+                new RecyclerView.OnScrollListener() {
+                    int lastItemPosition;
+                    @Override
+                    public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                        super.onScrollStateChanged(recyclerView, newState);
+                        if(newState == RecyclerView.SCROLL_STATE_IDLE &&
+                                lastItemPosition == mAdapter.getItemCount()-1){
+                            if(mAdapter.isMore()){
+                                mSwipeRefreshLayout.setRefreshing(true);
+//                                mPageId++;
+                                mPageId +=PAGE_SIZE;
+                                try {
+                                    NetUtilRS.findNewandBoutiqueGoods(mAdapter,mCatId,mPageId,
+                                            PAGE_SIZE,I.ACTION_PULL_UP,mSwipeRefreshLayout,mtvHint);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                        super.onScrolled(recyclerView, dx, dy);
+                        //获取最后列表项的下标
+                        lastItemPosition = mGridLayoutManager.findLastVisibleItemPosition();
+                    }
                 }
-            }
-            
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem,
-                    int visibleItemCount, int totalItemCount) {
-                lastPosition=firstVisibleItem+totalItemCount-1;
-            }
-        });
+        );
     }
 
     private void setPullDownRefreshListener() {
-        mprvChild.setOnRefreshListener(new OnRefreshListener() {
-            @Override
-            public void loadData() {
-                mPageId=0;
-                mDownloadGoodsTask=new DownloadGoodsTask(mContext, mAdapter, 
-                    mGoodList, ActionType.ACTION_PULL_DOWN, mCatId, I.CATEGORY_GOOD);
-                mDownloadGoodsTask.execute(mPageId,PAGE_SIZE);
+        mSwipeRefreshLayout.setOnRefreshListener(
+            new SwipeRefreshLayout.OnRefreshListener(){
+                @Override
+                public void onRefresh() {
+                    mtvHint.setVisibility(View.VISIBLE);
+                    mPageId = 0;
+                    try {
+                        NetUtilRS.findNewandBoutiqueGoods(mAdapter,mCatId,mPageId,PAGE_SIZE,
+                                I.ACTION_DOWNLOAD,mSwipeRefreshLayout,mtvHint);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
             }
-
-            @Override
-            public LoadStatus getLoadStatus() {
-                return mDownloadGoodsTask.getLoadStatus();
-            }
-        }, mgvChild);
+        );
     }
 
     private void setReturnClickListener() {
@@ -160,22 +180,43 @@ public class CategoryChildActivity extends BaseActivity {
     private void initData() {
         mSortBy=I.SORT_BY_ADDTIME_DESC;
         mCatId=getIntent().getIntExtra(I.CategoryChild.CAT_ID, 0);
+        Log.e(TAG,"initData,mCatId="+mCatId);
         mGroupName=getIntent().getStringExtra(I.CategoryGroup.NAME);
         mChildList=(ArrayList<CategoryChildBean>) getIntent().getSerializableExtra("children");
         
         mGoodList=(ArrayList<NewGoodBean>) getIntent().getSerializableExtra("goodList");
         if(mGoodList==null){
-            mDownloadGoodsTask=new DownloadGoodsTask(mContext, mAdapter, mGoodList, ActionType.ACTION_DOWNLOAD, mCatId, I.CATEGORY_GOOD);
-            mDownloadGoodsTask.execute(mPageId,PAGE_SIZE);
+            try {
+                NetUtilRS.findNewandBoutiqueGoods(mAdapter,mCatId,mPageId,PAGE_SIZE,I.ACTION_DOWNLOAD,
+                        mSwipeRefreshLayout,mtvHint);
+                Log.e(TAG,"initData,mGoodList.1size="+mGoodList);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }else{
+            Log.e(TAG,"initData,mGoodList.2size="+mGoodList.size());
             mAdapter.initItems(mGoodList);
         }
         
         new DownloadColorFilterTask(mContext, mCatId).execute();
     }
     private void initView() {
-        mprvChild=getViewById(R.id.prvCategoryChild);
-        mgvChild=getViewById(R.id.gvCategoryChild);
+        mSwipeRefreshLayout = getViewById(R.id.srl_category_child);
+        mSwipeRefreshLayout.setColorSchemeColors(
+                R.color.google_blue,
+                R.color.google_green,
+                R.color.google_red,
+                R.color.google_yellow
+        );
+        mtvHint = getViewById(R.id.tv_refresh_hint);
+        mGridLayoutManager = new GridLayoutManager(mContext, I.COLUM_NUM);
+        mGridLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mRecyclerView = getViewById(R.id.rv_category_child);
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setLayoutManager(mGridLayoutManager);
+        mGoodList=new ArrayList<NewGoodBean>();
+        mAdapter = new GoodAdapterRS(mContext,mGoodList,I.SORT_BY_ADDTIME_DESC);
+        mRecyclerView.setAdapter(mAdapter);
         
         mbtnCatFilter=getViewById(R.id.btnCatChildFilter);
         mbtnColorFilter=getViewById(R.id.btnColorFilter);
@@ -183,10 +224,7 @@ public class CategoryChildActivity extends BaseActivity {
         
         mbtnAddTimeSort=getViewById(R.id.btnAddTimeSort);
         mbtnPriceSort=getViewById(R.id.btnPriceSort);
-        
-        mGoodList=new ArrayList<NewGoodBean>();
-        mAdapter=new GoodAdapter(mContext, mGoodList,mSortBy);
-        mgvChild.setAdapter(mAdapter);
+
     }
 
     class GoodDetailsUpdateReceiver extends BroadcastReceiver {
