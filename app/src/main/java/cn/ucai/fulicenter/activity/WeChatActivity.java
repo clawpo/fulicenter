@@ -39,7 +39,6 @@ import com.easemob.chat.EMMessage;
 import com.easemob.chat.TextMessageBody;
 import com.easemob.util.EMLog;
 import com.easemob.util.HanziToPinyin;
-import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -137,7 +136,7 @@ public class WeChatActivity extends BaseActivity  implements EMEventListener {
 
         // MobclickAgent.setDebugMode( true );
         // --?--
-        MobclickAgent.updateOnlineConfig(this);
+//        MobclickAgent.updateOnlineConfig(this);
 
         if (getIntent().getBooleanExtra("conflict", false)
                 && !isConflictDialogShow) {

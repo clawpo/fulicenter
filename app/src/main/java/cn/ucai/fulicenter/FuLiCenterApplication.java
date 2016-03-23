@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import cn.beecloud.BeeCloud;
+import cn.sharesdk.framework.ShareSDK;
 import cn.ucai.fulicenter.bean.CartBean;
 import cn.ucai.fulicenter.bean.ContactBean;
 import cn.ucai.fulicenter.bean.UserBean;
@@ -92,6 +93,7 @@ public class FuLiCenterApplication extends Application {
 		BeeCloud.setSandbox(true);
 		//此处第二个参数是控制台的test secret
 		BeeCloud.setAppIdAndSecret(I.BEE_COLUD_APP_ID,I.BEE_COLUD_APP_SECRET);
+		ShareSDK.initSDK(this);
 	}
 
 

@@ -22,6 +22,7 @@ import com.android.volley.toolbox.NetworkImageView;
 
 import java.util.ArrayList;
 
+import cn.sharesdk.onekeyshare.OnekeyShare;
 import cn.ucai.fulicenter.D;
 import cn.ucai.fulicenter.FuLiCenterApplication;
 import cn.ucai.fulicenter.I;
@@ -64,6 +65,7 @@ public class GoodDetailsActivity extends BaseActivity {
 
     ImageView mivCollect;
     ImageView mivAddCart;
+    ImageView mivShare;
     TextView mtvCartCount;
 
     GoodDetailsUpdateReceiver mReceiver;
@@ -97,8 +99,46 @@ public class GoodDetailsActivity extends BaseActivity {
     private void setListener() {
         setCollectClickListener();
         setReturnClickListener();
-        
+        setShareListener();
         setAddCartClickListener();
+    }
+    private void setShareListener(){
+        mivShare.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showShare();
+            }
+        });
+    }
+    private void showShare() {
+        OnekeyShare oks = new OnekeyShare();
+        //关闭sso授权
+        oks.disableSSOWhenAuthorize();
+
+        // 分享时Notification的图标和文字  2.5.9以后的版本不调用此方法
+        //oks.setNotification(R.drawable.ic_launcher, getString(R.string.app_name));
+        // title标题，印象笔记、邮箱、信息、微信、人人网和QQ空间使用
+        oks.setTitle(mGoodDetails.getGoodsName());
+        // titleUrl是标题的网络链接，仅在人人网和QQ空间使用
+        oks.setTitleUrl("http://sharesdk.cn");
+        // text是分享文本，所有平台都需要这个字段
+        oks.setText(mGoodDetails.getGoodsBrief());
+        // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
+        //oks.setImagePath("/sdcard/test.jpg");//确保SDcard下面存在此张图片
+        // url仅在微信（包括好友和朋友圈）中使用
+        String url = I.SERVER_ROOT
+                + "?" + I.KEY_REQUEST + "=" + I.REQUEST_FIND_GOOD_DETAILS
+                + "&" + I.CategoryGood.GOODS_ID + "=" + mGoodDetails.getId();
+        oks.setUrl(url);
+        // comment是我对这条分享的评论，仅在人人网和QQ空间使用
+        oks.setComment(mGoodDetails.getGoodsBrief());
+        // site是分享此内容的网站名称，仅在QQ空间使用
+        oks.setSite(getString(R.string.app_name));
+        // siteUrl是分享此内容的网站地址，仅在QQ空间使用
+        oks.setSiteUrl(url);
+
+        // 启动分享GUI
+        oks.show(this);
     }
 
     private void setAddCartClickListener() {
@@ -149,6 +189,7 @@ public class GoodDetailsActivity extends BaseActivity {
     private void initView() {
         mivCollect=getViewById(R.id.ivCollect);
         mivAddCart=getViewById(R.id.ivAddCart);
+        mivShare = getViewById(R.id.ivShare);
         mtvCartCount=getViewById(R.id.tvCartCount);
 
         mSlideAutoLoopView=getViewById(R.id.salv);
