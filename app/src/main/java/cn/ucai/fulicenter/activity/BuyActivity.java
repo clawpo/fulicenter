@@ -11,7 +11,6 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.pingplusplus.android.PingppLog;
 import com.pingplusplus.libone.PayActivity;
 import com.pingplusplus.model.Charge;
 
@@ -30,6 +29,7 @@ import cn.ucai.fulicenter.bean.BillBean;
 import cn.ucai.fulicenter.bean.CartBean;
 import cn.ucai.fulicenter.bean.GoodDetailsBean;
 import cn.ucai.fulicenter.bean.UserBean;
+import cn.ucai.fulicenter.beecolud.ShoppingCartActivity;
 import cn.ucai.fulicenter.utils.DateUtils;
 import cn.ucai.fulicenter.utils.NetUtil;
 import cn.ucai.fulicenter.utils.Utils;
@@ -38,6 +38,7 @@ import cn.ucai.fulicenter.utils.Utils;
  * Created by clawpo on 16/3/20.
  */
 public class BuyActivity  extends BaseActivity {
+    public static final String TAG = BuyActivity.class.getName();
     EditText metReceivePersonalName;
     EditText metMobile;
     EditText metAddress;
@@ -99,7 +100,7 @@ public class BuyActivity  extends BaseActivity {
                 StringBuilder body=new StringBuilder();
                 for (CartBean cart : cartList) {
                     if(cart.isChecked()){
-                        String strPrice = cart.getGoods().getCurrencyPrice();
+                        String strPrice = cart.getGoods().getRankPrice();
                         strPrice=strPrice.substring(1);
                         double price=Double.parseDouble(strPrice);
                         amount+=cart.getCount()*price*100;
@@ -135,22 +136,17 @@ public class BuyActivity  extends BaseActivity {
                     bill.put("display", display);
                     bill.put("extras", extras);
                     bill.put("order_no",orderNo);
-//                    bill.put("amount", amount);
-                    bill.put("amount", 10000);
+                    bill.put("amount", amount);
+                    bill.put("merchant", I.MERCHANT_NAME);
                 } catch (JSONException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
-                //设置支付方式
-                PayActivity.SHOW_CHANNEL_ALIPAY=true;
-                PayActivity.SHOW_CHANNEL_BFB=true;
-                PayActivity.SHOW_CHANNEL_UPMP=true;
-                PayActivity.SHOW_CHANNEL_WECHAT=true;
 
-                //设置支付用的日志开关
-                PingppLog.DEBUG=true;
-                //调用壹收款进行支付
-                PayActivity.CallPayActivity(BuyActivity.this, bill.toString(), I.PAY_URL);
+                Log.e(TAG,"bill="+bill.toString());
+                startActivity(new Intent(BuyActivity.this, ShoppingCartActivity.class).putExtra("bill",bill.toString()));
+//                //调用壹收款进行支付
+//                PayActivity.CallPayActivity(BuyActivity.this, bill.toString(), I.PAY_URL);
 
             }
 
@@ -188,6 +184,7 @@ public class BuyActivity  extends BaseActivity {
         findViewById(R.id.ivReturn).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                startActivity(new Intent(BuyActivity.this,MainActivity.class).putExtra("action","buy"));
                 finish();
             }
         });

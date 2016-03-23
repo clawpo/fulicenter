@@ -7,17 +7,13 @@ The following files were *not* copied into the new Gradle project; you
 should evaluate whether these are still needed in your project and if
 so manually move them:
 
-* .DS_Store
+* .checkstyle
+* ant.properties
 * build.xml
-* chatdemo-ui.apk
-* copyright.txt
-* gradle/
-* gradle/wrapper/
-* gradle/wrapper/gradle-wrapper.jar
-* gradle/wrapper/gradle-wrapper.properties
-* gradlew
-* gradlew.bat
+* dev.keystore
+* ic_launcher-web.png
 * proguard-project.txt
+* proguard.cfg
 
 Replaced Jars with Dependencies:
 --------------------------------
@@ -29,37 +25,34 @@ the .jar file in your project was of an older version than the
 dependency we picked, which could render the project not compileable.
 You can disable the jar replacement in the import wizard and try again:
 
-android-support-v4.jar => com.android.support:support-v4:19.1.0
+android-support-v4.jar => com.android.support:support-v4:19.+
 
 Moved Files:
 ------------
 Android Gradle projects use a different directory structure than ADT
 Eclipse projects. Here's how the projects were restructured:
 
-* AndroidManifest.xml => app/src/main/AndroidManifest.xml
-* libs/MiPush_SDK_Client_2_2_19.jar => app/libs/MiPush_SDK_Client_2_2_19.jar
-* libs/Parse-1.9.4.jar => app/libs/Parse-1.9.4.jar
-* libs/arm64-v8a/libeasemob_jni.so => app/src/main/jniLibs/arm64-v8a/libeasemob_jni.so
-* libs/arm64-v8a/libeasemobservice.so => app/src/main/jniLibs/arm64-v8a/libeasemobservice.so
-* libs/armeabi/libBaiduMapSDK_v3_2_0_15.so => app/src/main/jniLibs/armeabi/libBaiduMapSDK_v3_2_0_15.so
-* libs/armeabi/libbspatch.so => app/src/main/jniLibs/armeabi/libbspatch.so
-* libs/armeabi/libeasemob_jni.so => app/src/main/jniLibs/armeabi/libeasemob_jni.so
-* libs/armeabi/libeasemobservice.so => app/src/main/jniLibs/armeabi/libeasemobservice.so
-* libs/armeabi/liblocSDK3.so => app/src/main/jniLibs/armeabi/liblocSDK3.so
-* libs/armeabi/libvi_voslib.so => app/src/main/jniLibs/armeabi/libvi_voslib.so
-* libs/baidumapapi_v3_2_0.jar => app/libs/baidumapapi_v3_2_0.jar
-* libs/bolts-android-1.2.0.jar => app/libs/bolts-android-1.2.0.jar
-* libs/easemobchat_2.2.5.jar => app/libs/easemobchat_2.2.5.jar
-* libs/google-play-services.jar => app/libs/google-play-services.jar
-* libs/locSDK_3.3.jar => app/libs/locSDK_3.3.jar
-* libs/org.apache.http.legacy.jar => app/libs/org.apache.http.legacy.jar
-* libs/picasso-2.4.0.jar => app/libs/picasso-2.4.0.jar
-* libs/umeng-analytics-v5.2.4.jar => app/libs/umeng-analytics-v5.2.4.jar
-* libs/x86/libeasemobservice.so => app/src/main/jniLibs/x86/libeasemobservice.so
-* libs/x86_64/libeasemobservice.so => app/src/main/jniLibs/x86_64/libeasemobservice.so
-* lint.xml => app/lint.xml
-* res/ => app/src/main/res/
-* src/ => app/src/main/java/
+* AndroidManifest.xml => bdwallet_pay_sdk/src/main/AndroidManifest.xml
+* assets/ => bdwallet_pay_sdk/src/main/assets
+* libs/armeabi/libbd_wsp_v1_0.so => bdwallet_pay_sdk/src/main/jniLibs/armeabi/libbd_wsp_v1_0.so
+* libs/paySDk3.4.1.jar => bdwallet_pay_sdk/libs/paySDk3.4.1.jar
+* libs/x86/libbd_wsp_v1_0.so => bdwallet_pay_sdk/src/main/jniLibs/x86/libbd_wsp_v1_0.so
+* res/ => bdwallet_pay_sdk/src/main/res/
+* src/ => bdwallet_pay_sdk/src/main/java
+
+Missing Android Support Repository:
+-----------------------------------
+Some useful libraries, such as the Android Support Library, are
+installed from a special Maven repository, which should be installed
+via the SDK manager.
+
+It looks like this library is missing from your SDK installation at:
+null
+
+To install it, open the SDK manager, and in the Extras category,
+select "Android Support Repository". You may also want to install the
+"Google Repository" if you want to use libraries like Google Play
+Services.
 
 Next Steps:
 -----------

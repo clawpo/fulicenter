@@ -109,7 +109,9 @@ public class MainActivity extends BaseActivity {
                 sendBroadcast(new Intent("update_collect_count"));
                 setFragment(4);
             }
-		}
+		} else if(action.equals("buy")){
+            setFragment(3);
+        }
 	}
 
     private void initFragment() {
@@ -176,6 +178,7 @@ public class MainActivity extends BaseActivity {
                     index = 4;
                 }else{
                     startLogin("person");
+                    return;
                 }
                 break;
         }

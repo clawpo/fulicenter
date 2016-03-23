@@ -41,6 +41,25 @@ public interface I {
     /** 表示列表项布局的两种类型*/
     public static final int TYPE_ITEM=0;
     public static final int TYPE_FOOTER=1;
+
+    /** BeeColud APP ID */
+    public static final String BEE_COLUD_APP_ID = "3539b590-4859-4128-87a3-5fb8b86b94f6";
+    /** BeeColud APP Secret*/
+    public static final String BEE_COLUD_APP_SECRET = "c75c74e1-105e-437c-9be9-84c4ddee4d5f";
+    /** BeeColud APP Test Secret*/
+    public static final String BEE_COLUD_APP_SECRET_TEST = "06eb1210-0eeb-41df-99e3-1ffb9eb87b99";
+    /** weixin APP ID */
+    public static final String WEIXIN_APP_ID = "wxf1aa465362b4c8f1";
+    // 如果使用PayPal需要在支付之前设置client id和应用secret
+    public static final String PAYPAL_CLIENT_ID = "AVT1Ch18aTIlUJIeeCxvC7ZKQYHczGwiWm8jOwhrREc4a5FnbdwlqEB4evlHPXXUA67RAAZqZM0H8TCR";
+    public static final String PAYPAL_SECRET = "EL-fkjkEUyxrwZAmrfn46awFXlX-h2nRkyCVhhpeVdlSRuhPJKXx3ZvUTTJqPQuAeomXA8PZ2MkX24vF";
+
+    //商户名称
+    public static final String MERCHANT_NAME = "福利社";
+
+    //货币单位
+    public static final String CURRENCY_TYPE_CNY = "CNY";
+    public static final String CURRENCY_TYPE_USD = "USD";
     
     class Cart{
         public static final String ID="id";

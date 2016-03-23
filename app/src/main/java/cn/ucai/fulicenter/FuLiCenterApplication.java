@@ -27,6 +27,7 @@ import com.easemob.EMCallBack;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import cn.beecloud.BeeCloud;
 import cn.ucai.fulicenter.bean.CartBean;
 import cn.ucai.fulicenter.bean.ContactBean;
 import cn.ucai.fulicenter.bean.UserBean;
@@ -81,10 +82,16 @@ public class FuLiCenterApplication extends Application {
 		if(isLocalhost){
 			initServerUrl();
 		}else{
+//			SERVER_ROOT = "http://10.0.2.2:8080/FuLiCenterServer/Server";
 			SERVER_ROOT = "http://10.0.2.2:8080/FuLiCenterServer/Server";
 		}
 		Log.e("main","***************************Superwechat.serverurl="+SERVER_ROOT);
 		hxSDKHelper.onInit(applicationContext);
+
+		//开启测试模式
+		BeeCloud.setSandbox(true);
+		//此处第二个参数是控制台的test secret
+		BeeCloud.setAppIdAndSecret(I.BEE_COLUD_APP_ID,I.BEE_COLUD_APP_SECRET);
 	}
 
 

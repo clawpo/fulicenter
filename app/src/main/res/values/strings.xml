@@ -322,4 +322,12 @@
     <string name="generic_server_down">generic server down</string>
     <string name="no_internet">no internet</string>
     <string name="generic_error">generic error</string>
+    <string name="title_activity_bill_list">BillListActivity</string>
+    <string name="title_activity_refund_orders">RefundOrdersActivity</string>
+    <string name="title_activity_refund_status">RefundStatusActivity</string>
+    <string name="title_activity_gen_qrcode">GenQRCodeActivity</string>
+    <string name="title_activity_aliqrcode">ALIQRCodeActivity</string>
+    <string name="title_activity_orders_entry">OrdersEntryActivity</string>
+    <string name="title_activity_pay_pal_un_synced_list">PayPalUnSyncedListActivity</string>
+
 </resources>

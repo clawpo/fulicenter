@@ -65,4 +65,8 @@
     <color name="google_blue">#0057e7</color>
     <color name="google_green">#008744</color>
     <color name="google_yellow">#ffa700</color>
+    <color name="bluebg">#007edf</color>
+    <color name="greybg">#EEEEEE</color>
+    <color name="fontgrey">#999999</color>
+    <color name="main_orange">#FF6C2C</color>
 </resources>
