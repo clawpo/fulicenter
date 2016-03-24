@@ -39,6 +39,7 @@ import cn.ucai.fulicenter.fragment.PersonalCenterFragment;
 import cn.ucai.fulicenter.task.DownloadCartTask;
 import cn.ucai.fulicenter.utils.FragmentUtils;
 import cn.ucai.fulicenter.utils.Utils;
+import cn.ucai.fulicenter.view.RotateUtil;
 
 public class MainActivity extends BaseActivity {
 
@@ -161,21 +162,26 @@ public class MainActivity extends BaseActivity {
         switch (view.getId()) {
             case R.id.layout_new_good:
                 index = 0;
+                RotateUtil.startRotateY(mLayoutNewGood);
                 break;
             case R.id.layout_boutique:
                 index = 1;
+                RotateUtil.startRotateY(mLayoutBoutique);
                 break;
             case R.id.layout_category:
                 index=2;
+                RotateUtil.startRotateY(mLayoutCategory);
                 break;
             case R.id.layout_cart:
                 index =3;
+                RotateUtil.startRotateY(mLayoutCart);
                 break;
             case R.id.layout_personal_center:
                 mUser = FuLiCenterApplication.getInstance().getUserBean();
                 Log.e(TAG,"mUser="+mUser);
                 if(mUser!=null) {
                     index = 4;
+                    RotateUtil.startRotateY(mLayoutPersonalCenter);
                 }else{
                     startLogin("person");
                     return;
