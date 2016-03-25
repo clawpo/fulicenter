@@ -403,6 +403,9 @@
             android:screenOrientation="portrait"
             android:theme="@style/horizontal_slide">
         </activity>
+        <activity android:name="cn.ucai.fulicenter.activity.QRCodeActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/horizontal_slide"/>
 
         <!--以下为BeeCloud支付相关 begin-->
         <activity

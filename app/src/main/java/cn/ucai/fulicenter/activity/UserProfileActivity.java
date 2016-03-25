@@ -1,7 +1,5 @@
 package cn.ucai.fulicenter.activity;
 
-import java.io.ByteArrayOutputStream;
-
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.ProgressDialog;
@@ -23,13 +21,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.easemob.EMValueCallBack;
-import cn.ucai.fulicenter.applib.controller.HXSDKHelper;
 import com.easemob.chat.EMChatManager;
+import com.squareup.picasso.Picasso;
+
+import java.io.ByteArrayOutputStream;
+
 import cn.ucai.fulicenter.DemoHXSDKHelper;
 import cn.ucai.fulicenter.R;
+import cn.ucai.fulicenter.applib.controller.HXSDKHelper;
 import cn.ucai.fulicenter.domain.User;
 import cn.ucai.fulicenter.utils.UserUtils;
-import com.squareup.picasso.Picasso;
 
 public class UserProfileActivity extends BaseActivity implements OnClickListener{
 	
@@ -42,6 +43,7 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
 	private TextView tvUsername;
 	private ProgressDialog dialog;
 	private RelativeLayout rlNickName;
+	private RelativeLayout rlQrCode;
 	
 	
 	
@@ -60,6 +62,7 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
 		tvNickName = (TextView) findViewById(R.id.user_nickname);
 		rlNickName = (RelativeLayout) findViewById(R.id.rl_nickname);
 		iconRightArrow = (ImageView) findViewById(R.id.ic_right_arrow);
+		rlQrCode = (RelativeLayout) findViewById(R.id.rl_qr);
 	}
 	
 	private void initListener() {
@@ -71,6 +74,7 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
 			iconRightArrow.setVisibility(View.VISIBLE);
 			rlNickName.setOnClickListener(this);
 			headAvatar.setOnClickListener(this);
+			rlQrCode.setOnClickListener(this);
 		} else {
 			headPhotoUpdate.setVisibility(View.GONE);
 			iconRightArrow.setVisibility(View.INVISIBLE);
@@ -113,6 +117,9 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
 						}
 					}).setNegativeButton(R.string.dl_cancel, null).show();
 			break;
+			case R.id.rl_qr:
+				startActivity(new Intent(UserProfileActivity.this,QRCodeActivity.class));
+				break;
 		default:
 			break;
 		}

@@ -341,4 +341,5 @@
     <string name="no_internet">网络异常</string>
     <string name="generic_error">下载失败</string>
     <string name="share">分享</string>
+    <string name="user_qrcode">我的二维码</string>
 </resources>

@@ -330,5 +330,6 @@
     <string name="title_activity_orders_entry">OrdersEntryActivity</string>
     <string name="title_activity_pay_pal_un_synced_list">PayPalUnSyncedListActivity</string>
     <string name="share">share</string>
+    <string name="user_qrcode">user qrcode</string>
 
 </resources>

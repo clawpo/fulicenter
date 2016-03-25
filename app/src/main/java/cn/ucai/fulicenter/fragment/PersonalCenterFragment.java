@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import cn.ucai.fulicenter.FuLiCenterApplication;
@@ -47,6 +48,7 @@ public class PersonalCenterFragment extends Fragment {
     TextView mtvSettings;
     ImageView mivMessage;
     LinearLayout mLayoutCenterCollet;
+    RelativeLayout mLyaoutCenterUserInfo;
 
     ImageLoader mImageLoader;
 
@@ -91,6 +93,7 @@ public class PersonalCenterFragment extends Fragment {
         mLayoutCenterCollet.setOnClickListener(listener);
         mtvSettings.setOnClickListener(listener);
         mivMessage.setOnClickListener(listener);
+        mLyaoutCenterUserInfo.setOnClickListener(listener);
     }
 
     class MyClickListener implements OnClickListener{
@@ -101,6 +104,7 @@ public class PersonalCenterFragment extends Fragment {
                     startActivity(new Intent(mContext, CollectActivity.class));
                     break;
                 case R.id.tv_center_settings:
+                case R.id.center_user_info:
                     startActivity(new Intent(mContext, SettingsActivity.class));
                     break;
                 case R.id.iv_persona_center_msg:
@@ -157,6 +161,7 @@ public class PersonalCenterFragment extends Fragment {
         mOrderList.setSelector(new ColorDrawable(Color.TRANSPARENT));
         mAdapter = new OrderAdapter(mContext,pic_path);
         mOrderList.setAdapter(mAdapter);
+        mLyaoutCenterUserInfo = (RelativeLayout) layout.findViewById(R.id.center_user_info);
     }
 
     class CollectCountChangedReceiver extends BroadcastReceiver{

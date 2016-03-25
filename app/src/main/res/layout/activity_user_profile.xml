@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:text="@string/title_user_profile"
-            android:textColor="#fff"
+            android:textColor="#000"
             android:textSize="18sp" />
     </RelativeLayout>
     <LinearLayout 
@@ -123,6 +123,53 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_margin="5dip"
+                />
+        </RelativeLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/gray_pressed"
+
+            />
+        <RelativeLayout
+            android:id="@+id/rl_qr"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#ffffff"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dip"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:layout_alignParentLeft="true"
+                android:text="@string/user_qrcode"
+                android:textSize="16sp"
+                android:gravity="center_vertical"
+                android:textColor="#808080"
+                android:background="#FFFFFF"
+                />
+            <TextView
+                android:id="@+id/user_qr"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:layout_alignParentRight="true"
+                android:paddingRight="20dip"
+                android:textSize="16sp"
+                android:gravity="center_vertical"
+                android:textColor="#3366cc"
+                android:background="#FFFFFF"
+                />
+            <ImageView
+                android:id="@+id/iv_qr"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/tb_icon_home_qrcode_gray"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="5dp"
                 />
         </RelativeLayout>
     </LinearLayout>
