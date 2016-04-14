@@ -186,6 +186,14 @@ public class PersonalCenterFragment extends Fragment {
         mtvUserName.setText(mUser.getNick());
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if(mReceiver!=null){
+            mContext.unregisterReceiver(mReceiver);
+        }
+    }
+
     class UpdateCollectCountChangedReceiver extends BroadcastReceiver{
 
         @Override

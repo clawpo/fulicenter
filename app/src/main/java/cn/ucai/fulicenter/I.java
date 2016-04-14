@@ -8,8 +8,8 @@ package cn.ucai.fulicenter;
  */
 public interface I {
 
-    String SERVER_ROOT="http://10.0.2.2:8080/FuLiCenterServer/Server";
-//    String SERVER_ROOT="http://139.196.185.33:8080/FuLiCenterServer/Server";
+//    String SERVER_ROOT="http://10.0.2.2:8080/FuLiCenterServer/Server";
+    String SERVER_ROOT="http://139.196.185.33:8080/FuLiCenterServer/Server";
     //String SERVER_ROOT="http://139.196.185.33:8080/SuperQQ3Server/Server";
 
     /**页号*/

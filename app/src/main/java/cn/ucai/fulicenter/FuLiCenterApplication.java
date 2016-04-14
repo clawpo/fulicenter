@@ -37,8 +37,8 @@ public class FuLiCenterApplication extends Application {
 
 	public static final String TAG = FuLiCenterApplication.class.getName();
 
-	    public static String SERVER_ROOT="http://10.0.2.2:8080/FuLiCenterServer/Server";
-//	public static String SERVER_ROOT="http://139.196.185.33:8080/FuLiCenterServer/Server";
+//	    public static String SERVER_ROOT="http://10.0.2.2:8080/FuLiCenterServer/Server";
+	public static String SERVER_ROOT="http://139.196.185.33:8080/FuLiCenterServer/Server";
 
 	public static boolean isLocalhost = false;
 
@@ -83,7 +83,7 @@ public class FuLiCenterApplication extends Application {
 		if(isLocalhost){
 			initServerUrl();
 		}else{
-//			SERVER_ROOT = "http://10.0.2.2:8080/FuLiCenterServer/Server";
+//			SERVER_ROOT = "http://139.196.185.33:8080/FuLiCenterServer/Server";
 			SERVER_ROOT = "http://10.0.2.2:8080/FuLiCenterServer/Server";
 		}
 		Log.e("main","***************************Superwechat.serverurl="+SERVER_ROOT);
